@@ -69,6 +69,10 @@ TOPIC_ADJACENT = [
     "personalentwicklung", "organisationspsychologie", "arbeitspsychologie",
     "berufliche bildung", "weiterbildung", "übergang studium beruf",
     "übergang hochschule beruf",
+    # Psychology sub-disciplines — W2-Professur titles use these directly
+    "wirtschaftspsychologie", "gesundheitspsychologie", "sozialpsychologie",
+    "pädagogische psychologie", "pädagogik", "erziehungswissenschaft",
+    "personalpsychologie", "berufspsychologie",
 ]
 STRONG_VACANCY_SIGNALS = [
     "deadline", "closing date", "hiring", "vacancy", "opening",
@@ -527,6 +531,14 @@ def passes_relevance_gate(
 ) -> bool:
     if not has_position:
         return False
+
+    # Professorship bypass: W1/W2/W3, Juniorprofessur, Tenure Track on a trusted
+    # German portal are rare, high-value openings. Skip the topic gate for these
+    # since the position type itself IS the relevance signal.
+    PROF_TERMS = ["w1", "w2", "w3", "professur", "juniorprofessur", "tenure track", "tenure-track"]
+    if trusted and any(p in lower for p in PROF_TERMS):
+        return True
+
     if not has_core and not has_adjacent:
         return False
     has_strong = any(t in lower for t in STRONG_VACANCY_SIGNALS)
