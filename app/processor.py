@@ -126,6 +126,9 @@ GERMAN_SIGNALS = [
     # Funding bodies and research orgs
     "dfg", "daad", "mpg.de", "helmholtz", "leibniz", "fraunhofer",
     "max-planck-institut", "mlu", "mpi",
+    # Germany-only job portals — any URL on these is definitionally German
+    "psychjob.eu", "academics.de", "hsozkult.de", "stellenwerk.de",
+    "akademische-jobs.de", "hochschul-job.de",
 ]
 
 # Regex to detect gender-inclusive German title variants found in URL slugs and
