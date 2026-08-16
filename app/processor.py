@@ -18,10 +18,12 @@ EXCLUDE_TITLES = [
     "doktorand", "doktorandin", "promotionsstelle", "phd programme",
     "hr generalist", "recruiter", "sales", "marketing", "customer service",
 ]
+# NOTE: WissZeitVG removed — German postdoc contracts frequently cite this
+# law without the role being doctoral-only. Keeping it caused valid drops.
 EXCLUDE_DESC = [
-    "opportunity to pursue a doctorate", "doctoral qualification position",
-    "doctorate expected", "promotion vorgesehen",
-    "qualification position under wisszeitvg",
+    "opportunity to pursue a doctorate",
+    "doctorate expected",
+    "promotion vorgesehen",
 ]
 
 # ---------------------------------------------------------------------------
@@ -32,6 +34,8 @@ POSITION_TERMS = [
     "academic researcher", "wissenschaftliche mitarbeiter", "wissenschaftlicher mitarbeiter",
     "wissenschaftliche mitarbeiterin", "postdoktorand", "postdoktorandin",
     "junior research group",
+    # German contract/qualification terms that indicate postdoc-level roles
+    "qualifikationsstelle", "wisszeitvg", "akademische mitarbeiter",
 ]
 TOPIC_CORE = [
     "employability", "graduate employability", "labour market", "labor market",
@@ -62,12 +66,29 @@ STRONG_VACANCY_SIGNALS = [
 WEAK_VACANCY_SIGNALS = ["apply", "application", "applications"]
 VACANCY_SIGNALS = STRONG_VACANCY_SIGNALS + WEAK_VACANCY_SIGNALS
 
+# Soft penalty only (score reduction applied in scoring block)
 NEGATIVE_DISCIPLINES = [
-    "chemistry", "chemical engineering", "biology", "molecular", "genetics",
-    "genomics", "neuroscience", "physics", "astrophysics", "robotics",
+    "genomics", "astrophysics", "robotics",
     "mechanical engineering", "civil engineering", "electrical engineering",
-    "materials science", "biomedical", "medicine", "clinical", "oncology",
-    "pharmacology", "agriculture", "veterinary",
+    "biomedical", "oncology", "pharmacology", "agriculture", "veterinary",
+]
+
+# Hard exclusion — immediate drop regardless of any topic match
+HARD_EXCLUSIONS = [
+    "computational chemistry", "chemistry", "chemical engineering",
+    "tooth enamel", "dentistry", "dental", "molecular biology",
+    "nanotechnology", "materials science", "neuroscience",
+    "physics", "biology", "genetics", "clinical trial", "medicine",
+]
+
+# Geographic exclusion — drop listings explicitly located outside target regions
+NON_TARGET_REGIONS = [
+    re.compile(p, re.I) for p in [
+        r"\bindia\b", r"\bnagaland\b", r"\bsingapore\b", r"\bmalaysia\b",
+        r"\bchina\b", r"\bjapan\b", r"\bbrazil\b", r"\bsouth africa\b",
+        r"\bpakistan\b", r"\bbangladesh\b", r"\bnigeria\b", r"\bkenya\b",
+        r"\bindonesia\b", r"\bphilippines\b", r"\bvietnam\b",
+    ]
 ]
 
 SOCIAL_SOURCES = {"Reddit", "Facebook", "Twitter/X", "ResearchGate"}
@@ -173,8 +194,24 @@ def _safe_str(v) -> str:
 
 
 def guess_institution(title: str) -> str:
-    parts = re.split(r"[-–|]", title)
-    return parts[-1].strip() if len(parts) > 1 else title.strip()
+    """Extract institution name from a job title string.
+    Strips parenthetical fragments, rejects location noise, and removes
+    trailing geographic qualifiers (e.g. ', Nagaland, India').
+    """
+    # Remove parenthetical suffixes e.g. '(2-year contract)'
+    clean = re.sub(r"\([^)]*\)", "", title).strip()
+    parts = re.split(r"[-–|]", clean)
+    candidate = parts[-1].strip() if len(parts) > 1 else clean.strip()
+
+    # Reject if fewer than 2 words or contains digits (likely an address/fragment)
+    words = candidate.split()
+    if len(words) < 2 or re.search(r"\d", candidate):
+        return clean or title.strip()
+
+    # Strip trailing 'City, Region, Country' geographic qualifiers
+    candidate = re.sub(r",\s*[A-Z][a-zA-Z\s]+,\s*[A-Z][a-zA-Z]+$", "", candidate).strip()
+
+    return candidate or title.strip()
 
 
 def extract_position_title(title: str) -> str:
@@ -340,6 +377,10 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if not clean_link or clean_link in seen_links:
             continue
 
+        # ── Guard 1: LinkedIn posts/shares are not job listings ──────────────
+        if "linkedin.com" in clean_link and "/jobs/view/" not in clean_link:
+            continue
+
         title = _safe_str(item.title)
         snippet = _safe_str(item.snippet)
 
@@ -352,6 +393,14 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         text = f"{title} {snippet}"
         lower = text.lower()
         url = clean_link.lower()
+
+        # ── Guard 2: Hard science terms → immediate drop ───────────────────
+        if any(term in lower for term in HARD_EXCLUSIONS):
+            continue
+
+        # ── Guard 3: Non-target geographic regions → drop ──────────────────
+        if any(pat.search(text) for pat in NON_TARGET_REGIONS):
+            continue
 
         has_position = any(t in lower for t in POSITION_TERMS)
         has_core = any(t in lower for t in TOPIC_CORE)
