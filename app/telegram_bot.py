@@ -73,18 +73,24 @@ def build_digest(records: List[PostdocRecord]) -> str:
 
 async def send_telegram_alert(client: httpx.AsyncClient, text: str) -> None:
     url = f"https://api.telegram.org/bot{settings.TELEGRAM_POSTDOC_BOT_TOKEN}/sendMessage"
-    try:
-        res = await client.post(
-            url,
-            json={
-                "chat_id": settings.TELEGRAM_POSTDOC_CHAT_ID,
-                "text": text,
-                "parse_mode": "Markdown",
-                "disable_web_page_preview": True,
-            },
-            timeout=15.0,
-        )
-        res.raise_for_status()
-        print("  [telegram] Digest sent successfully.")
-    except Exception as exc:
-        print(f"  [telegram] Failed to send digest — {exc}")
+
+    # Split into <=4000 char chunks (Telegram message limit is 4096)
+    chunks = [text[i:i+4000] for i in range(0, len(text), 4000)]
+
+    for chunk in chunks:
+        try:
+            res = await client.post(
+                url,
+                json={
+                    "chat_id": settings.TELEGRAM_POSTDOC_CHAT_ID,
+                    "text": chunk,
+                    "disable_web_page_preview": True,
+                },
+                timeout=15.0,
+            )
+            res.raise_for_status()
+        except Exception as exc:
+            print(f"  [telegram] Failed to send chunk — {exc}")
+            return
+
+    print(f"  [telegram] Digest sent successfully ({len(chunks)} message(s)).")

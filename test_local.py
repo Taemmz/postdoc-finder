@@ -185,14 +185,19 @@ async def test_supabase():
 # ──────────────────────────────────────────────────────────────
 async def test_telegram():
     print("\n📱 Sending test message to Telegram...\n")
-    from app.telegram_bot import send_telegram_alert
+    from app.config import settings
     try:
         async with httpx.AsyncClient() as client:
-            await send_telegram_alert(
-                client,
-                "🔬 *SkillEdgeUp Post-Doc Finder* — Test message\n\n✅ Your bot is connected and working correctly!\n\n_This was triggered by `test_local.py`._"
+            r = await client.post(
+                f"https://api.telegram.org/bot{settings.TELEGRAM_POSTDOC_BOT_TOKEN}/sendMessage",
+                json={
+                    "chat_id": settings.TELEGRAM_POSTDOC_CHAT_ID,
+                    "text": "SkillEdgeUp Post-Doc Finder - Test message\n\nYour bot is connected and working correctly!\n\nThis was triggered by test_local.py",
+                },
+                timeout=15.0,
             )
-        print("✅ Check your Telegram chat for the test message.")
+            r.raise_for_status()
+            print("✅ Check your Telegram chat for the test message.")
     except Exception as e:
         print(f"\n❌ FAILED: {e}")
 
