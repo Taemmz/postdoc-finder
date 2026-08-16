@@ -279,17 +279,26 @@ async def fetch_ssr_stellenwerk(client) -> List[RawVacancy]:
 
 
 async def scrape_all_sources() -> List[RawVacancy]:
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         tasks = [
-            fetch_german_boards(client),      # ~50 Serper queries, gl=de hl=de
+            # ── Serper / API sources ───────────────────────────────────────────
+            fetch_german_boards(client),      # ~42 Serper queries, gl=de hl=de
             fetch_google_news(client),        # 2 SerpAPI news queries, gl=de
             fetch_exa(client),                # 4 Exa semantic queries (Germany-scoped)
             fetch_all_rss(client),            # 4 RSS feeds
+            # ── SSR aggregators ────────────────────────────────────────────────
             fetch_ssr_academics(client),      # academics.de direct HTML
             fetch_ssr_euraxess(client),       # EURAXESS Germany-filtered
             fetch_ssr_psychjob(client),       # psychjob.eu (DGPs portal)
             fetch_ssr_hsozkult(client),       # H-Soz-Kult (social science & humanities)
             fetch_ssr_stellenwerk(client),    # Stellenwerk (multi-campus network)
+            # ── Direct university career pages (zero API cost) ─────────────────
+            fetch_direct_lmu(client),
+            fetch_direct_hu_berlin(client),
+            fetch_direct_tu_berlin(client),
+            fetch_direct_uni_leipzig(client),
+            fetch_direct_uni_heidelberg(client),
+            fetch_direct_uni_koeln(client),
         ]
         nested = await asyncio.gather(*tasks, return_exceptions=True)
         flat: List[RawVacancy] = []
@@ -298,4 +307,137 @@ async def scrape_all_sources() -> List[RawVacancy]:
                 flat.extend(batch)
         print(f"  [scrapers] Total raw items collected: {len(flat)}")
         return flat
+
+
+# ---------------------------------------------------------------------------
+# Direct German university career page scrapers (zero API cost)
+# ---------------------------------------------------------------------------
+
+def _direct_uni(source: str, base_url: str) -> dict:
+    """Shared config dict for direct university scrapers."""
+    return {"source": source, "base": base_url}
+
+
+async def fetch_direct_lmu(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """LMU München — arbeiten-an-der-lmu/stellenangebote."""
+    url = "https://www.lmu.de/de/die-lmu/arbeiten-an-der-lmu/stellenangebote/index.html"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for item in soup.select("article, .contenttable tr, .teaser-text, li.item"):
+            a = item.select_one("a[href]")
+            if not a:
+                continue
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://www.lmu.de{href}"
+            snippet = item.get_text(" ", strip=True)
+            if title:
+                results.append(RawVacancy(source="LMU München Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
+
+
+async def fetch_direct_hu_berlin(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """HU Berlin — karriere/stellenausschreibungen."""
+    url = "https://www.hu-berlin.de/de/ueberblick/karriere/stellenausschreibungen"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for a in soup.select("a[href*='stellenausschreibungen'], .job-offer-item a, .news-list-item a"):
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://www.hu-berlin.de{href}"
+            if title and len(title) > 10:
+                results.append(RawVacancy(source="HU Berlin Direct", title=title, link=link, snippet=title, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
+
+
+async def fetch_direct_tu_berlin(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """TU Berlin — jobs.tu-berlin.de/stellenangebote."""
+    url = "https://jobs.tu-berlin.de/stellenangebote"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for row in soup.select(".views-row, .job-item, tr"):
+            a = row.select_one("a[href]")
+            if not a:
+                continue
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://jobs.tu-berlin.de{href}"
+            snippet = row.get_text(" ", strip=True)
+            if title and len(title) > 10:
+                results.append(RawVacancy(source="TU Berlin Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
+
+
+async def fetch_direct_uni_leipzig(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """Uni Leipzig — stellenausschreibungen page."""
+    url = "https://www.uni-leipzig.de/universitaet/arbeiten-an-der-universitaet-leipzig/stellenausschreibungen"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for a in soup.select("a[href*='ausschreibung'], a[href*='stellenangebot'], .element-job a, table.contenttable a"):
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://www.uni-leipzig.de{href}"
+            if title and len(title) > 15:
+                results.append(RawVacancy(source="Uni Leipzig Direct", title=title, link=link, snippet=title, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
+
+
+async def fetch_direct_uni_heidelberg(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """Uni Heidelberg — beschaeftigung-ausbildung/stellenangebote."""
+    url = "https://www.uni-heidelberg.de/de/beschaeftigung-ausbildung/stellenangebote"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for item in soup.select(".news-list-item, article, li.item"):
+            a = item.select_one("a[href]")
+            if not a:
+                continue
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://www.uni-heidelberg.de{href}"
+            snippet = item.get_text(" ", strip=True)
+            if title and len(title) > 10:
+                results.append(RawVacancy(source="Uni Heidelberg Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
+
+
+async def fetch_direct_uni_koeln(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """Uni Köln — via stellenwerk-koeln.de (the official Cologne campus job board)."""
+    url = "https://www.stellenwerk-koeln.de/stellenmarkt?q=wissenschaftliche+Mitarbeiter"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for item in soup.select(".job-item, article, .job-title, li.item"):
+            a = item.select_one("a[href]")
+            if not a:
+                continue
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://www.stellenwerk-koeln.de{href}"
+            snippet = item.get_text(" ", strip=True)
+            if title and len(title) > 10:
+                results.append(RawVacancy(source="Uni Köln Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
 

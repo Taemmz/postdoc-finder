@@ -178,13 +178,19 @@ TRUSTED_JOB_DOMAINS = [
     "mpg.de", "helmholtz.de", "leibniz-gemeinschaft.de", "fraunhofer.de",
     "gesis.org", "iab.de", "dzhw.eu", "wzb.eu",
     "bibb.de", "ifo.de", "zew.de",
-    # German universities
+    # German universities (domain-based)
     "charite.de", "kit.edu", "rwth-aachen.de",
+    "lmu.de", "hu-berlin.de", "jobs.tu-berlin.de", "uni-leipzig.de",
+    "uni-heidelberg.de", "stellenwerk-koeln.de",
     # Professional networks (Germany)
     "linkedin.com/jobs", "xing.com/jobs",
     # RSS aggregators
     "academickeys.com",
+    # Direct university scraper source names (matched against item.source)
+    "LMU München Direct", "HU Berlin Direct", "TU Berlin Direct",
+    "Uni Leipzig Direct", "Uni Heidelberg Direct", "Uni Köln Direct",
 ]
+
 
 # ---------------------------------------------------------------------------
 # Institution tier patterns
@@ -379,8 +385,10 @@ def detect_german(text: str) -> str:
     return "unknown"
 
 
-def is_trusted_domain(url: str) -> bool:
-    return any(d in url for d in TRUSTED_JOB_DOMAINS)
+def is_trusted_domain(url: str, source: str = "") -> bool:
+    """Return True if url or source name is in TRUSTED_JOB_DOMAINS."""
+    return any(d in url or d in source for d in TRUSTED_JOB_DOMAINS)
+
 
 
 def is_strictly_germany(link: str, text: str) -> bool:
@@ -501,7 +509,7 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         has_position = any(t in lower for t in POSITION_TERMS)
         has_core = any(t in lower for t in TOPIC_CORE)
         has_adjacent = any(t in lower for t in TOPIC_ADJACENT)
-        trusted = is_trusted_domain(url)
+        trusted = is_trusted_domain(url, item.source or "")
 
         if not passes_relevance_gate(item.source, has_position, has_core, has_adjacent, trusted, lower):
             continue
