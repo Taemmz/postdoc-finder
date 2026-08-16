@@ -30,13 +30,93 @@ EXCLUDE_DESC = [
 # Keyword banks
 # ---------------------------------------------------------------------------
 POSITION_TERMS = [
-    "postdoc", "post-doc", "postdoctoral", "research fellow", "research associate",
-    "academic researcher", "wissenschaftliche mitarbeiter", "wissenschaftlicher mitarbeiter",
+    # English
+    "postdoc", "post-doc", "postdoctoral", "postdoctoral researcher",
+    "postdoctoral fellow", "research associate", "research assistant",
+    "academic researcher", "senior researcher", "research fellow",
+    # German
+    "wissenschaftliche mitarbeiter", "wissenschaftlicher mitarbeiter",
     "wissenschaftliche mitarbeiterin", "postdoktorand", "postdoktorandin",
-    "junior research group",
-    # German contract/qualification terms that indicate postdoc-level roles
-    "qualifikationsstelle", "wisszeitvg", "akademische mitarbeiter",
+    "nachwuchswissenschaftler", "nachwuchswissenschaftlerin",
+    "akademischer rat", "akademische rätin", "junior research group",
+    "qualifikationsstelle", "akademische mitarbeiter",
+    # German contract grades (strong signal of postdoc-level academic role)
+    "tv-l e13", "tv-l e14", "tv-l 13", "tv-l 14", "tvöd e13", "tvöd e14",
+    "wisszeitvg",
 ]
+TOPIC_CORE = [
+    "employability", "graduate employability", "labour market", "labor market",
+    "workforce development", "organisational development", "organizational development",
+    "arbeitsmarkt", "arbeitsmarktforschung", "beschäftigungsfähigkeit",
+    "organisationsentwicklung",
+]
+TOPIC_ADJACENT = [
+    "work psychology", "workplace learning", "human resource development",
+    "capability development", "evaluation research", "programme evaluation",
+    "program evaluation", "psychometrics", "educational assessment",
+    "measurement and assessment", "mixed methods", "higher education research",
+    "graduate outcomes", "education policy", "education-to-work",
+    "assessment fairness", "labour market transitions", "skills development",
+    "employment policy", "workforce capability", "organizational behavior",
+    "organisational behaviour", "hochschulforschung", "bildungsforschung",
+    "bildungspolitik", "evaluation", "programmevaluation", "kompetenzentwicklung",
+    "personalentwicklung", "organisationspsychologie", "arbeitspsychologie",
+    "berufliche bildung", "weiterbildung", "übergang studium beruf",
+    "übergang hochschule beruf",
+]
+STRONG_VACANCY_SIGNALS = [
+    "deadline", "closing date", "hiring", "vacancy", "opening",
+    "position available", "join our team", "applications are open",
+    "applications invited", "bewerbung", "bewerbungsfrist",
+    "stellenausschreibung", "stellenangebot", "zu besetzen", "wir suchen",
+]
+WEAK_VACANCY_SIGNALS = ["apply", "application", "applications"]
+VACANCY_SIGNALS = STRONG_VACANCY_SIGNALS + WEAK_VACANCY_SIGNALS
+
+# Soft penalty only (score reduction)
+NEGATIVE_DISCIPLINES = [
+    "genomics", "astrophysics", "robotics",
+    "mechanical engineering", "civil engineering", "electrical engineering",
+    "biomedical", "oncology", "pharmacology", "agriculture", "veterinary",
+]
+
+# Hard exclusion — immediate drop regardless of topic match
+HARD_EXCLUSIONS = [
+    "computational chemistry", "chemistry", "chemical engineering",
+    "tooth enamel", "dentistry", "dental", "molecular biology",
+    "nanotechnology", "materials science", "neuroscience",
+    "physics", "biology", "genetics", "clinical trial", "medicine",
+]
+
+# Foreign location blacklist — instantly drops non-German positions
+NON_GERMAN_LOCATIONS = [
+    re.compile(p, re.I) for p in [
+        r"\bindia\b", r"\bnagaland\b", r"\bsingapore\b", r"\bmalaysia\b",
+        r"\bchina\b", r"\bjapan\b", r"\bbrazil\b", r"\bsouth africa\b",
+        r"\bpakistan\b", r"\bbangladesh\b", r"\bnigeria\b", r"\bkenya\b",
+        r"\bindonesia\b", r"\bphilippines\b", r"\bvietnam\b",
+        r"\buk\b", r"\bunited kingdom\b", r"\blondon\b", r"\bleeds\b",
+        r"\bmanchester\b", r"\bcambridge\b", r"\boxford\b", r"\bedinburgh\b",
+        r"\bcanada\b", r"\btoronto\b", r"\baustralia\b", r"\bsydney\b",
+        r"\bmelbourne\b", r"\bnew zealand\b", r"\busa\b", r"\bunited states\b",
+        r"\bfrance\b", r"\bparis\b", r"\bnetherlands\b", r"\bamsterdam\b",
+        r"\bswitzerland\b", r"\bzurich\b", r"\bbelgium\b", r"\bbrussels\b",
+        r"\bsweden\b", r"\bdenmark\b", r"\bnorway\b", r"\bfinland\b",
+    ]
+]
+
+# German geographic whitelist — at least one must be present
+GERMAN_SIGNALS = [
+    ".de/", "germany", "deutschland",
+    "berlin", "münchen", "munich", "hamburg", "köln", "cologne",
+    "frankfurt", "stuttgart", "leipzig", "heidelberg", "mannheim",
+    "tübingen", "düsseldorf", "bonn", "dresden", "hannover",
+    "nürnberg", "kiel", "potsdam", "bielefeld", "münster", "göttingen",
+    "tv-l", "tvöd", "wisszeitvg", "universität", "hochschule",
+    "dfg", "daad", "mpg.de", "helmholtz", "leibniz", "fraunhofer",
+]
+
+
 TOPIC_CORE = [
     "employability", "graduate employability", "labour market", "labor market",
     "workforce development", "organisational development", "organizational development",
@@ -81,18 +161,8 @@ HARD_EXCLUSIONS = [
     "physics", "biology", "genetics", "clinical trial", "medicine",
 ]
 
-# Geographic exclusion — drop listings explicitly located outside target regions
-NON_TARGET_REGIONS = [
-    re.compile(p, re.I) for p in [
-        r"\bindia\b", r"\bnagaland\b", r"\bsingapore\b", r"\bmalaysia\b",
-        r"\bchina\b", r"\bjapan\b", r"\bbrazil\b", r"\bsouth africa\b",
-        r"\bpakistan\b", r"\bbangladesh\b", r"\bnigeria\b", r"\bkenya\b",
-        r"\bindonesia\b", r"\bphilippines\b", r"\bvietnam\b",
-    ]
-]
 
-SOCIAL_SOURCES = {"Reddit", "Facebook", "Twitter/X", "ResearchGate"}
-SOCIAL_SOURCE_PENALTY = 1
+
 
 TRUSTED_JOB_DOMAINS = [
     "euraxess.ec.europa.eu", "academicpositions.com", "jobs.ac.uk",
@@ -302,6 +372,23 @@ def is_trusted_domain(url: str) -> bool:
     return any(d in url for d in TRUSTED_JOB_DOMAINS)
 
 
+def is_strictly_germany(link: str, text: str) -> bool:
+    """Two-stage Germany gate:
+    1. Reject if an explicit foreign location is present AND no .de domain/German city overrides it.
+    2. Require at least one affirmative German signal in link or text.
+    """
+    combined = f"{link} {text}".lower()
+
+    # Stage 1 — foreign location blacklist
+    if any(pat.search(combined) for pat in NON_GERMAN_LOCATIONS):
+        # Override allowed only if the link is .de OR text explicitly says Germany/Deutschland
+        if not (".de/" in link.lower() or "germany" in combined or "deutschland" in combined):
+            return False
+
+    # Stage 2 — require at least one German signal
+    return any(sig in combined for sig in GERMAN_SIGNALS)
+
+
 def _contains_exclude(text: str, terms: list) -> bool:
     low = text.lower()
     for term in terms:
@@ -358,8 +445,6 @@ def passes_relevance_gate(
     if not has_core and not has_adjacent:
         return False
     has_strong = any(t in lower for t in STRONG_VACANCY_SIGNALS)
-    if source in SOCIAL_SOURCES:
-        return has_strong
     return trusted or has_strong or any(t in lower for t in WEAK_VACANCY_SIGNALS)
 
 
@@ -398,8 +483,8 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if any(term in lower for term in HARD_EXCLUSIONS):
             continue
 
-        # ── Guard 3: Non-target geographic regions → drop ──────────────────
-        if any(pat.search(text) for pat in NON_TARGET_REGIONS):
+        # ── Guard 3: Germany-only gate ─────────────────────────────────────
+        if not is_strictly_germany(clean_link, text):
             continue
 
         has_position = any(t in lower for t in POSITION_TERMS)
@@ -433,9 +518,8 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         inst_bonus, inst_tier = compute_institution_bonus(text, clean_link)
         neg_hits = [d for d in NEGATIVE_DISCIPLINES if d in lower]
         neg_penalty = (-1 if has_core else -3) if neg_hits else 0
-        social_penalty = SOCIAL_SOURCE_PENALTY if item.source in SOCIAL_SOURCES else 0
 
-        score = max(1, min(10, base + inst_bonus + neg_penalty - social_penalty))
+        score = max(1, min(10, base + inst_bonus + neg_penalty))
 
         german = detect_german(text)
         if german in ("c1", "c2"):
