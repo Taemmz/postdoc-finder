@@ -481,8 +481,9 @@ def compute_institution_bonus(text: str, link: str) -> Tuple[int, int]:
 
 def compute_region(source: str, link: str, text: str, institution_tier: int) -> str:
     """Classify a listing into germany / europe / other.
-    Uses the full GERMAN_SIGNALS list (cities, pay grades, institutions)
-    rather than a short inline subset.
+    Signal check runs FIRST — a German city/paygrade/institution in the URL or
+    text always wins, regardless of institution tier.
+    Tier meanings from compute_institution_bonus: 1=top, 2=high, 3=lower, 4=unknown.
     """
     combined = f"{text} {link}".lower()
     global_board_sources = {
@@ -490,12 +491,12 @@ def compute_region(source: str, link: str, text: str, institution_tier: int) -> 
     }
     if source == "North America/ANZ Boards":
         return "other"
-    if institution_tier == 3:
-        return "other"
-    # Use the comprehensive GERMAN_SIGNALS list (includes all German cities,
-    # pay grades, funding bodies, and institutional markers)
+
+    # German signals win unconditionally — city, paygrade, or institution in URL/text
     if any(s in combined for s in GERMAN_SIGNALS):
         return "germany"
+
+    # No German signal found — fall back to tier/source heuristics
     if institution_tier in (1, 2):
         return "europe"
     if source in global_board_sources:
