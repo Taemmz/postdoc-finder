@@ -96,6 +96,9 @@ HARD_EXCLUSIONS = [
     "tooth enamel", "dentistry", "dental", "molecular biology",
     "nanotechnology", "materials science", "neuroscience",
     "physics", "biology", "genetics", "clinical trial", "medicine",
+    # Veterinary / animal science — catches 'One Health, Tierhygiene' etc.
+    "veterinary", "tierhygiene", "tierseuche", "one health", "tierschutz",
+    "animal health", "livestock",
 ]
 
 # Foreign location blacklist — instantly drops non-German positions
@@ -569,6 +572,11 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
 
         # ── Guard 1c: academics.de — keep /jobs/ listings, drop /stellenanzeigen/ browse
         if "academics.de" in clean_link and "/stellenanzeigen/" in clean_link:
+            continue
+
+        # ── Guard 1d: personal profile / team pages — not job listings ──────────
+        _PROFILE_PATTERNS = ["/team/", "/mitarbeiter/", "/staff/", "/person/", "/people/", "~b"]
+        if any(p in clean_link.lower() for p in _PROFILE_PATTERNS) and "/job" not in clean_link.lower():
             continue
 
         title = _safe_str(item.title)
