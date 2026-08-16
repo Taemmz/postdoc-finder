@@ -89,7 +89,23 @@ GERMAN_ACADEMIC_QUERIES = [
     # ── Broad German sweeps ───────────────────────────────────────────────────
     ('"wissenschaftlicher Mitarbeiter" (employability OR arbeitsmarkt OR bildungsforschung OR evaluation) site:.de', "de", "de"),
     ('"TV-L E13" OR "TV-L E14" (postdoc OR "wissenschaftliche Mitarbeiter") (bildung OR arbeitsmarkt OR evaluation) site:.de', "de", "de"),
+
+    # ── Gender-inclusive title variants & city-specific portals ───────────────
+    # German job boards use (m/w/d), (m/f/d/x), Wissenschaftliche*r suffixes
+    ('site:psychjob.eu ("post-doktorandin" OR "postdoktorandin" OR "organisationale" OR "organisationspsychologie")', "de", "de"),
+    ('site:evifa.de (postdoc OR "wissenschaftliche Mitarbeiter" OR "postdoktorand")', "de", "de"),
+    ('site:academics.de/jobs ("wissenschaftliche Mitarbeiter" OR postdoc) (halle OR freiburg OR münchen OR berlin OR köln)', "de", "de"),
+    ('site:academics.de/jobs ("wissenschaftliche Mitarbeiter" OR postdoc) (hamburg OR frankfurt OR bonn OR tübingen OR mannheim)', "de", "de"),
+    ('site:xing.com/jobs ("wissenschaftliche Mitarbeiter" OR postdoc) "TV-L"', "de", "de"),
+    # ScholarshipDB Germany aggregator (indexes Nature Careers & others scoped to Germany)
+    ('site:scholarshipdb.net/jobs-in-Germany ("research associate" OR postdoc)', "de", "en"),
+    # universitypositions.eu is already in queries above; add topic-scoped variant
+    ('site:universitypositions.eu Germany (postdoc OR "wissenschaftliche Mitarbeiter") (labour OR arbeitsmarkt OR evaluation OR employability)', "de", "en"),
+    # Freiburg, Halle, Regensburg — cities not covered by direct university scrapers
+    ('"Freiburg" (postdoc OR "wissenschaftliche Mitarbeiter") (arbeitsmarkt OR bildung OR evaluation) site:.de', "de", "de"),
+    ('"Halle" OR "Halle-Wittenberg" (postdoc OR "wissenschaftliche Mitarbeiter") site:.de', "de", "de"),
 ]
+
 
 GOOGLE_NEWS_QUERIES = [
     '(postdoc OR "wissenschaftlicher Mitarbeiter") Germany (employability OR "labour market" OR arbeitsmarkt OR evaluation)',

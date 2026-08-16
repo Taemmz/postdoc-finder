@@ -108,13 +108,51 @@ NON_GERMAN_LOCATIONS = [
 # German geographic whitelist — at least one must be present
 GERMAN_SIGNALS = [
     ".de/", "germany", "deutschland",
+    # Major cities already in scrapers
     "berlin", "münchen", "munich", "hamburg", "köln", "cologne",
     "frankfurt", "stuttgart", "leipzig", "heidelberg", "mannheim",
     "tübingen", "düsseldorf", "bonn", "dresden", "hannover",
     "nürnberg", "kiel", "potsdam", "bielefeld", "münster", "göttingen",
-    "tv-l", "tvöd", "wisszeitvg", "universität", "hochschule",
+    # Additional German cities appearing in listings (e.g. Halle, Freiburg)
+    "freiburg", "halle", "halle-wittenberg", "regensburg", "würzburg",
+    "jena", "marburg", "darmstadt", "erlangen", "augsburg", "konstanz",
+    "rostock", "mainz", "kassel", "trier", "paderborn",
+    # Pay grades and legal frameworks → unambiguous Germany signals
+    "tv-l", "tvöd", "e13", "e14", "wisszeitvg",
+    # Academic language / institutional markers
+    "universität", "hochschule", "wissenschaft",
+    # Funding bodies and research orgs
     "dfg", "daad", "mpg.de", "helmholtz", "leibniz", "fraunhofer",
+    "max-planck-institut", "mlu", "mpi",
 ]
+
+# Regex to detect gender-inclusive German title variants found in URL slugs and
+# mixed-format listings e.g. "Wissenschaftliche-r-Mitarbeiterin-Mitarbeiter-m-w-d",
+# "Post-Doktorandin (m/f/d/x)", "Postdoc-Position-m-f-d-x"
+GERMAN_POSITION_REGEX = re.compile(
+    r"("
+    # English postdoc: postdoc, post-doc, post-doc-torand (slug edge-cases)
+    r"post[-\s]?doc(?:torand(?:in)?)?|"
+    # German: postdoktorand(in), post-doktorand(in) — 'doktorand' ≠ 'doctorand'
+    r"post[-\s]?doktorand(?:in)?|"
+    # Wissenschaftliche(r/n) Mitarbeiter(in) — handles slug 'wissenschaftliche-r-mitarbeiterin'
+    r"wissenschaftliche[-\s]?[rn]?[-\s]+mitarbeiter(?:in)?|"
+    # Akademischer Rat / Rätin
+    r"akademische[-\s]?[rn]?[-\s]+rat|\u00e4tin|"
+    # Research roles (with optional hyphen between words)
+    r"research[-\s]+(?:associate|fellow|assistant)|"
+    # German-only academic terms
+    r"nachwuchswissenschaftler(?:in)?|qualifikationsstelle|"
+    # Pay grades — unambiguous postdoc signal in Germany (tvoed = umlaut-stripped tvöd)
+    r"tv[-\s]?l[-\s]?e?1[34]|tv(?:\u00f6d|oed)[-\s]?e?1[34]"
+    r")"
+    # Optional gender suffix: (m/w/d), (m/f/d/x), -m-w-d etc.
+    r"(?:[-\s]*\(?[mwdxf/]+\)?)?",
+    re.IGNORECASE,
+)
+
+
+
 
 
 TOPIC_CORE = [
@@ -186,6 +224,8 @@ TRUSTED_JOB_DOMAINS = [
     "linkedin.com/jobs", "xing.com/jobs",
     # RSS aggregators
     "academickeys.com",
+    # Germany-scoped aggregators
+    "scholarshipdb.net",
     # Direct university scraper source names (matched against item.source)
     "LMU München Direct", "HU Berlin Direct", "TU Berlin Direct",
     "Uni Leipzig Direct", "Uni Heidelberg Direct", "Uni Köln Direct",
@@ -506,7 +546,12 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if not is_strictly_germany(clean_link, text):
             continue
 
-        has_position = any(t in lower for t in POSITION_TERMS)
+        # Match position terms: list check covers normal text; regex catches
+        # hyphenated slug variants e.g. "wissenschaftliche-r-mitarbeiterin-m-w-d"
+        has_position = (
+            any(t in lower for t in POSITION_TERMS)
+            or bool(GERMAN_POSITION_REGEX.search(lower))
+        )
         has_core = any(t in lower for t in TOPIC_CORE)
         has_adjacent = any(t in lower for t in TOPIC_ADJACENT)
         trusted = is_trusted_domain(url, item.source or "")
