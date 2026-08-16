@@ -222,20 +222,74 @@ async def fetch_all_rss(client):
 
 
 async def fetch_ssr_academics(client):
+    """Academics.de direct HTML — postdoc + professorship queries with dedup."""
+    queries = [
+        "Postdoc", "Wissenschaftliche+Mitarbeiter", "Postdoktorand",
+        "wissenschaftlicher+Mitarbeiter",
+        # Professorship terms (new)
+        "Professur", "Juniorprofessur", "Wirtschaftspsychologie", "Bildungsforschung",
+    ]
     results = []
-    for q in ["Postdoc", "Wissenschaftliche+Mitarbeiter", "Postdoktorand", "wissenschaftlicher+Mitarbeiter"]:
+    seen_links: set = set()
+    for q in queries:
         try:
-            res = await client.get(f"https://www.academics.de/stellenanzeigen?q={q}", headers=HEADERS, timeout=20.0)
+            res = await client.get(
+                f"https://www.academics.de/stellenanzeigen?q={q}",
+                headers=HEADERS, timeout=20.0
+            )
             soup = BeautifulSoup(res.text, "html.parser")
-            for a in soup.select("a.job-link, h2 a, article a"):
+            for a in soup.select("a.job-link, h2 a, article a[href*='/jobs/']"):
                 title = a.get_text(strip=True)
                 href = a.get("href", "")
-                if title and href:
-                    full = href if href.startswith("http") else f"https://www.academics.de{href}"
-                    results.append(RawVacancy(source="Academics.de SSR", title=title, link=full, query_type="ssr_html"))
+                if not href or not title or len(title) < 10:
+                    continue
+                # Drop browse/category pages — only individual job listings
+                if "/stellenanzeigen/branche-" in href or "page=" in href:
+                    continue
+                full = href if href.startswith("http") else f"https://www.academics.de{href}"
+                if full in seen_links:
+                    continue
+                seen_links.add(full)
+                parent = a.find_parent("article") or a.parent
+                snippet = parent.get_text(" ", strip=True)[:400] if parent else title
+                results.append(RawVacancy(
+                    source="Academics.de SSR", title=title, link=full,
+                    snippet=snippet, query_type="ssr_html"
+                ))
         except Exception:
             continue
     return results
+
+
+async def fetch_bund_rss(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """service.bund.de native XML RSS feed.
+
+    Legally mandated portal for ALL German federal/state public sector vacancies,
+    including W2/W3 professorships at state universities (TV-L contracts).
+    Zero API cost — pure RSS/XML, no scraping needed.
+    """
+    url = "https://www.service.bund.de/Content/Globals/Functions/RSSFeed/RSSGenerator_Stellen.xml"
+    try:
+        import feedparser
+        res = await client.get(url, headers=HEADERS, timeout=20.0)
+        feed = feedparser.parse(res.text)
+        results = []
+        for entry in feed.entries:
+            link  = entry.get("link", "")
+            title = entry.get("title", "")
+            snippet = entry.get("description", "") or entry.get("summary", "")
+            if link and title:
+                results.append(RawVacancy(
+                    source="RSS Bund.de",
+                    title=title,
+                    link=link,
+                    snippet=snippet[:400],
+                    query_type="rss_feed",
+                ))
+        return results
+    except Exception as e:
+        print(f"  [bund_rss] Error: {e}")
+        return []
 
 
 async def fetch_ssr_euraxess(client):
@@ -324,8 +378,9 @@ async def scrape_all_sources() -> List[RawVacancy]:
             fetch_google_news(client),        # 2 SerpAPI news queries, gl=de
             fetch_exa(client),                # 4 Exa semantic queries (Germany-scoped)
             fetch_all_rss(client),            # 4 RSS feeds
+            fetch_bund_rss(client),           # service.bund.de XML — federal/state vacancies
             # ── SSR aggregators ────────────────────────────────────────────────
-            fetch_ssr_academics(client),      # academics.de direct HTML
+            fetch_ssr_academics(client),      # academics.de (postdoc + professorship queries)
             fetch_ssr_euraxess(client),       # EURAXESS Germany-filtered
             fetch_ssr_psychjob(client),       # psychjob.eu (DGPs portal) — category list
             fetch_ssr_hsozkult(client),       # H-Soz-Kult (social science & humanities)

@@ -579,6 +579,38 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if any(p in clean_link.lower() for p in _PROFILE_PATTERNS) and "/job" not in clean_link.lower():
             continue
 
+        # ── Guard 1e: XING city/discipline search pages — not individual jobs ──
+        # Valid XING job: /jobs/title-123456789 (numeric ID at end)
+        # Noise:         /jobs/postdoc-jobs-in-berlin  (city/discipline search)
+        import re as _re
+        if "xing.com/jobs/" in clean_link and _re.search(r"-jobs-in-", clean_link, _re.I):
+            continue
+
+        # ── Guard 1f: Non-job pages from university domains ──────────────────
+        # University websites contain "Professur" in menus, news, press releases.
+        # Only keep pages whose URL path signals an actual vacancy.
+        _JOB_PATH_SIGNALS = [
+            "/job", "/stelle", "/career", "/vacancy", "/ausschreibung",
+            "/posting", "/jobposting", "/stellen", "/wissenschaftliche",
+            "/offene-stellen", "/open-positions", "/recruitment",
+        ]
+        _TRUSTED_PORTALS = [
+            "academics.de", "psychjob.eu", "hsozkult.de", "stellenwerk",
+            "akademische-jobs.de", "hochschul-job.de", "euraxess",
+            "scholarshipdb.net", "universitypositions.eu", "inomics.com",
+            "b-ite.careers", "dvinci-hr.com", "softgarden.io",
+            "interamt.de", "service.bund.de", "evifa.de", "psychjob",
+        ]
+        _NON_JOB_SUFFIXES = [".pdf", ".php", "/", "/news", "/presse", "/aktuell"]
+        is_trusted_portal = any(p in clean_link for p in _TRUSTED_PORTALS)
+        has_job_path = any(s in clean_link.lower() for s in _JOB_PATH_SIGNALS)
+        ends_with_noise = any(clean_link.lower().rstrip("/").endswith(s) for s in [".pdf", "pressemitteilungen", "promotion", "forschen", "startseite"])
+        if not is_trusted_portal and not has_job_path:
+            continue
+        if ends_with_noise:
+            continue
+
+
         title = _safe_str(item.title)
         snippet = _safe_str(item.snippet)
 
