@@ -117,6 +117,8 @@ GERMAN_SIGNALS = [
     "freiburg", "halle", "halle-wittenberg", "regensburg", "würzburg",
     "jena", "marburg", "darmstadt", "erlangen", "augsburg", "konstanz",
     "rostock", "mainz", "kassel", "trier", "paderborn",
+    "bamberg", "witten", "herdecke", "bochum", "giessen", "siegen",
+    "braunschweig", "koblenz", "magdeburg", "halle saale",
     # Pay grades and legal frameworks → unambiguous Germany signals
     "tv-l", "tvöd", "e13", "e14", "wisszeitvg",
     # Academic language / institutional markers
@@ -478,8 +480,11 @@ def compute_institution_bonus(text: str, link: str) -> Tuple[int, int]:
 
 
 def compute_region(source: str, link: str, text: str, institution_tier: int) -> str:
+    """Classify a listing into germany / europe / other.
+    Uses the full GERMAN_SIGNALS list (cities, pay grades, institutions)
+    rather than a short inline subset.
+    """
     combined = f"{text} {link}".lower()
-    german_signals = [".de", "germany", "deutschland", "tv-l", "tvöd"]
     global_board_sources = {
         "RSS HigherEdJobs", "RSS AcademicKeys SocSci", "RSS AcademicKeys Education"
     }
@@ -487,7 +492,9 @@ def compute_region(source: str, link: str, text: str, institution_tier: int) -> 
         return "other"
     if institution_tier == 3:
         return "other"
-    if any(s in combined for s in german_signals):
+    # Use the comprehensive GERMAN_SIGNALS list (includes all German cities,
+    # pay grades, funding bodies, and institutional markers)
+    if any(s in combined for s in GERMAN_SIGNALS):
         return "germany"
     if institution_tier in (1, 2):
         return "europe"
@@ -528,6 +535,14 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
 
         # ── Guard 1: LinkedIn posts/shares are not job listings ──────────────
         if "linkedin.com" in clean_link and "/jobs/view/" not in clean_link:
+            continue
+
+        # ── Guard 1b: psychjob.eu — keep /job/ listings, drop /jobs/ category pages ─
+        if "psychjob.eu" in clean_link and "/job/" not in clean_link:
+            continue
+
+        # ── Guard 1c: academics.de — keep /jobs/ listings, drop /stellenanzeigen/ browse
+        if "academics.de" in clean_link and "/stellenanzeigen/" in clean_link:
             continue
 
         title = _safe_str(item.title)
