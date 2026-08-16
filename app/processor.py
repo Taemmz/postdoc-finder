@@ -203,12 +203,12 @@ def extract_deadline(text: str) -> Optional[str]:
 
 
 def parse_deadline_iso(text: Optional[str]) -> Optional[str]:
-    """Parse a keyword-anchored deadline string to ISO format (YYYY-MM-DD).
+    """Parse the full snippet text for a keyword-anchored deadline date.
 
-    Returns None if:
-    - text is empty / no anchor match
-    - date components are unrecognisable
-    - parsed date is already in the past (stale deadline)
+    Returns the ISO date string (YYYY-MM-DD) if an anchored date is found,
+    regardless of whether it is past or future.
+    Returns None if no keyword anchor is present — meaning the position is
+    rolling/open and must NOT be dropped by is_deadline_expired.
     """
     if not text:
         return None
@@ -221,7 +221,6 @@ def parse_deadline_iso(text: Optional[str]) -> Optional[str]:
     p1 = part1.lower()
     p2 = part2.lower()
 
-    # Determine which token is the month name and which is the day number
     if p1 in MONTHS and part2.isdigit():
         month, day = MONTHS[p1], int(part2)
     elif p2 in MONTHS and part1.isdigit():
@@ -231,25 +230,23 @@ def parse_deadline_iso(text: Optional[str]) -> Optional[str]:
 
     try:
         from datetime import date
-        deadline_date = date(int(year_str), month, day)
-        today = date.today()
-        # Discard the date if it is already in the past
-        return deadline_date.isoformat() if deadline_date >= today else None
+        # Return the real date — do NOT suppress past dates here.
+        # Expiration filtering is handled exclusively by is_deadline_expired().
+        return date(int(year_str), month, day).isoformat()
     except ValueError:
         return None
 
 
 def is_deadline_expired(deadline_iso: Optional[str]) -> bool:
-    """Return True only when a confirmed keyword-anchored deadline is in the past.
+    """Sole decision-maker for expiration.
 
-    Three safe outcomes:
-      - deadline_iso is None  → we found NO anchored deadline → keep the listing
-      - deadline_iso is a future/today date → keep the listing
-      - deadline_iso is a past date → drop the listing
+    Guaranteed outcomes:
+      None          → no keyword-anchored deadline found → rolling/open → False (keep)
+      '2026-10-15'  → future deadline → False (keep)
+      '2025-09-30'  → confirmed past deadline → True  (drop)
     """
     if not deadline_iso:
-        return False
-    # ISO strings compare lexicographically correctly (YYYY-MM-DD)
+        return False   # No anchor found — cannot confirm expiry — keep listing
     from datetime import date
     return deadline_iso < date.today().isoformat()
 
@@ -405,11 +402,13 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
             elif "euraxess" in (item.source or "").lower():
                 full_link = f"https://euraxess.ec.europa.eu{clean_link}"
 
-        deadline_text = extract_deadline(text)
-        deadline_iso = parse_deadline_iso(deadline_text)
+        # parse_deadline_iso scans the full text for a keyword-anchored date
+        # and returns the real ISO string (past OR future) or None (no anchor).
+        deadline_iso = parse_deadline_iso(text)
 
-        # Skip listings where we found a deadline and it has clearly passed
-        if deadline_text and is_deadline_expired(deadline_iso):
+        # Drop only when an anchored deadline is confirmed past.
+        # None → rolling/open position → always kept.
+        if is_deadline_expired(deadline_iso):
             continue
 
         region = compute_region(item.source, full_link, text, inst_tier)
@@ -435,7 +434,7 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
                     "source": item.source,
                     "query_type": item.query_type,
                     "title_raw": title,
-                    "deadline_text": deadline_text,
+                    "deadline_text": deadline_iso,
                     "matched_terms": matched_terms,
                     "region_tier": region,
                     "live_verified": True,

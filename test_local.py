@@ -132,7 +132,7 @@ def test_process():
             source="Academic Boards",
             title="Postdoctoral Researcher in Graduate Employability — University of Leipzig",
             link="https://uni-leipzig.de/jobs/postdoc-employability",
-            snippet="We are hiring a postdoctoral researcher to join our labour market transitions project. Applications are open. Deadline: 30 September 2025.",
+            snippet="We are hiring a postdoctoral researcher to join our labour market transitions project. Applications are open. Deadline: 30 September 2027.",
         ),
         RawVacancy(
             source="Reddit",
@@ -144,7 +144,19 @@ def test_process():
             source="RSS HigherEdJobs",
             title="Research Fellow in Workforce Development — Humboldt University Berlin",
             link="https://hu-berlin.de/jobs/research-fellow-workforce",
-            snippet="Open position for research fellow. Closing date: 15 October 2025. No German required.",
+            snippet="Open position for research fellow. Closing date: 15 October 2027. No German required.",
+        ),
+        RawVacancy(
+            source="RSS HigherEdJobs",
+            title="Postdoctoral Research Associate in Psychometrics — University of Cologne",
+            link="https://uni-koeln.de/jobs/postdoc-psychometrics",
+            snippet="Rolling application — no fixed deadline. Research associate position in educational assessment and mixed methods. Apply now.",
+        ),
+        RawVacancy(
+            source="Academic Boards",
+            title="Postdoc in Labour Market Research — DZHW",
+            link="https://dzhw.eu/jobs/postdoc-labour-market",
+            snippet="In the 2025 call, 4 fellows were accepted. PhD completed after January 2024 required. New round now open for workforce development research.",
         ),
     ]
 
