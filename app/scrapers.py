@@ -222,39 +222,55 @@ async def fetch_all_rss(client):
 
 
 async def fetch_ssr_academics(client):
-    """Academics.de direct HTML — postdoc + professorship queries with dedup."""
+    """Academics.de direct HTML — postdoc + professorship queries.
+
+    Uses article/div.job-item/[data-qa='job-item'] card containers matching
+    academics.de's actual DOM structure rather than generic anchor scans.
+    """
     queries = [
         "Postdoc", "Wissenschaftliche+Mitarbeiter", "Postdoktorand",
         "wissenschaftlicher+Mitarbeiter",
-        # Professorship terms (new)
-        "Professur", "Juniorprofessur", "Wirtschaftspsychologie", "Bildungsforschung",
+        # Professorship & discipline terms
+        "Professur", "Juniorprofessur", "W2",
+        "Wirtschaftspsychologie", "Arbeitsmarkt", "Bildungsforschung",
     ]
     results = []
     seen_links: set = set()
+    # Card-level selectors matching academics.de job listing DOM
+    CARD_SEL = "article, div.job-item, [data-qa='job-item'], div[class*='job-card']"
     for q in queries:
         try:
             res = await client.get(
                 f"https://www.academics.de/stellenanzeigen?q={q}",
-                headers=HEADERS, timeout=20.0
+                headers=HEADERS, timeout=20.0,
             )
             soup = BeautifulSoup(res.text, "html.parser")
-            for a in soup.select("a.job-link, h2 a, article a[href*='/jobs/']"):
+            cards = soup.select(CARD_SEL)
+            # Fallback: scan all job-path anchors if no cards found
+            anchors = (
+                [c.select_one("a[href*='/jobs/']") for c in cards]
+                if cards
+                else soup.select("a[href*='/jobs/']")
+            )
+            for a in anchors:
+                if not a:
+                    continue
                 title = a.get_text(strip=True)
-                href = a.get("href", "")
+                href  = a.get("href", "")
                 if not href or not title or len(title) < 10:
                     continue
-                # Drop browse/category pages — only individual job listings
-                if "/stellenanzeigen/branche-" in href or "page=" in href:
+                if "/stellenanzeigen/" in href or "page=" in href:
                     continue
                 full = href if href.startswith("http") else f"https://www.academics.de{href}"
                 if full in seen_links:
                     continue
                 seen_links.add(full)
-                parent = a.find_parent("article") or a.parent
-                snippet = parent.get_text(" ", strip=True)[:400] if parent else title
+                # Rich snippet from the card container
+                card = a.find_parent("article") or a.find_parent("div") or a.parent
+                snippet = card.get_text(" ", strip=True)[:400] if card else title
                 results.append(RawVacancy(
                     source="Academics.de SSR", title=title, link=full,
-                    snippet=snippet, query_type="ssr_html"
+                    snippet=snippet, query_type="ssr_html",
                 ))
         except Exception:
             continue
@@ -538,21 +554,24 @@ async def fetch_direct_uni_koeln(client: httpx.AsyncClient) -> List[RawVacancy]:
 
 
 async def fetch_psychjob_direct(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """Directly scrape individual job listings from PsychJob category pages.
+    """Scrape individual job listings from PsychJob category pages.
 
-    Covers both postdoc/Wiss.Mitarbeiter AND Professur/Juniorprofessur categories.
-    Uses a[href*='/job/'] selector — only detail pages pass, never category lists.
-    This bypasses the Serper index entirely, capturing listings the day they go live.
+    psychjob.eu runs on Drupal — job rows sit inside .views-row containers.
+    Employer/location metadata lives in .views-field-field-employer or .field-content.
+    Covers postdoc, Wiss.Mitarbeiter, Professur, and Juniorprofessur categories.
+    Fallback to direct a[href*='/job/'] scan if Drupal layout changes.
     """
     categories = [
-        # Postdoc & researcher categories
+        # German postdoc & researcher categories
         "https://www.psychjob.eu/de/jobs/arbeits-betriebs-und-organisationspsychologie",
         "https://www.psychjob.eu/de/jobs/lehre-forschung",
         "https://www.psychjob.eu/de/jobs/personalpsychologie",
-        # Professorship & junior faculty categories
+        # Professorship & junior faculty
         "https://www.psychjob.eu/de/jobs/professur",
         "https://www.psychjob.eu/de/jobs/juniorprofessur",
         "https://www.psychjob.eu/de/jobs/wirtschaftspsychologie",
+        # English-language category (catches bilingual listings)
+        "https://www.psychjob.eu/en/jobs/work-organisational-psychology",
     ]
     seen: set = set()
     results: List[RawVacancy] = []
@@ -560,25 +579,53 @@ async def fetch_psychjob_direct(client: httpx.AsyncClient) -> List[RawVacancy]:
         try:
             res = await client.get(url, headers=HEADERS, timeout=15.0)
             soup = BeautifulSoup(res.text, "html.parser")
-            # Only select links that point to individual job detail pages
-            for a in soup.select("a[href*='/job/']"):
-                href = a.get("href", "")
-                full = href if href.startswith("http") else f"https://www.psychjob.eu{href}"
-                if full in seen:
-                    continue
-                seen.add(full)
-                title = a.get_text(strip=True)
-                # Also try parent container for richer snippet
-                parent = a.find_parent(["li", "article", "div"])
-                snippet = parent.get_text(" ", strip=True) if parent else title
-                if title and len(title) > 10:
-                    results.append(RawVacancy(
-                        source="PsychJob Direct",
-                        title=title,
-                        link=full,
-                        snippet=snippet[:400],
-                        query_type="direct_uni_ssr",
-                    ))
+
+            # Primary: Drupal .views-row containers
+            rows = soup.select(".views-row")
+            if rows:
+                for row in rows:
+                    link_tag = row.select_one("a[href*='/job/']")
+                    if not link_tag:
+                        continue
+                    href  = link_tag.get("href", "")
+                    full  = href if href.startswith("http") else f"https://www.psychjob.eu{href}"
+                    if full in seen:
+                        continue
+                    seen.add(full)
+                    title = link_tag.get_text(strip=True)
+                    # Employer/location from Drupal field containers
+                    meta  = row.select_one(
+                        ".views-field-field-employer, .views-field-field-location, .field-content, p"
+                    )
+                    meta_text = meta.get_text(" ", strip=True) if meta else ""
+                    snippet = f"{title} — {meta_text}" if meta_text else title
+                    if title and len(title) > 10:
+                        results.append(RawVacancy(
+                            source="PsychJob Direct",
+                            title=title,
+                            link=full,
+                            snippet=snippet[:400],
+                            query_type="direct_uni_ssr",
+                        ))
+            else:
+                # Fallback: flat anchor scan (handles layout changes)
+                for a in soup.select("a[href*='/job/']"):
+                    href = a.get("href", "")
+                    full = href if href.startswith("http") else f"https://www.psychjob.eu{href}"
+                    if full in seen:
+                        continue
+                    seen.add(full)
+                    title = a.get_text(strip=True)
+                    parent = a.find_parent(["li", "article", "div"])
+                    snippet = parent.get_text(" ", strip=True) if parent else title
+                    if title and len(title) > 10:
+                        results.append(RawVacancy(
+                            source="PsychJob Direct",
+                            title=title,
+                            link=full,
+                            snippet=snippet[:400],
+                            query_type="direct_uni_ssr",
+                        ))
         except Exception:
             continue
     return results
