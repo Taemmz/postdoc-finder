@@ -104,7 +104,18 @@ GERMAN_ACADEMIC_QUERIES = [
     # Freiburg, Halle, Regensburg — cities not covered by direct university scrapers
     ('"Freiburg" (postdoc OR "wissenschaftliche Mitarbeiter") (arbeitsmarkt OR bildung OR evaluation) site:.de', "de", "de"),
     ('"Halle" OR "Halle-Wittenberg" (postdoc OR "wissenschaftliche Mitarbeiter") site:.de', "de", "de"),
+
+    # ── German university ATS (white-label recruiting platforms) ──────────────
+    # Many German unis outsource their careers pages to these ATS providers.
+    # The university name is encoded in the subdomain: uni-leipzig.b-ite.careers
+    ('site:b-ite.careers (postdoc OR "wissenschaftliche Mitarbeiter" OR "research associate")', "de", "de"),
+    ('site:dvinci-hr.com (postdoc OR "wissenschaftliche Mitarbeiter")', "de", "de"),
+    ('site:softgarden.io (postdoc OR "wissenschaftliche Mitarbeiter") Germany', "de", "en"),
+    ('site:persis.de (postdoc OR "wissenschaftliche Mitarbeiter")', "de", "de"),
+    # interamt.de: German federal/state public sector vacancies (TV-L contracts)
+    ('site:interamt.de (postdoc OR "wissenschaftliche Mitarbeiter" OR "TV-L E13" OR "TV-L E14")', "de", "de"),
 ]
+
 
 
 GOOGLE_NEWS_QUERIES = [
