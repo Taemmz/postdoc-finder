@@ -30,11 +30,11 @@ EXCLUDE_DESC = [
 # Keyword banks
 # ---------------------------------------------------------------------------
 POSITION_TERMS = [
-    # English
+    # English postdoc / staff researcher
     "postdoc", "post-doc", "postdoctoral", "postdoctoral researcher",
     "postdoctoral fellow", "research associate", "research assistant",
     "academic researcher", "senior researcher", "research fellow",
-    # German
+    # German postdoc / staff researcher
     "wissenschaftliche mitarbeiter", "wissenschaftlicher mitarbeiter",
     "wissenschaftliche mitarbeiterin", "postdoktorand", "postdoktorandin",
     "nachwuchswissenschaftler", "nachwuchswissenschaftlerin",
@@ -43,6 +43,12 @@ POSITION_TERMS = [
     # German contract grades (strong signal of postdoc-level academic role)
     "tv-l e13", "tv-l e14", "tv-l 13", "tv-l 14", "tvöd e13", "tvöd e14",
     "wisszeitvg",
+    # Professorships & junior faculty (W1/W2/W3, Juniorprofessur, Tenure Track)
+    "professur", "professor", "professorin",
+    "juniorprofessur", "juniorprofessor", "juniorprofessorin",
+    "w1", "w2", "w3", "w1-professur", "w2-professur", "w3-professur",
+    "tenure track", "tenure-track",
+    "assistant professor", "associate professor",
 ]
 TOPIC_CORE = [
     "employability", "graduate employability", "labour market", "labor market",
@@ -136,16 +142,20 @@ GERMAN_SIGNALS = [
 # "Post-Doktorandin (m/f/d/x)", "Postdoc-Position-m-f-d-x"
 GERMAN_POSITION_REGEX = re.compile(
     r"("
-    # English postdoc: postdoc, post-doc, post-doc-torand (slug edge-cases)
+    # English postdoc: postdoc, post-doc
     r"post[-\s]?doc(?:torand(?:in)?)?|"
-    # German: postdoktorand(in), post-doktorand(in) — 'doktorand' ≠ 'doctorand'
+    # German: postdoktorand(in), post-doktorand(in)
     r"post[-\s]?doktorand(?:in)?|"
     # Wissenschaftliche(r/n) Mitarbeiter(in) — handles slug 'wissenschaftliche-r-mitarbeiterin'
     r"wissenschaftliche[-\s]?[rn]?[-\s]+mitarbeiter(?:in)?|"
+    # Professorships: W1/W2/W3-Professur, Juniorprofessur, Professor(in)
+    r"(?:w[123]|junior|tenure[-\s]?track)?[-\s]?professur|"
+    r"(?:junior[-\s]?)?professor(?:in)?|"
+    r"tenure[-\s]?track|"
     # Akademischer Rat / Rätin
-    r"akademische[-\s]?[rn]?[-\s]+rat|\u00e4tin|"
+    r"akademische[-\s]?[rn]?[-\s]+(?:rat|rätin|mitarbeiter(?:in)?)|"
     # Research roles (with optional hyphen between words)
-    r"research[-\s]+(?:associate|fellow|assistant)|"
+    r"research[-\s]+(?:associate|fellow|assistant|scientist)|"
     # German-only academic terms
     r"nachwuchswissenschaftler(?:in)?|qualifikationsstelle|"
     # Pay grades — unambiguous postdoc signal in Germany (tvoed = umlaut-stripped tvöd)
@@ -602,6 +612,12 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
             base = 6
         else:
             base = 5
+
+        # Professorship bonus: W1/W2/W3 Professur or Juniorprofessur on a core/adjacent
+        # topic is a rare, high-value opening — bump base score up
+        PROFESSORSHIP_TERMS = ["w1", "w2", "w3", "professur", "juniorprofessur", "tenure track", "tenure-track"]
+        if any(p in lower for p in PROFESSORSHIP_TERMS):
+            base = max(base, 9 if has_core else 7)
 
         inst_bonus, inst_tier = compute_institution_bonus(text, clean_link)
         neg_hits = [d for d in NEGATIVE_DISCIPLINES if d in lower]

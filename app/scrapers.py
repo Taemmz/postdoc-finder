@@ -114,6 +114,17 @@ GERMAN_ACADEMIC_QUERIES = [
     ('site:persis.de (postdoc OR "wissenschaftliche Mitarbeiter")', "de", "de"),
     # interamt.de: German federal/state public sector vacancies (TV-L contracts)
     ('site:interamt.de (postdoc OR "wissenschaftliche Mitarbeiter" OR "TV-L E13" OR "TV-L E14")', "de", "de"),
+
+    # ── Professorships & Junior Faculty (W1/W2/W3, Juniorprofessur, Tenure Track) ──
+    # These are missed by postdoc-only queries; added as a separate sweep.
+    ('site:psychjob.eu (Professur OR Juniorprofessur OR W2 OR W3 OR "tenure track")', "de", "de"),
+    ('site:academics.de/jobs (Professur OR Juniorprofessur OR "W2-Professur" OR "W3-Professur")', "de", "de"),
+    ('site:hsozkult.de/job (Professur OR Juniorprofessur OR "tenure track")', "de", "de"),
+    ('site:xing.com/jobs (Professur OR W2 OR W3 OR Juniorprofessur) (Wirtschaftspsychologie OR Bildungsforschung OR Arbeitsmarkt)', "de", "de"),
+    ('site:service.bund.de/IMPORTE/Stellenangebote (Professur OR Juniorprofessur OR "tenure track" OR W2 OR W3)', "de", "de"),
+    ('site:lmu.de (Professur OR W2 OR W3 OR Juniorprofessur)', "de", "de"),
+    ('site:uni-mannheim.de (Professur OR Juniorprofessur OR "tenure track")', "de", "de"),
+    ('site:uni-leipzig.de (Professur OR Juniorprofessur OR W2 OR W3)', "de", "de"),
 ]
 
 
@@ -309,14 +320,14 @@ async def scrape_all_sources() -> List[RawVacancy]:
     async with httpx.AsyncClient(follow_redirects=True) as client:
         tasks = [
             # ── Serper / API sources ───────────────────────────────────────────
-            fetch_german_boards(client),      # ~42 Serper queries, gl=de hl=de
+            fetch_german_boards(client),      # 64 Serper queries (postdoc + professorship)
             fetch_google_news(client),        # 2 SerpAPI news queries, gl=de
             fetch_exa(client),                # 4 Exa semantic queries (Germany-scoped)
             fetch_all_rss(client),            # 4 RSS feeds
             # ── SSR aggregators ────────────────────────────────────────────────
             fetch_ssr_academics(client),      # academics.de direct HTML
             fetch_ssr_euraxess(client),       # EURAXESS Germany-filtered
-            fetch_ssr_psychjob(client),       # psychjob.eu (DGPs portal)
+            fetch_ssr_psychjob(client),       # psychjob.eu (DGPs portal) — category list
             fetch_ssr_hsozkult(client),       # H-Soz-Kult (social science & humanities)
             fetch_ssr_stellenwerk(client),    # Stellenwerk (multi-campus network)
             # ── Direct university career pages (zero API cost) ─────────────────
@@ -326,6 +337,8 @@ async def scrape_all_sources() -> List[RawVacancy]:
             fetch_direct_uni_leipzig(client),
             fetch_direct_uni_heidelberg(client),
             fetch_direct_uni_koeln(client),
+            # ── PsychJob direct — extracts individual /job/ links from categories ─
+            fetch_psychjob_direct(client),
         ]
         nested = await asyncio.gather(*tasks, return_exceptions=True)
         flat: List[RawVacancy] = []
@@ -467,4 +480,51 @@ async def fetch_direct_uni_koeln(client: httpx.AsyncClient) -> List[RawVacancy]:
         return results
     except Exception:
         return []
+
+
+async def fetch_psychjob_direct(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """Directly scrape individual job listings from PsychJob category pages.
+
+    Covers both postdoc/Wiss.Mitarbeiter AND Professur/Juniorprofessur categories.
+    Uses a[href*='/job/'] selector — only detail pages pass, never category lists.
+    This bypasses the Serper index entirely, capturing listings the day they go live.
+    """
+    categories = [
+        # Postdoc & researcher categories
+        "https://www.psychjob.eu/de/jobs/arbeits-betriebs-und-organisationspsychologie",
+        "https://www.psychjob.eu/de/jobs/lehre-forschung",
+        "https://www.psychjob.eu/de/jobs/personalpsychologie",
+        # Professorship & junior faculty categories
+        "https://www.psychjob.eu/de/jobs/professur",
+        "https://www.psychjob.eu/de/jobs/juniorprofessur",
+        "https://www.psychjob.eu/de/jobs/wirtschaftspsychologie",
+    ]
+    seen: set = set()
+    results: List[RawVacancy] = []
+    for url in categories:
+        try:
+            res = await client.get(url, headers=HEADERS, timeout=15.0)
+            soup = BeautifulSoup(res.text, "html.parser")
+            # Only select links that point to individual job detail pages
+            for a in soup.select("a[href*='/job/']"):
+                href = a.get("href", "")
+                full = href if href.startswith("http") else f"https://www.psychjob.eu{href}"
+                if full in seen:
+                    continue
+                seen.add(full)
+                title = a.get_text(strip=True)
+                # Also try parent container for richer snippet
+                parent = a.find_parent(["li", "article", "div"])
+                snippet = parent.get_text(" ", strip=True) if parent else title
+                if title and len(title) > 10:
+                    results.append(RawVacancy(
+                        source="PsychJob Direct",
+                        title=title,
+                        link=full,
+                        snippet=snippet[:400],
+                        query_type="direct_uni_ssr",
+                    ))
+        except Exception:
+            continue
+    return results
 
