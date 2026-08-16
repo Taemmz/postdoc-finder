@@ -137,19 +137,23 @@ GERMAN_C_RE = re.compile(r"\b(c1|c2)\b", re.I)
 GERMAN_B_RE = re.compile(r"\b(b1|b2)\b", re.I)
 GERMAN_NONE_RE = re.compile(r"(no german required|german not required|english only)", re.I)
 
-DEADLINE_PATTERNS = [
-    re.compile(r"deadline[\s:]+([A-Za-z]+\s+\d{1,2},?\s*\d{4})", re.I),
-    re.compile(r"(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2},?\s*\d{4}", re.I),
-    re.compile(r"\d{1,2}\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}", re.I),
-    re.compile(r"closing date[\s:]+([A-Za-z0-9\s,]+)", re.I),
-    re.compile(r"apply by[\s:]+([A-Za-z]+\s+\d{1,2},?\s*\d{4})", re.I),
-]
+# Anchored deadline pattern — ONLY matches dates that appear directly after
+# a deadline keyword. This prevents incidental dates ("PhD after Jan 2024",
+# "In the 2025 call...", "Founded October 2024") from being misread as deadlines.
+DEADLINE_CONTEXT_PATTERN = re.compile(
+    r"(?:deadline|closing date|apply by|applications due|bewerbungsfrist)"
+    r"[:\s]+"
+    r"([a-z]+|\d{1,2})[\s,.-]+(\d{1,2}|[a-z]+)[\s,.-]+(\d{4})",
+    re.IGNORECASE,
+)
 
 MONTHS = {
-    "jan": 0, "january": 0, "feb": 1, "february": 1, "mar": 2, "march": 2,
-    "apr": 3, "april": 3, "may": 4, "jun": 5, "june": 5, "jul": 6, "july": 6,
-    "aug": 7, "august": 7, "sep": 8, "sept": 8, "september": 8,
-    "oct": 9, "october": 9, "nov": 10, "november": 10, "dec": 11, "december": 11,
+    "jan": 1, "january": 1, "feb": 2, "february": 2,
+    "mar": 3, "march": 3, "apr": 4, "april": 4,
+    "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
+    "aug": 8, "august": 8, "sep": 9, "sept": 9, "september": 9,
+    "oct": 10, "october": 10, "nov": 11, "november": 11,
+    "dec": 12, "december": 12,
 }
 
 # ---------------------------------------------------------------------------
@@ -193,49 +197,61 @@ def build_canonical_key(title: str, institution: str) -> Optional[str]:
 
 
 def extract_deadline(text: str) -> Optional[str]:
-    for pat in DEADLINE_PATTERNS:
-        m = pat.search(text)
-        if m:
-            return m.group(0)
-    return None
+    """Return the raw matched deadline string if a keyword-anchored date is found."""
+    m = DEADLINE_CONTEXT_PATTERN.search(text)
+    return m.group(0) if m else None
 
 
 def parse_deadline_iso(text: Optional[str]) -> Optional[str]:
-    """Parse deadline text to ISO date string.
-    Returns None if the date is unparseable OR already in the past."""
+    """Parse a keyword-anchored deadline string to ISO format (YYYY-MM-DD).
+
+    Returns None if:
+    - text is empty / no anchor match
+    - date components are unrecognisable
+    - parsed date is already in the past (stale deadline)
+    """
     if not text:
         return None
-    from datetime import date
-    today = date.today()
 
-    low = text.lower()
-    m = re.search(r"([a-z]+)\s+(\d{1,2}),?\s*(\d{4})", low)
-    if m and m.group(1) in MONTHS:
-        try:
-            d = date(int(m.group(3)), MONTHS[m.group(1)] + 1, int(m.group(2)))
-            return d.isoformat() if d >= today else None  # discard past dates
-        except ValueError:
-            pass
-    m = re.search(r"(\d{1,2})\s+([a-z]+)\.?\s+(\d{4})", low)
-    if m and m.group(2) in MONTHS:
-        try:
-            d = date(int(m.group(3)), MONTHS[m.group(2)] + 1, int(m.group(1)))
-            return d.isoformat() if d >= today else None  # discard past dates
-        except ValueError:
-            pass
-    return None
+    m = DEADLINE_CONTEXT_PATTERN.search(text)
+    if not m:
+        return None
+
+    part1, part2, year_str = m.groups()
+    p1 = part1.lower()
+    p2 = part2.lower()
+
+    # Determine which token is the month name and which is the day number
+    if p1 in MONTHS and part2.isdigit():
+        month, day = MONTHS[p1], int(part2)
+    elif p2 in MONTHS and part1.isdigit():
+        month, day = MONTHS[p2], int(part1)
+    else:
+        return None
+
+    try:
+        from datetime import date
+        deadline_date = date(int(year_str), month, day)
+        today = date.today()
+        # Discard the date if it is already in the past
+        return deadline_date.isoformat() if deadline_date >= today else None
+    except ValueError:
+        return None
 
 
 def is_deadline_expired(deadline_iso: Optional[str]) -> bool:
-    """Return True if we found a deadline AND it has already passed.
-    If no deadline found, return False (we can't be sure it's expired)."""
+    """Return True only when a confirmed keyword-anchored deadline is in the past.
+
+    Three safe outcomes:
+      - deadline_iso is None  → we found NO anchored deadline → keep the listing
+      - deadline_iso is a future/today date → keep the listing
+      - deadline_iso is a past date → drop the listing
+    """
     if not deadline_iso:
         return False
+    # ISO strings compare lexicographically correctly (YYYY-MM-DD)
     from datetime import date
-    try:
-        return date.fromisoformat(deadline_iso) < date.today()
-    except ValueError:
-        return False
+    return deadline_iso < date.today().isoformat()
 
 
 def detect_german(text: str) -> str:
