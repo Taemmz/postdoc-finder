@@ -16,5 +16,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application source
 COPY . .
 
-# Default command — Coolify will override this with the scheduled cron call
-CMD ["python", "main.py"]
+# Keep container alive in idle state so Coolify's cron engine can exec into it.
+# Without this, Docker sees Python exit 0 and restarts the container (Exit 137).
+CMD ["tail", "-f", "/dev/null"]
