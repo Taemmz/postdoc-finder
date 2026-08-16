@@ -201,26 +201,41 @@ def extract_deadline(text: str) -> Optional[str]:
 
 
 def parse_deadline_iso(text: Optional[str]) -> Optional[str]:
+    """Parse deadline text to ISO date string.
+    Returns None if the date is unparseable OR already in the past."""
     if not text:
         return None
+    from datetime import date
+    today = date.today()
+
     low = text.lower()
     m = re.search(r"([a-z]+)\s+(\d{1,2}),?\s*(\d{4})", low)
     if m and m.group(1) in MONTHS:
         try:
-            from datetime import date
             d = date(int(m.group(3)), MONTHS[m.group(1)] + 1, int(m.group(2)))
-            return d.isoformat()
+            return d.isoformat() if d >= today else None  # discard past dates
         except ValueError:
             pass
     m = re.search(r"(\d{1,2})\s+([a-z]+)\.?\s+(\d{4})", low)
     if m and m.group(2) in MONTHS:
         try:
-            from datetime import date
             d = date(int(m.group(3)), MONTHS[m.group(2)] + 1, int(m.group(1)))
-            return d.isoformat()
+            return d.isoformat() if d >= today else None  # discard past dates
         except ValueError:
             pass
     return None
+
+
+def is_deadline_expired(deadline_iso: Optional[str]) -> bool:
+    """Return True if we found a deadline AND it has already passed.
+    If no deadline found, return False (we can't be sure it's expired)."""
+    if not deadline_iso:
+        return False
+    from datetime import date
+    try:
+        return date.fromisoformat(deadline_iso) < date.today()
+    except ValueError:
+        return False
 
 
 def detect_german(text: str) -> str:
@@ -375,6 +390,12 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
                 full_link = f"https://euraxess.ec.europa.eu{clean_link}"
 
         deadline_text = extract_deadline(text)
+        deadline_iso = parse_deadline_iso(deadline_text)
+
+        # Skip listings where we found a deadline and it has clearly passed
+        if deadline_text and is_deadline_expired(deadline_iso):
+            continue
+
         region = compute_region(item.source, full_link, text, inst_tier)
 
         matched_terms = list({
@@ -391,7 +412,7 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
                 institution=institution,
                 research_focus=snippet[:300],
                 link=full_link,
-                deadline=parse_deadline_iso(deadline_text),
+                deadline=deadline_iso,
                 match_score=score,
                 german_required=german,
                 research_data={
