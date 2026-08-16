@@ -165,13 +165,24 @@ HARD_EXCLUSIONS = [
 
 
 TRUSTED_JOB_DOMAINS = [
-    "euraxess.ec.europa.eu", "academicpositions.com", "jobs.ac.uk",
-    "academics.de", "linkedin.com/jobs", "universitypositions.eu",
+    # International boards
+    "euraxess.ec.europa.eu", "academicpositions.com", "universitypositions.eu",
     "jobs.chronicle.com", "higheredjobs.com", "careers.insidehighered.com",
-    "psychjob.eu", "mpg.de", "leibniz-gemeinschaft.de", "helmholtz.de",
-    "fraunhofer.de", "gesis.org", "bibb.de", "ifo.de", "zew.de",
-    "service.bund.de", "inomics.com", "evifa.de", "xing.com/jobs",
-    "researchgate.net/jobs", "charite.de", "kit.edu", "rwth-aachen.de",
+    "inomics.com",
+    # German clearinghouses & discipline hubs
+    "academics.de", "service.bund.de", "psychjob.eu", "evifa.de",
+    "hsozkult.de",          # H-Soz-Kult: social science & humanities jobs
+    "stellenwerk.de",       # Multi-campus university job network
+    "hochschulverband.de",  # DHV: German academic association
+    # German research institutes
+    "mpg.de", "helmholtz.de", "leibniz-gemeinschaft.de", "fraunhofer.de",
+    "gesis.org", "iab.de", "dzhw.eu", "wzb.eu",
+    "bibb.de", "ifo.de", "zew.de",
+    # German universities
+    "charite.de", "kit.edu", "rwth-aachen.de",
+    # Professional networks (Germany)
+    "linkedin.com/jobs", "xing.com/jobs",
+    # RSS aggregators
     "academickeys.com",
 ]
 
