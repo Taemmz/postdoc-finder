@@ -54,6 +54,12 @@ GERMAN_ACADEMIC_QUERIES = [
     # Deutscher Hochschulverband (DHV): academic & professorial openings
     ('site:hochschulverband.de (postdoc OR "wissenschaftliche Mitarbeiter" OR ausschreibungen)', "de", "de"),
 
+    # ── Higher Education Innovation & Science Management ──────────────────────
+    ('site:academics.de ("Wissenschaftsmanagement" OR "Dekanatsreferat" OR "Hochschuldidaktik" OR "Stiftung Innovation in der Hochschullehre")', "de", "de"),
+    ('site:service.bund.de/IMPORTE/Stellenangebote ("Wissenschaftsmanagement" OR "Qualitätsentwicklung" OR "Bildungsforschung")', "de", "de"),
+    ('("Wissenschaftsmanager" OR "Dekanatsreferent" OR "Studiengangskoordinator") ("TV-L E13" OR "TV-L E14") site:.de', "de", "de"),
+    ('("Stiftung Innovation in der Hochschullehre" OR "Learning Analytics" OR "Lehr-Lernforschung") (Postdoc OR "wissenschaftliche Mitarbeiter") site:.de', "de", "de"),
+
     # ── International boards filtered to Germany ──────────────────────────────
     ('site:euraxess.ec.europa.eu/jobs Germany (postdoc OR "research fellow" OR "wissenschaftliche")', "de", "en"),
     ('site:universitypositions.eu Germany (postdoc OR "research associate")', "de", "en"),

@@ -115,6 +115,14 @@ POSITION_TERMS = [
     "nachwuchswissenschaftler", "nachwuchswissenschaftlerin",
     "akademischer rat", "akademische rätin", "junior research group",
     "qualifikationsstelle", "akademische mitarbeiter",
+    # Higher Education & Science Management / Academic Governance
+    "wissenschaftsmanagement", "wissenschaftsmanager", "wissenschaftsmanagerin",
+    "dekanatsreferat", "dekanatsreferent", "dekanatsreferentin",
+    "referent für forschung", "referentin für forschung",
+    "referent für lehre", "referentin für lehre",
+    "studiengangskoordinator", "studiengangskoordinatorin",
+    "studiengangsentwicklung", "qualitätsentwicklung", "qualitätsmanagement",
+    "hochschuldidaktik", "hochschulentwicklung", "academic governance",
     # German contract grades (strong signal of postdoc-level academic role)
     "tv-l e13", "tv-l e14", "tv-l 13", "tv-l 14", "tvöd e13", "tvöd e14",
     "wisszeitvg",
@@ -125,25 +133,36 @@ POSITION_TERMS = [
     "assistant professor",
 ]
 TOPIC_CORE = [
+    # Empirical Educational Research & Higher Education
+    "empirische bildungsforschung", "empirical educational research",
+    "educational evaluation", "evaluation research", "programmevaluation", "programme evaluation",
+    "higher education research", "hochschulforschung", "bildungsforschung",
+    "lehr-lernforschung", "lehr-lern-forschung", "teaching and learning research",
+    "learning analytics", "kompetenzmessung", "wirkungsanalyse", "impact analysis",
+    # Labour Market, Employability & Organisation
     "employability", "graduate employability", "labour market", "labor market",
     "workforce development", "organisational development", "organizational development",
     "arbeitsmarkt", "arbeitsmarktforschung", "beschäftigungsfähigkeit",
-    "organisationsentwicklung",
+    "organisationsentwicklung", "psychometrics", "psychometrie",
+    "educational assessment", "mixed methods",
 ]
 TOPIC_ADJACENT = [
     "work psychology", "workplace learning", "human resource development",
-    "capability development", "evaluation research", "programme evaluation",
-    "program evaluation", "psychometrics", "educational assessment",
-    "measurement and assessment", "mixed methods", "higher education research",
+    "capability development", "program evaluation",
+    "measurement and assessment",
     "graduate outcomes", "education policy", "education-to-work",
     "assessment fairness", "labour market transitions", "skills development",
     "employment policy", "workforce capability", "organizational behavior",
-    "organisational behaviour", "hochschulforschung", "bildungsforschung",
-    "bildungspolitik", "evaluation", "programmevaluation", "kompetenzentwicklung",
-    "personalentwicklung", "organisationspsychologie", "arbeitspsychologie",
-    "berufliche bildung", "weiterbildung", "übergang studium beruf",
-    "übergang hochschule beruf",
-    # Psychology sub-disciplines
+    "organisational behaviour", "bildungspolitik", "evaluation",
+    "kompetenzentwicklung", "personalentwicklung", "organisationspsychologie",
+    "arbeitspsychologie", "berufliche bildung", "weiterbildung",
+    "übergang studium beruf", "übergang hochschule beruf",
+    # Educational Innovation, Quality Development & Governance
+    "stiftung innovation in der hochschullehre", "lehrinnovation",
+    "curriculumentwicklung", "studienreform", "evaluation von studium und lehre",
+    "studienerfolg", "studienabbruch", "academic assessment", "institutional research",
+    "hochschuldidaktik", "qualitätsentwicklung", "hochschulentwicklung",
+    # Psychology & Education sub-disciplines
     "wirtschaftspsychologie", "gesundheitspsychologie", "sozialpsychologie",
     "pädagogische psychologie", "pädagogik", "erziehungswissenschaft",
     "personalpsychologie", "berufspsychologie",
@@ -315,8 +334,12 @@ GERMAN_POSITION_REGEX = re.compile(
     r"akademische[-\s]?[rn]?[-\s]+(?:rat|rätin|mitarbeiter(?:in)?)|"
     # Research roles (with optional hyphen between words)
     r"research[-\s]+(?:associate|fellow|assistant|scientist)|"
-    # German-only academic terms
+    # German-only academic terms & Science Management
     r"nachwuchswissenschaftler(?:in)?|qualifikationsstelle|"
+    r"wissenschaftsmanagement|wissenschaftsmanager(?:in)?|"
+    r"dekanatsreferat|dekanatsreferent(?:in)?|"
+    r"studiengangskoordinator(?:in)?|studiengangsentwicklung|"
+    r"qualitätsentwicklung|hochschuldidaktik|"
     # Pay grades — unambiguous postdoc signal in Germany (tvoed = umlaut-stripped tvöd)
     r"tv[-\s]?l[-\s]?e?1[34]|tv(?:\u00f6d|oed)[-\s]?e?1[34]"
     r")"

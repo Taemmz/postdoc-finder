@@ -271,11 +271,18 @@ def test_process():
             link="https://jobs.tu-berlin.de/jobs/w1-hochschulforschung",
             snippet="Open position for Juniorprofessur / W1-Professur in Hochschulforschung and Bildungsforschung. Deadline: 01.12.2026.",
         ),
+        # 14. Valid: Higher Education & Science Management / Governance
+        RawVacancy(
+            source="Academic Boards",
+            title="Referent/in für Wissenschaftsmanagement und Qualitätsentwicklung — LMU München",
+            link="https://lmu.de/jobs/referent-wissenschaftsmanagement",
+            snippet="100% TV-L E13. Dekanatsreferat sucht Referentin für Wissenschaftsmanagement, Qualitätsentwicklung und Evaluation von Studium und Lehre. Bewerbungsschluss: 20.11.2026.",
+        ),
     ]
 
     results = process_vacancies(mocks)
     print(f"  Input : {len(mocks)} raw vacancies")
-    print(f"  Output: {len(results)} scored records (Expected: 3 passing, 10 excluded)\n")
+    print(f"  Output: {len(results)} scored records (Expected: 4 passing, 10 excluded)\n")
     for r in results:
         print(f"  ✅ Inst     : {r.institution}")
         print(f"     Dept     : {r.department or 'N/A'}")
@@ -288,7 +295,7 @@ def test_process():
         print(f"     Matched  : {r.research_data.get('matched_terms', [])[:5]}")
         print()
 
-    print("✅ Processor working correctly." if len(results) == 3 else f"⚠️ Expected 3 results, got {len(results)}.")
+    print("✅ Processor working correctly." if len(results) == 4 else f"⚠️ Expected 4 results, got {len(results)}.")
 
 
 # ──────────────────────────────────────────────────────────────
