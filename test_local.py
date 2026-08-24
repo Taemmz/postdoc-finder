@@ -158,6 +158,12 @@ def test_process():
             link="https://dzhw.eu/jobs/postdoc-labour-market",
             snippet="In the 2025 call, 4 fellows were accepted. PhD completed after January 2024 required. New round now open for workforce development research.",
         ),
+        RawVacancy(
+            source="Academic Boards",
+            title="Wissenschaftliche/r Mitarbeiter/in Bildungsforschung — Uni Heidelberg",
+            link="https://uni-heidelberg.de/jobs/wiss-mitarbeiter-bildungsforschung",
+            snippet="Bewerbungsfrist bis zum 15.09.2027. Bereich Hochschulforschung und Kompetenzentwicklung.",
+        ),
     ]
 
     results = process_vacancies(mocks)
@@ -232,18 +238,23 @@ async def test_dryrun():
     print("   (nothing will be inserted into Supabase)\n")
 
     from app.scrapers import scrape_all_sources
-    from app.processor import process_vacancies
+    from app.processor import enrich_missing_deadlines, process_vacancies
     from app.telegram_bot import build_digest, send_telegram_alert
 
     # 1. Scrape
-    print("[1/3] Scraping all sources...")
+    print("[1/4] Scraping all sources...")
     raw = await scrape_all_sources()
     print(f"      Raw items: {len(raw)}")
 
     # 2. Process
-    print("\n[2/3] Scoring and filtering...")
+    print("\n[2/4] Scoring and filtering...")
     candidates = process_vacancies(raw)
     print(f"      Passed filter: {len(candidates)} records\n")
+
+    # 3. Enrich missing deadlines
+    print("[3/4] Enriching missing deadlines via deep fetch...")
+    candidates = await enrich_missing_deadlines(candidates)
+    print(f"      Candidates after enrichment: {len(candidates)}\n")
 
     if not candidates:
         print("  No results passed the filter. Try running again or check your API keys.")

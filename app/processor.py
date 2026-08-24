@@ -6,7 +6,11 @@ Handles: exclusion filtering, position/topic keyword matching,
 """
 
 import re
+from datetime import date, datetime
 from typing import List, Optional, Tuple
+
+import httpx
+from bs4 import BeautifulSoup
 
 from app.models import PostdocRecord, RawVacancy
 
@@ -173,57 +177,6 @@ GERMAN_POSITION_REGEX = re.compile(
     re.IGNORECASE,
 )
 
-
-
-
-
-TOPIC_CORE = [
-    "employability", "graduate employability", "labour market", "labor market",
-    "workforce development", "organisational development", "organizational development",
-    "arbeitsmarkt", "arbeitsmarktforschung", "beschäftigungsfähigkeit",
-    "organisationsentwicklung",
-]
-TOPIC_ADJACENT = [
-    "work psychology", "workplace learning", "human resource development",
-    "capability development", "evaluation research", "programme evaluation",
-    "program evaluation", "psychometrics", "educational assessment",
-    "measurement and assessment", "mixed methods", "higher education research",
-    "graduate outcomes", "education policy", "education-to-work",
-    "assessment fairness", "labour market transitions", "skills development",
-    "employment policy", "workforce capability", "organizational behavior",
-    "organisational behaviour", "hochschulforschung", "bildungsforschung",
-    "bildungspolitik", "evaluation", "programmevaluation", "kompetenzentwicklung",
-    "personalentwicklung", "organisationspsychologie", "arbeitspsychologie",
-    "berufliche bildung", "weiterbildung", "übergang studium beruf",
-    "übergang hochschule beruf",
-]
-STRONG_VACANCY_SIGNALS = [
-    "deadline", "closing date", "hiring", "vacancy", "opening",
-    "position available", "join our team", "applications are open",
-    "applications invited", "bewerbung", "bewerbungsfrist",
-    "stellenausschreibung", "stellenangebot", "zu besetzen", "wir suchen",
-]
-WEAK_VACANCY_SIGNALS = ["apply", "application", "applications"]
-VACANCY_SIGNALS = STRONG_VACANCY_SIGNALS + WEAK_VACANCY_SIGNALS
-
-# Soft penalty only (score reduction applied in scoring block)
-NEGATIVE_DISCIPLINES = [
-    "genomics", "astrophysics", "robotics",
-    "mechanical engineering", "civil engineering", "electrical engineering",
-    "biomedical", "oncology", "pharmacology", "agriculture", "veterinary",
-]
-
-# Hard exclusion — immediate drop regardless of any topic match
-HARD_EXCLUSIONS = [
-    "computational chemistry", "chemistry", "chemical engineering",
-    "tooth enamel", "dentistry", "dental", "molecular biology",
-    "nanotechnology", "materials science", "neuroscience",
-    "physics", "biology", "genetics", "clinical trial", "medicine",
-]
-
-
-
-
 TRUSTED_JOB_DOMAINS = [
     # International boards
     "euraxess.ec.europa.eu", "academicpositions.com", "universitypositions.eu",
@@ -312,24 +265,31 @@ GERMAN_C_RE = re.compile(r"\b(c1|c2)\b", re.I)
 GERMAN_B_RE = re.compile(r"\b(b1|b2)\b", re.I)
 GERMAN_NONE_RE = re.compile(r"(no german required|german not required|english only)", re.I)
 
-# Anchored deadline pattern — ONLY matches dates that appear directly after
-# a deadline keyword. This prevents incidental dates ("PhD after Jan 2024",
-# "In the 2025 call...", "Founded October 2024") from being misread as deadlines.
-DEADLINE_CONTEXT_PATTERN = re.compile(
-    r"(?:deadline|closing date|apply by|applications due|bewerbungsfrist)"
-    r"[:\s]+"
-    r"([a-z]+|\d{1,2})[\s,.-]+(\d{1,2}|[a-z]+)[\s,.-]+(\d{4})",
-    re.IGNORECASE,
-)
-
-MONTHS = {
-    "jan": 1, "january": 1, "feb": 2, "february": 2,
-    "mar": 3, "march": 3, "apr": 4, "april": 4,
-    "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
-    "aug": 8, "august": 8, "sep": 9, "sept": 9, "september": 9,
-    "oct": 10, "october": 10, "nov": 11, "november": 11,
-    "dec": 12, "december": 12,
+GERMAN_MONTHS_MAP = {
+    "januar": 1, "jan": 1,
+    "februar": 2, "feb": 2,
+    "märz": 3, "maerz": 3, "mrz": 3,
+    "april": 4, "apr": 4,
+    "mai": 5,
+    "juni": 6, "jun": 6,
+    "juli": 7, "jul": 7,
+    "august": 8, "aug": 8,
+    "september": 9, "sep": 9, "sept": 9,
+    "oktober": 10, "okt": 10,
+    "november": 11, "nov": 11,
+    "dezember": 12, "dez": 12,
 }
+
+ENGLISH_MONTHS_MAP = {
+    "january": 1, "jan": 1, "february": 2, "feb": 2, "march": 3, "mar": 3,
+    "april": 4, "apr": 4, "may": 5, "june": 6, "jun": 6, "july": 7, "jul": 7,
+    "august": 8, "aug": 8, "september": 9, "sep": 9, "october": 10, "oct": 10,
+    "november": 11, "nov": 11, "december": 12, "dec": 12,
+}
+
+ALL_MONTHS = {**GERMAN_MONTHS_MAP, **ENGLISH_MONTHS_MAP}
+_MONTHS_PATTERN = "|".join(ALL_MONTHS.keys())
+
 
 # ---------------------------------------------------------------------------
 # Utility helpers
@@ -389,43 +349,130 @@ def build_canonical_key(title: str, institution: str) -> Optional[str]:
 
 def extract_deadline(text: str) -> Optional[str]:
     """Return the raw matched deadline string if a keyword-anchored date is found."""
-    m = DEADLINE_CONTEXT_PATTERN.search(text)
-    return m.group(0) if m else None
+    return parse_deadline_string(text)
 
 
-def parse_deadline_iso(text: Optional[str]) -> Optional[str]:
-    """Parse the full snippet text for a keyword-anchored deadline date.
-
-    Returns the ISO date string (YYYY-MM-DD) if an anchored date is found,
-    regardless of whether it is past or future.
-    Returns None if no keyword anchor is present — meaning the position is
-    rolling/open and must NOT be dropped by is_deadline_expired.
+def parse_deadline_string(text: Optional[str]) -> Optional[str]:
+    """
+    Parses dates in both German and English formats:
+    - 31.10.2026, 31/10/2026, 31-10-2026
+    - 15. Oktober 2026, Ende Oktober 2026
+    - October 15, 2026 / 15 Oct 2026
+    - Contextual phrases: Bewerbungsfrist bis, Einsendeschluss, Deadline, etc.
     """
     if not text:
         return None
 
-    m = DEADLINE_CONTEXT_PATTERN.search(text)
-    if not m:
-        return None
+    # Priority 1: Keyword-anchored dates (highest precision)
+    # 1a. Anchored Numeric (e.g. Bewerbungsfrist: 15.09.2026, Deadline: 15/09/2026)
+    anchored_num = re.search(
+        r"(?:bewerbungsfrist|bewerbungsschluss|frist|einsendeschluss|deadline|closing\s*date|apply\s*by|applications?\s*due|bis\s*zum|bis)[:\s]+"
+        r"([0-3]?[0-9])[./\-]([0-1]?[0-9])[./\-]((?:20)?[2-3][0-9])",
+        text,
+        re.IGNORECASE,
+    )
+    if anchored_num:
+        day, month, year = anchored_num.groups()
+        if len(year) == 2:
+            year = f"20{year}"
+        try:
+            dt = datetime(int(year), int(month), int(day))
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
 
-    part1, part2, year_str = m.groups()
-    p1 = part1.lower()
-    p2 = part2.lower()
+    # 1b. Anchored Textual (e.g. Bewerbungsfrist: 15. Oktober 2026, Deadline: 30 September 2027, Frist: Ende Oktober 2026)
+    anchored_text = re.search(
+        rf"(?:bewerbungsfrist|bewerbungsschluss|frist|einsendeschluss|deadline|closing\s*date|apply\s*by|applications?\s*due|ausschreibungsende|bis\s*zum|bis)[:\s]+"
+        rf"(?:([0-3]?[0-9])\.?\s+|ende\s+)?({_MONTHS_PATTERN})\s+((?:20)?[2-3][0-9])",
+        text,
+        re.IGNORECASE,
+    )
+    if anchored_text:
+        day_str, month_str, year_str = anchored_text.groups()
+        month = ALL_MONTHS.get(month_str.lower(), 1)
+        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
+        day = int(day_str) if day_str else 28
+        try:
+            dt = datetime(year, month, day)
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
 
-    if p1 in MONTHS and part2.isdigit():
-        month, day = MONTHS[p1], int(part2)
-    elif p2 in MONTHS and part1.isdigit():
-        month, day = MONTHS[p2], int(part1)
-    else:
-        return None
+    # 1c. Anchored English Month first (e.g. Deadline: October 15, 2026)
+    anchored_en = re.search(
+        rf"(?:bewerbungsfrist|bewerbungsschluss|frist|einsendeschluss|deadline|closing\s*date|apply\s*by|applications?\s*due)[:\s]+"
+        rf"({_MONTHS_PATTERN})\s+([0-3]?[0-9])(?:st|nd|rd|th)?,?\s+((?:20)?[2-3][0-9])",
+        text,
+        re.IGNORECASE,
+    )
+    if anchored_en:
+        month_str, day_str, year_str = anchored_en.groups()
+        month = ALL_MONTHS.get(month_str.lower(), 1)
+        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
+        day = int(day_str) if day_str else 1
+        try:
+            dt = datetime(year, month, day)
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
 
-    try:
-        from datetime import date
-        # Return the real date — do NOT suppress past dates here.
-        # Expiration filtering is handled exclusively by is_deadline_expired().
-        return date(int(year_str), month, day).isoformat()
-    except ValueError:
-        return None
+    # Priority 2: Unanchored explicit dates with Day + Month + Year
+    # 2a. Numeric standard DD.MM.YYYY
+    num_match = re.search(
+        r"\b([0-3]?[0-9])[./\-]([0-1]?[0-9])[./\-]((?:20)?[2-3][0-9])\b",
+        text,
+        re.IGNORECASE,
+    )
+    if num_match:
+        day, month, year = num_match.groups()
+        if len(year) == 2:
+            year = f"20{year}"
+        try:
+            dt = datetime(int(year), int(month), int(day))
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+
+    # 2b. Textual DD. Month YYYY or Ende Month YYYY
+    text_match = re.search(
+        rf"\b(?:([0-3]?[0-9])\.?\s+|ende\s+)({_MONTHS_PATTERN})\s+((?:20)?[2-3][0-9])\b",
+        text,
+        re.IGNORECASE,
+    )
+    if text_match:
+        day_str, month_str, year_str = text_match.groups()
+        month = ALL_MONTHS.get(month_str.lower(), 1)
+        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
+        day = int(day_str) if day_str else 28
+        try:
+            dt = datetime(year, month, day)
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+
+    # 2c. Textual Month DD, YYYY
+    text_match_en = re.search(
+        rf"\b({_MONTHS_PATTERN})\s+([0-3]?[0-9])(?:st|nd|rd|th)?,?\s+((?:20)?[2-3][0-9])\b",
+        text,
+        re.IGNORECASE,
+    )
+    if text_match_en:
+        month_str, day_str, year_str = text_match_en.groups()
+        month = ALL_MONTHS.get(month_str.lower(), 1)
+        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
+        day = int(day_str) if day_str else 1
+        try:
+            dt = datetime(year, month, day)
+            return dt.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+
+    return None
+
+
+# Alias for backward compatibility
+parse_deadline_iso = parse_deadline_string
 
 
 def is_deadline_expired(deadline_iso: Optional[str]) -> bool:
@@ -732,3 +779,48 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         )
 
     return results
+
+
+async def enrich_missing_deadlines(
+    candidates: List[PostdocRecord], max_fetches: int = 20
+) -> List[PostdocRecord]:
+    """
+    Only fetches full pages for candidates missing a deadline date.
+    Keeps network traffic low while solving the 150-char snippet truncation issue.
+    """
+    if not candidates:
+        return candidates
+
+    async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+        fetched = 0
+        for item in candidates:
+            if not item.deadline and fetched < max_fetches:
+                try:
+                    resp = await client.get(
+                        item.link,
+                        headers={
+                            "User-Agent": (
+                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                "Chrome/122.0.0.0 Safari/537.36"
+                            ),
+                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                        },
+                    )
+                    if resp.status_code == 200:
+                        soup = BeautifulSoup(resp.text, "html.parser")
+                        for elem in soup(["script", "style", "noscript", "svg"]):
+                            elem.decompose()
+                        page_text = soup.get_text(separator=" ", strip=True)[:4000]
+                        resolved_deadline = parse_deadline_string(page_text)
+                        if resolved_deadline:
+                            item.deadline = resolved_deadline
+                            if isinstance(item.research_data, dict):
+                                item.research_data["deadline_text"] = resolved_deadline
+                    fetched += 1
+                except Exception:
+                    continue
+
+    # Filter out any candidates whose newly resolved deadline is confirmed past
+    active_candidates = [c for c in candidates if not is_deadline_expired(c.deadline)]
+    return active_candidates

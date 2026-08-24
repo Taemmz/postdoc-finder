@@ -13,7 +13,7 @@ import asyncio
 import httpx
 
 from app.scrapers import scrape_all_sources
-from app.processor import process_vacancies
+from app.processor import enrich_missing_deadlines, process_vacancies
 from app.supabase_db import get_existing_links, insert_postdocs, log_activity
 from app.telegram_bot import build_digest, send_telegram_alert
 
@@ -32,6 +32,11 @@ async def main() -> None:
     print("\n[2/4] Processing and scoring candidates...")
     candidates = process_vacancies(raw_vacancies)
     print(f"      Valid candidates after filtering: {len(candidates)}")
+
+    # 2b. Lazy deep fetch for missing deadlines
+    print("\n[2b/4] Enriching missing deadlines via deep fetch...")
+    candidates = await enrich_missing_deadlines(candidates)
+    print(f"      Candidates after deadline enrichment: {len(candidates)}")
 
     # 3. Deduplicate against Supabase, insert fresh records
     print("\n[3/4] Checking against Supabase and inserting new records...")
