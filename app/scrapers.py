@@ -408,6 +408,7 @@ async def scrape_all_sources() -> List[RawVacancy]:
             fetch_direct_uni_leipzig(client),
             fetch_direct_uni_heidelberg(client),
             fetch_direct_uni_koeln(client),
+            fetch_direct_uni_muenster(client),
             # ── PsychJob direct — extracts individual /job/ links from categories ─
             fetch_psychjob_direct(client),
         ]
@@ -548,6 +549,28 @@ async def fetch_direct_uni_koeln(client: httpx.AsyncClient) -> List[RawVacancy]:
             snippet = item.get_text(" ", strip=True)
             if title and len(title) > 10:
                 results.append(RawVacancy(source="Uni Köln Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        return results
+    except Exception:
+        return []
+
+
+async def fetch_direct_uni_muenster(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """Uni Münster — direct vacancies listing."""
+    url = "https://www.uni-muenster.de/Rektorat/Stellen/"
+    try:
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
+        soup = BeautifulSoup(res.text, "html.parser")
+        results = []
+        for item in soup.select("article, .content-box, li, tr, div.teaser, .content a"):
+            a = item if item.name == "a" else item.select_one("a[href]")
+            if not a or not a.get("href"):
+                continue
+            title = a.get_text(strip=True)
+            href = a["href"]
+            link = href if href.startswith("http") else f"https://www.uni-muenster.de{href}"
+            snippet = item.get_text(" ", strip=True) if item != a else title
+            if title and len(title) > 10 and any(w in (title + snippet).lower() for w in ["wissenschaft", "postdoc", "stelle", "ausschreibung"]):
+                results.append(RawVacancy(source="Uni Münster Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
         return results
     except Exception:
         return []
