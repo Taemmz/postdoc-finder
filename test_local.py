@@ -164,6 +164,24 @@ def test_process():
             link="https://uni-heidelberg.de/jobs/wiss-mitarbeiter-bildungsforschung",
             snippet="Bewerbungsfrist bis zum 15.09.2027. Bereich Hochschulforschung und Kompetenzentwicklung.",
         ),
+        RawVacancy(
+            source="Academic Boards",
+            title="W2-Professur für Arbeitspsychologie — University of Leipzig",
+            link="https://uni-leipzig.de/jobs/w2-prof-arbeitspsychologie",
+            snippet="W2-Professur für Arbeitspsychologie und Organisationsentwicklung zu besetzen. Deadline: 15.11.2026.",
+        ),
+        RawVacancy(
+            source="Academic Boards",
+            title="Postdoc in Klinische Psychologie und Psychotherapie — Uni Frankfurt",
+            link="https://uni-frankfurt.de/jobs/postdoc-klinische-psychologie",
+            snippet="Forschungsprojekt Psychotherapie und Approbation gefordert. Bewerbungsfrist: 30.10.2026.",
+        ),
+        RawVacancy(
+            source="Academic Boards",
+            title="W1-Professur (Tenure Track) für Hochschulforschung — TU Berlin",
+            link="https://jobs.tu-berlin.de/jobs/w1-hochschulforschung",
+            snippet="Open position for Juniorprofessur / W1-Professur in Hochschulforschung and Bildungsforschung. Deadline: 01.12.2026.",
+        ),
     ]
 
     results = process_vacancies(mocks)

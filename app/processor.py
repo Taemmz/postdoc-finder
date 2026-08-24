@@ -30,6 +30,36 @@ EXCLUDE_DESC = [
     "promotion vorgesehen",
 ]
 
+# Disallow senior professorships (W2, W3, full chair / Lehrstuhl)
+SENIOR_CHAIR_BLOCKLIST = [
+    r"\bw3\b",
+    r"\bw2\b",
+    r"\bw2/w3\b",
+    r"\bw3/w2\b",
+    r"\buniversity\s+professor\b",
+    r"\buniv\.-prof\b",
+    r"\blehrstuhlinhaber",
+    r"\bordentliche[r]?\s+professor",
+    r"\btenured\s+full\s+professor\b",
+]
+
+SENIOR_CHAIR_REGEX = re.compile("|".join(SENIOR_CHAIR_BLOCKLIST), re.IGNORECASE)
+
+# Block hard-gated psychology tracks that require a primary Psychology B.Sc./M.Sc.
+PURE_PSYCH_BLOCKLIST = [
+    r"\bpersönlichkeitspsychologie\b",
+    r"\bpersonality\s+psychology\b",
+    r"\bpsychologische\s+diagnostik\b",
+    r"\bpsychological\s+diagnostics\b",
+    r"\bklinische\s+psychologie\b",
+    r"\bclinical\s+psychology\b",
+    r"\bpsychotherapie\b",
+    r"\bpsychotherapy\b",
+    r"\bapprobation\b",
+]
+
+PURE_PSYCH_REGEX = re.compile("|".join(PURE_PSYCH_BLOCKLIST), re.IGNORECASE)
+
 # ---------------------------------------------------------------------------
 # Keyword banks
 # ---------------------------------------------------------------------------
@@ -47,12 +77,11 @@ POSITION_TERMS = [
     # German contract grades (strong signal of postdoc-level academic role)
     "tv-l e13", "tv-l e14", "tv-l 13", "tv-l 14", "tvöd e13", "tvöd e14",
     "wisszeitvg",
-    # Professorships & junior faculty (W1/W2/W3, Juniorprofessur, Tenure Track)
-    "professur", "professor", "professorin",
+    # Junior Professorships & early faculty (W1, Juniorprofessur, Tenure Track)
     "juniorprofessur", "juniorprofessor", "juniorprofessorin",
-    "w1", "w2", "w3", "w1-professur", "w2-professur", "w3-professur",
+    "w1", "w1-professur",
     "tenure track", "tenure-track",
-    "assistant professor", "associate professor",
+    "assistant professor",
 ]
 TOPIC_CORE = [
     "employability", "graduate employability", "labour market", "labor market",
@@ -159,8 +188,8 @@ GERMAN_POSITION_REGEX = re.compile(
     r"post[-\s]?doktorand(?:in)?|"
     # Wissenschaftliche(r/n) Mitarbeiter(in) — handles slug 'wissenschaftliche-r-mitarbeiterin'
     r"wissenschaftliche[-\s]?[rn]?[-\s]+mitarbeiter(?:in)?|"
-    # Professorships: W1/W2/W3-Professur, Juniorprofessur, Professor(in)
-    r"(?:w[123]|junior|tenure[-\s]?track)?[-\s]?professur|"
+    # Junior professorships: W1-Professur, Juniorprofessur, Tenure Track
+    r"(?:w1|junior|tenure[-\s]?track)?[-\s]?professur|"
     r"(?:junior[-\s]?)?professor(?:in)?|"
     r"tenure[-\s]?track|"
     # Akademischer Rat / Rätin
@@ -571,6 +600,20 @@ def compute_region(source: str, link: str, text: str, institution_tier: int) -> 
     return "europe"
 
 
+def passes_qualification_gates(title: str, text: str) -> Tuple[bool, str]:
+    full_corpus = f"{title} {text}".lower()
+
+    # Gate 1: Check for W2/W3 senior chair blocklist
+    if SENIOR_CHAIR_REGEX.search(title):
+        return False, "Excluded: Senior Professorship (W2/W3 / Tenured Chair)"
+
+    # Gate 2: Check for pure psychology requirements
+    if PURE_PSYCH_REGEX.search(full_corpus):
+        return False, "Excluded: Requires formal Psychology degree / Clinical Approbation"
+
+    return True, "Passed"
+
+
 def passes_relevance_gate(
     source: str,
     has_position: bool,
@@ -582,10 +625,10 @@ def passes_relevance_gate(
     if not has_position:
         return False
 
-    # Professorship bypass: W1/W2/W3, Juniorprofessur, Tenure Track on a trusted
+    # Professorship bypass: W1, Juniorprofessur, Tenure Track on a trusted
     # German portal are rare, high-value openings. Skip the topic gate for these
     # since the position type itself IS the relevance signal.
-    PROF_TERMS = ["w1", "w2", "w3", "professur", "juniorprofessur", "tenure track", "tenure-track"]
+    PROF_TERMS = ["w1", "juniorprofessur", "juniorprofessor", "tenure track", "tenure-track"]
     if trusted and any(p in lower for p in PROF_TERMS):
         return True
 
@@ -671,6 +714,11 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         lower = text.lower()
         url = clean_link.lower()
 
+        # Qualification gates: Senior Chair (W2/W3) & Pure/Clinical Psychology
+        passes_qual, _ = passes_qualification_gates(title, text)
+        if not passes_qual:
+            continue
+
         # ── Guard 2: Hard science terms → immediate drop ───────────────────
         if any(term in lower for term in HARD_EXCLUSIONS):
             continue
@@ -712,9 +760,9 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         else:
             base = 5
 
-        # Professorship bonus: W1/W2/W3 Professur or Juniorprofessur on a core/adjacent
+        # Junior Professorship bonus: W1 Professur or Juniorprofessur on a core/adjacent
         # topic is a rare, high-value opening — bump base score up
-        PROFESSORSHIP_TERMS = ["w1", "w2", "w3", "professur", "juniorprofessur", "tenure track", "tenure-track"]
+        PROFESSORSHIP_TERMS = ["w1", "juniorprofessur", "juniorprofessor", "tenure track", "tenure-track"]
         if any(p in lower for p in PROFESSORSHIP_TERMS):
             base = max(base, 9 if has_core else 7)
 
