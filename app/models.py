@@ -12,7 +12,10 @@ class RawVacancy(BaseModel):
 
 class PostdocRecord(BaseModel):
     institution: str
+    department: Optional[str] = None
     research_focus: str
+    country: Optional[str] = "Germany"
+    city: Optional[str] = None
     link: str
     deadline: Optional[str] = None
     match_score: int = Field(ge=1, le=10)

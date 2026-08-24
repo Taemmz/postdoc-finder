@@ -6,8 +6,8 @@ Handles: exclusion filtering, position/topic keyword matching,
 """
 
 import re
-from datetime import date, datetime
-from typing import List, Optional, Tuple
+from datetime import date, datetime, timedelta
+from typing import List, Optional, Tuple, Dict, Any
 
 import httpx
 from bs4 import BeautifulSoup
@@ -60,6 +60,47 @@ PURE_PSYCH_BLOCKLIST = [
 
 PURE_PSYCH_REGEX = re.compile("|".join(PURE_PSYCH_BLOCKLIST), re.IGNORECASE)
 
+# Hard gate on Pre-Doc / PhD / Dissertation pursuit listings
+PRE_DOC_BLOCKLIST = [
+    r"within\s+the\s+framework\s+of\s+a\s+doctorate",
+    r"academic\s+qualification\s+within\s+the\s+framework\s+of\s+a\s+doctorate",
+    r"interest\s+in\s+pursuing\s+a\s+doctorate",
+    r"pursuing\s+a\s+doctorate",
+    r"attractive\s+phd\s+position",
+    r"phd\s+position\s+in",
+    r"opportunity\s+to\s+pursue\s+a\s+doctorate",
+    r"im\s+rahmen\s+einer\s+promotion",
+    r"gelegenheit\s+zur\s+promotion",
+    r"wissenschaftliche\s+weiterqualifikation\s+\(promotion\)",
+    r"streben\s+sie\s+eine\s+promotion\s+an",
+    r"promotion\s+vorgesehen",
+    r"promotionsabsicht",
+    r"promotionsvorhaben",
+    r"promotionsstelle",
+    r"(?<!post)\bdoktorand(?:in)?\b",
+    r"(?<!post)\bdoctoral\s+(?:researcher|student|candidate)\b",
+    r"\bphd\s+candidate\b",
+    r"even\s+if\s+you\s+have\s+not\s+yet\s+completed\s+your\s+studies",
+    r"studium\s+noch\s+nicht\s+abgeschlossen",
+    r"\b(?:50|65|70|75)\s*%\s*(?:tv[-\s]?l|tvöd)\b",
+]
+PRE_DOC_REGEX = re.compile("|".join(PRE_DOC_BLOCKLIST), re.IGNORECASE)
+
+POSTDOC_AFFIRMATIVE = [
+    r"\bpostdoc(?:torand(?:in)?)?\b",
+    r"\bpost-doc\b",
+    r"\bpostdoctoral\b",
+    r"abgeschlossene\s+promotion",
+    r"promotion\s+vorausgesetzt",
+    r"phd\s+required",
+    r"completed\s+phd",
+    r"habilitation",
+    r"\bw1\b",
+    r"\bjuniorprofessur\b",
+    r"100\s*%\s*(?:tv[-\s]?l|tvöd)",
+]
+POSTDOC_AFFIRMATIVE_REGEX = re.compile("|".join(POSTDOC_AFFIRMATIVE), re.IGNORECASE)
+
 # ---------------------------------------------------------------------------
 # Keyword banks
 # ---------------------------------------------------------------------------
@@ -102,7 +143,7 @@ TOPIC_ADJACENT = [
     "personalentwicklung", "organisationspsychologie", "arbeitspsychologie",
     "berufliche bildung", "weiterbildung", "übergang studium beruf",
     "übergang hochschule beruf",
-    # Psychology sub-disciplines — W2-Professur titles use these directly
+    # Psychology sub-disciplines
     "wirtschaftspsychologie", "gesundheitspsychologie", "sozialpsychologie",
     "pädagogische psychologie", "pädagogik", "erziehungswissenschaft",
     "personalpsychologie", "berufspsychologie",
@@ -125,11 +166,21 @@ NEGATIVE_DISCIPLINES = [
 
 # Hard exclusion — immediate drop regardless of topic match
 HARD_EXCLUSIONS = [
+    # Chemistry / Material Science
     "computational chemistry", "chemistry", "chemical engineering",
     "tooth enamel", "dentistry", "dental", "molecular biology",
-    "nanotechnology", "materials science", "neuroscience",
-    "physics", "biology", "genetics", "clinical trial", "medicine",
-    # Veterinary / animal science — catches 'One Health, Tierhygiene' etc.
+    "nanotechnology", "materials science", "materials",
+    # Hard Physics / Atmospheric / Tropical / Climate Physics
+    "tropical dynamics", "tropical", "meteorology", "meteorologie",
+    "geophysics", "geophysik", "astronomy", "astronomie", "astrophysics",
+    "quantum", "fluid mechanics", "strömungsmechanik", "stroemungsmechanik",
+    "atmospheric", "atmosphäre", "atmosphaere", "oceanography", "ozeanographie",
+    "climatology", "geology", "geowissenschaften", "thermodynamics",
+    "plasma physics", "optics", "particle physics", "solid state physics",
+    "kondensierte materie", "hydrodynamics", "physics", "systemsimulation",
+    "technische mechanik", "regelungs-technik", "regelungs\xadtechnik",
+    # Life sciences & Clinical medicine
+    "biology", "genetics", "clinical trial", "medicine", "oncology", "pharmacology",
     "veterinary", "tierhygiene", "tierseuche", "one health", "tierschutz",
     "animal health", "livestock",
 ]
@@ -319,6 +370,79 @@ ENGLISH_MONTHS_MAP = {
 ALL_MONTHS = {**GERMAN_MONTHS_MAP, **ENGLISH_MONTHS_MAP}
 _MONTHS_PATTERN = "|".join(ALL_MONTHS.keys())
 
+# Phrases indicating contract duration or appointment start dates (NOT application deadlines)
+DURATION_IGNORE_PATTERNS = [
+    r"limited\s+to\s+(?:a\s+term\s+ending)?",
+    r"term\s+ending",
+    r"befristet\s+(?:bis\s+zum|bis)",
+    r"vertragslaufzeit\s+bis",
+    r"laufzeit\s+bis",
+    r"starting\s+(?:on|from)",
+    r"beginn\s+zum",
+    r"beginn\s+ab",
+    r"einstellung\s+zum",
+    r"zum\s+(?:nächstmöglichen\s+zeitpunkt|frühestmöglichen\s+zeitpunkt)",
+]
+
+# Explicit application anchors (Highest Priority for Deadline Detection)
+APPLICATION_ANCHOR_PATTERNS = [
+    r"application(?:s)?\s+by",
+    r"apply\s+by",
+    r"closing\s+date",
+    r"deadline",
+    r"bewerbungsfrist\s+(?:bis\s+zum|bis)?",
+    r"bewerbungsschluss\s+(?:bis\s+zum|bis)?",
+    r"einsendeschluss\s+(?:bis\s+zum|bis)?",
+    r"bewerbungen\s+bis\s+(?:zum)?",
+    r"frist\s+(?:bis\s+zum|bis)?",
+    r"ausschreibungsende",
+]
+
+APPLICATION_ANCHOR_REGEX = re.compile(
+    rf"(?:{'|'.join(APPLICATION_ANCHOR_PATTERNS)})[:\s]*",
+    re.IGNORECASE,
+)
+
+GERMAN_CITIES = [
+    "Aachen", "Augsburg", "Bamberg", "Bayreuth", "Berlin", "Bielefeld", "Bochum", "Bonn",
+    "Braunschweig", "Bremen", "Chemnitz", "Clausthal", "Cologne", "Köln", "Darmstadt",
+    "Dortmund", "Dresden", "Duisburg", "Düsseldorf", "Erlangen", "Essen", "Frankfurt",
+    "Freiberg", "Freiburg", "Gießen", "Giessen", "Göttingen", "Goettingen", "Greifswald",
+    "Hagen", "Halle", "Hamburg", "Hannover", "Heidelberg", "Ilmenau", "Jena", "Kaiserslautern",
+    "Karlsruhe", "Kassel", "Kiel", "Koblenz", "Konstanz", "Leipzig", "Lübeck", "Luebeck",
+    "Magdeburg", "Mainz", "Mannheim", "Marburg", "Munich", "München", "Münster", "Muenster",
+    "Nürnberg", "Nuernberg", "Oldenburg", "Osnabrück", "Paderborn", "Passau", "Potsdam",
+    "Regensburg", "Rostock", "Saarbrücken", "Siegen", "Stuttgart", "Trier", "Tübingen",
+    "Tuebingen", "Ulm", "Vechta", "Weimar", "Witten", "Würzburg", "Wuerzburg", "Wuppertal"
+]
+
+INSTITUTION_PATTERNS = [
+    (r"(?:university\s+of|universit[äa]t\s+(?:zu\s+)?|uni\s+)([A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?)", r"Universität \1"),
+    (r"(?:freie\s+universit[äa]t|fu|free\s+university\s+of)\s+berlin", "Freie Universität Berlin"),
+    (r"(?:humboldt-universit[äa]t|hu|humboldt\s+university)\s+(?:zu\s+)?berlin", "Humboldt-Universität zu Berlin"),
+    (r"(?:technische\s+universit[äa]t|technical\s+university\s+of|tu)\s+([A-ZÄÖÜ][a-zäöüß]+)", r"TU \1"),
+    (r"(?:ludwig-maximilians-universit[äa]t|lmu)\s*(?:m[üu]nchen)?", "LMU München"),
+    (r"(?:technische\s+universit[äa]t\s+m[üu]nchen|tum)\b", "TU München"),
+    (r"(?:rwth\s+aachen|rheinisch-westf[äa]lische\s+technische\s+hochschule)", "RWTH Aachen"),
+    (r"(?:karlsruher\s+institut\s+f[üu]r\s+technologie|kit|karlsruhe\s+institute\s+of\s+technology)\b", "Karlsruhe Institute of Technology (KIT)"),
+    (r"(?:hochschule)\s+([A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?)", r"Hochschule \1"),
+    (r"\bdzhw\b", "Deutsches Zentrum für Hochschul- und Wissenschaftsforschung (DZHW)"),
+    (r"\biab\b", "Institut für Arbeitsmarkt- und Berufsforschung (IAB)"),
+    (r"\bwzb\b", "Wissenschaftszentrum Berlin für Sozialforschung (WZB)"),
+    (r"\bbibb\b", "Bundesinstitut für Berufsbildung (BIBB)"),
+    (r"\bgesis\b", "GESIS – Leibniz-Institut für Sozialwissenschaften"),
+    (r"\bifo\b", "ifo Institut – Leibniz-Institut für Wirtschaftsforschung"),
+    (r"\bzew\b", "ZEW – Leibniz-Zentrum für Europäische Wirtschaftsforschung"),
+    (r"max-planck-institut[a-zäöü\s-]*|max\s+planck\s+institute", "Max-Planck-Institut"),
+    (r"fraunhofer-institut[a-zäöü\s-]*|fraunhofer\s+institute", "Fraunhofer-Institut"),
+    (r"helmholtz-zentrum[a-zäöü\s-]*|helmholtz\s+centre", "Helmholtz-Zentrum"),
+    (r"charit[ée]", "Charité – Universitätsmedizin Berlin"),
+]
+
+DEPT_PATTERNS = [
+    r"(?:institut\s+f[üu]r|department\s+of|fachbereich|fakult[äa]t\s+f[üu]r|chair\s+of|lehrstuhl\s+f[üu]r)\s+([A-Za-zÄÖÜäöüß\s,-]+?)(?=\.|\band\b|\bwith\b|\bat\b|,|\n|$)",
+    r"(?:arbeits-\s+und\s+organisationspsychologie|arbeitsmarkt-?\s*und\s+berufsforschung|erziehungswissenschaft|hochschulforschung|bildungsforschung|psychometrie|wirtschaftspsychologie)",
+]
 
 # ---------------------------------------------------------------------------
 # Utility helpers
@@ -336,25 +460,45 @@ def _safe_str(v) -> str:
     return str(v)
 
 
-def guess_institution(title: str) -> str:
-    """Extract institution name from a job title string.
-    Strips parenthetical fragments, rejects location noise, and removes
-    trailing geographic qualifiers (e.g. ', Nagaland, India').
-    """
-    # Remove parenthetical suffixes e.g. '(2-year contract)'
+def extract_city(text: str) -> Optional[str]:
+    for city in GERMAN_CITIES:
+        if re.search(rf"\b{city}\b", text, re.IGNORECASE):
+            return city.replace("Munich", "München").replace("Cologne", "Köln")
+    return None
+
+
+def extract_department(title: str, text: str = "") -> Optional[str]:
+    combined = f"{title} {text}"
+    for pat in DEPT_PATTERNS:
+        m = re.search(pat, combined, re.IGNORECASE)
+        if m:
+            val = m.group(0).strip().rstrip(" ,.-")
+            if 3 < len(val) < 60:
+                return val
+    return None
+
+
+def guess_institution(title: str, text: str = "", url: str = "") -> str:
+    """Extract clean institution name from title, text, or url."""
+    combined = f"{title} {text} {url}"
+    for pat, repl in INSTITUTION_PATTERNS:
+        m = re.search(pat, combined, re.IGNORECASE)
+        if m:
+            if r"\1" in repl:
+                city_or_name = m.group(1).strip()
+                city_clean = extract_city(city_or_name) or city_or_name
+                return repl.replace(r"\1", city_clean)
+            return repl
+
+    city = extract_city(combined)
+    if city:
+        return f"Universität {city}"
+
     clean = re.sub(r"\([^)]*\)", "", title).strip()
-    parts = re.split(r"[-–|]", clean)
+    parts = re.split(r"[-–|,]", clean)
     candidate = parts[-1].strip() if len(parts) > 1 else clean.strip()
-
-    # Reject if fewer than 2 words or contains digits (likely an address/fragment)
-    words = candidate.split()
-    if len(words) < 2 or re.search(r"\d", candidate):
-        return clean or title.strip()
-
-    # Strip trailing 'City, Region, Country' geographic qualifiers
-    candidate = re.sub(r",\s*[A-Z][a-zA-Z\s]+,\s*[A-Z][a-zA-Z]+$", "", candidate).strip()
-
-    return candidate or title.strip()
+    candidate = re.sub(r"\d+", "", candidate).strip()
+    return candidate if len(candidate.split()) >= 2 else (clean or title.strip())
 
 
 def extract_position_title(title: str) -> str:
@@ -381,119 +525,118 @@ def extract_deadline(text: str) -> Optional[str]:
     return parse_deadline_string(text)
 
 
+def clean_context(text: str) -> str:
+    """Strips contract duration and start date clauses so they don't pollute date matching."""
+    cleaned = text
+    for pattern in DURATION_IGNORE_PATTERNS:
+        cleaned = re.sub(
+            rf"{pattern}\s+[A-Za-z0-9\.\s,]+?(?=\.|\band\b|\bwith\b|\bor\b|\bdeadline\b|\bapply\b|\bbewerbung\b|$)",
+            " ",
+            cleaned,
+            flags=re.IGNORECASE,
+        )
+    return cleaned
+
+
+def is_plausible_deadline(dt: datetime) -> bool:
+    """Sanity check: An application deadline must not be > 1 year in the future
+    (dates 2-4 years ahead are contract terms or grant durations).
+    """
+    now = datetime.now()
+    max_future = now + timedelta(days=365)
+    min_past = now - timedelta(days=90)
+    return min_past <= dt <= max_future
+
+
 def parse_deadline_string(text: Optional[str]) -> Optional[str]:
-    """
-    Parses dates in both German and English formats:
-    - 31.10.2026, 31/10/2026, 31-10-2026
-    - 15. Oktober 2026, Ende Oktober 2026
-    - October 15, 2026 / 15 Oct 2026
-    - Contextual phrases: Bewerbungsfrist bis, Einsendeschluss, Deadline, etc.
-    """
+    """Parses application deadlines in German and English formats, ignoring contract duration dates."""
     if not text:
         return None
 
-    # Priority 1: Keyword-anchored dates (highest precision)
-    # 1a. Anchored Numeric (e.g. Bewerbungsfrist: 15.09.2026, Deadline: 15/09/2026)
-    anchored_num = re.search(
-        r"(?:bewerbungsfrist|bewerbungsschluss|frist|einsendeschluss|deadline|closing\s*date|apply\s*by|applications?\s*due|bis\s*zum|bis)[:\s]+"
-        r"([0-3]?[0-9])[./\-]([0-1]?[0-9])[./\-]((?:20)?[2-3][0-9])",
-        text,
-        re.IGNORECASE,
-    )
-    if anchored_num:
-        day, month, year = anchored_num.groups()
-        if len(year) == 2:
-            year = f"20{year}"
-        try:
-            dt = datetime(int(year), int(month), int(day))
-            return dt.strftime("%Y-%m-%d")
-        except ValueError:
-            pass
+    # Step 1: Check for explicit application anchors first (highest confidence)
+    anchor_matches = list(APPLICATION_ANCHOR_REGEX.finditer(text))
+    for m in anchor_matches:
+        start_idx = m.end()
+        snippet = text[start_idx : start_idx + 50]
 
-    # 1b. Anchored Textual (e.g. Bewerbungsfrist: 15. Oktober 2026, Deadline: 30 September 2027, Frist: Ende Oktober 2026)
-    anchored_text = re.search(
-        rf"(?:bewerbungsfrist|bewerbungsschluss|frist|einsendeschluss|deadline|closing\s*date|apply\s*by|applications?\s*due|ausschreibungsende|bis\s*zum|bis)[:\s]+"
-        rf"(?:([0-3]?[0-9])\.?\s+|ende\s+)?({_MONTHS_PATTERN})\s+((?:20)?[2-3][0-9])",
-        text,
-        re.IGNORECASE,
-    )
-    if anchored_text:
-        day_str, month_str, year_str = anchored_text.groups()
-        month = ALL_MONTHS.get(month_str.lower(), 1)
-        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
-        day = int(day_str) if day_str else 28
-        try:
-            dt = datetime(year, month, day)
-            return dt.strftime("%Y-%m-%d")
-        except ValueError:
-            pass
+        # Numeric DD.MM.YYYY
+        num_m = re.search(r"([0-3]?[0-9])[./\-]([0-1]?[0-9])[./\-]((?:20)?[2-3][0-9])", snippet)
+        if num_m:
+            d, mo, yr = num_m.groups()
+            yr = f"20{yr}" if len(yr) == 2 else yr
+            try:
+                dt = datetime(int(yr), int(mo), int(d))
+                if is_plausible_deadline(dt):
+                    return dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
 
-    # 1c. Anchored English Month first (e.g. Deadline: October 15, 2026)
-    anchored_en = re.search(
-        rf"(?:bewerbungsfrist|bewerbungsschluss|frist|einsendeschluss|deadline|closing\s*date|apply\s*by|applications?\s*due)[:\s]+"
-        rf"({_MONTHS_PATTERN})\s+([0-3]?[0-9])(?:st|nd|rd|th)?,?\s+((?:20)?[2-3][0-9])",
-        text,
-        re.IGNORECASE,
-    )
-    if anchored_en:
-        month_str, day_str, year_str = anchored_en.groups()
-        month = ALL_MONTHS.get(month_str.lower(), 1)
-        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
-        day = int(day_str) if day_str else 1
-        try:
-            dt = datetime(year, month, day)
-            return dt.strftime("%Y-%m-%d")
-        except ValueError:
-            pass
+        # Textual Month (DD. Month YYYY or Month DD, YYYY or Ende Month YYYY)
+        text_m = re.search(
+            rf"(?:([0-3]?[0-9])\.?\s+|ende\s+)?({_MONTHS_PATTERN})\s+([0-3]?[0-9])?,?\s*((?:20)?[2-3][0-9])",
+            snippet,
+            re.IGNORECASE,
+        )
+        if text_m:
+            d1, mo_str, d2, yr_str = text_m.groups()
+            day = int(d1 or d2 or 28)
+            month = ALL_MONTHS[mo_str.lower()]
+            year = int(yr_str) if len(yr_str) == 4 else int(f"20{yr_str}")
+            try:
+                dt = datetime(year, month, day)
+                if is_plausible_deadline(dt):
+                    return dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
 
-    # Priority 2: Unanchored explicit dates with Day + Month + Year
-    # 2a. Numeric standard DD.MM.YYYY
-    num_match = re.search(
-        r"\b([0-3]?[0-9])[./\-]([0-1]?[0-9])[./\-]((?:20)?[2-3][0-9])\b",
-        text,
-        re.IGNORECASE,
-    )
+    # Step 2: Fallback to general date regex on cleaned text (duration clauses stripped)
+    sanitized = clean_context(text)
+
+    # General Numeric DD.MM.YYYY
+    num_match = re.search(r"\b([0-3]?[0-9])[./\-]([0-1]?[0-9])[./\-]((?:20)?[2-3][0-9])\b", sanitized)
     if num_match:
-        day, month, year = num_match.groups()
-        if len(year) == 2:
-            year = f"20{year}"
+        d, mo, yr = num_match.groups()
+        yr = f"20{yr}" if len(yr) == 2 else yr
         try:
-            dt = datetime(int(year), int(month), int(day))
-            return dt.strftime("%Y-%m-%d")
+            dt = datetime(int(yr), int(mo), int(d))
+            if is_plausible_deadline(dt):
+                return dt.strftime("%Y-%m-%d")
         except ValueError:
             pass
 
-    # 2b. Textual DD. Month YYYY or Ende Month YYYY
+    # General Textual DD. Month YYYY or Ende Month YYYY
     text_match = re.search(
         rf"\b(?:([0-3]?[0-9])\.?\s+|ende\s+)({_MONTHS_PATTERN})\s+((?:20)?[2-3][0-9])\b",
-        text,
+        sanitized,
         re.IGNORECASE,
     )
     if text_match:
-        day_str, month_str, year_str = text_match.groups()
-        month = ALL_MONTHS.get(month_str.lower(), 1)
-        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
-        day = int(day_str) if day_str else 28
+        d_str, mo_str, yr_str = text_match.groups()
+        day = int(d_str) if d_str else 28
+        month = ALL_MONTHS[mo_str.lower()]
+        year = int(yr_str) if len(yr_str) == 4 else int(f"20{yr_str}")
         try:
             dt = datetime(year, month, day)
-            return dt.strftime("%Y-%m-%d")
+            if is_plausible_deadline(dt):
+                return dt.strftime("%Y-%m-%d")
         except ValueError:
             pass
 
-    # 2c. Textual Month DD, YYYY
+    # General Textual Month DD, YYYY
     text_match_en = re.search(
         rf"\b({_MONTHS_PATTERN})\s+([0-3]?[0-9])(?:st|nd|rd|th)?,?\s+((?:20)?[2-3][0-9])\b",
-        text,
+        sanitized,
         re.IGNORECASE,
     )
     if text_match_en:
-        month_str, day_str, year_str = text_match_en.groups()
-        month = ALL_MONTHS.get(month_str.lower(), 1)
-        year = int(year_str) if len(year_str) == 4 else int(f"20{year_str}")
-        day = int(day_str) if day_str else 1
+        mo_str, d_str, yr_str = text_match_en.groups()
+        day = int(d_str) if d_str else 1
+        month = ALL_MONTHS[mo_str.lower()]
+        year = int(yr_str) if len(yr_str) == 4 else int(f"20{yr_str}")
         try:
             dt = datetime(year, month, day)
-            return dt.strftime("%Y-%m-%d")
+            if is_plausible_deadline(dt):
+                return dt.strftime("%Y-%m-%d")
         except ValueError:
             pass
 
@@ -531,7 +674,6 @@ def detect_german(text: str) -> str:
 def is_trusted_domain(url: str, source: str = "") -> bool:
     """Return True if url or source name is in TRUSTED_JOB_DOMAINS."""
     return any(d in url or d in source for d in TRUSTED_JOB_DOMAINS)
-
 
 
 def is_strictly_germany(link: str, text: str) -> bool:
@@ -576,11 +718,7 @@ def compute_institution_bonus(text: str, link: str) -> Tuple[int, int]:
 
 
 def compute_region(source: str, link: str, text: str, institution_tier: int) -> str:
-    """Classify a listing into germany / europe / other.
-    Signal check runs FIRST — a German city/paygrade/institution in the URL or
-    text always wins, regardless of institution tier.
-    Tier meanings from compute_institution_bonus: 1=top, 2=high, 3=lower, 4=unknown.
-    """
+    """Classify a listing into germany / europe / other."""
     combined = f"{text} {link}".lower()
     global_board_sources = {
         "RSS HigherEdJobs", "RSS AcademicKeys SocSci", "RSS AcademicKeys Education"
@@ -610,6 +748,13 @@ def passes_qualification_gates(title: str, text: str) -> Tuple[bool, str]:
     # Gate 2: Check for pure psychology requirements
     if PURE_PSYCH_REGEX.search(full_corpus):
         return False, "Excluded: Requires formal Psychology degree / Clinical Approbation"
+
+    # Gate 3: Check for Pre-Doc / PhD pursuit positions
+    if PRE_DOC_REGEX.search(full_corpus):
+        if re.search(r"within\s+the\s+framework\s+of\s+a\s+doctorate|im\s+rahmen\s+einer\s+promotion|pursuing\s+a\s+doctorate|promotionsstelle|\bphd\s+candidate\b|(?<!post)\bdoktorand", full_corpus, re.I):
+            return False, "Excluded: Pre-Doctoral / PhD candidate role"
+        if not POSTDOC_AFFIRMATIVE_REGEX.search(title):
+            return False, "Excluded: Pre-Doctoral / PhD pursuit position"
 
     return True, "Passed"
 
@@ -740,7 +885,17 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if not passes_relevance_gate(item.source, has_position, has_core, has_adjacent, trusted, lower):
             continue
 
-        institution = guess_institution(title) or "Unknown — see listing"
+        # Normalise relative links
+        full_link = clean_link
+        if clean_link.startswith("/"):
+            if "universitypositions" in (item.source or "").lower():
+                full_link = f"https://universitypositions.eu{clean_link}"
+            elif "academics.de" in (item.source or "").lower():
+                full_link = f"https://www.academics.de{clean_link}"
+            elif "euraxess" in (item.source or "").lower():
+                full_link = f"https://euraxess.ec.europa.eu{clean_link}"
+
+        institution = guess_institution(title, snippet, full_link) or "Unknown — see listing"
         canonical = build_canonical_key(title, institution)
         if canonical and canonical in seen_canonical:
             continue
@@ -776,16 +931,6 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if german in ("c1", "c2"):
             score = min(score, 4)
 
-        # Normalise relative links
-        full_link = clean_link
-        if clean_link.startswith("/"):
-            if "universitypositions" in (item.source or "").lower():
-                full_link = f"https://universitypositions.eu{clean_link}"
-            elif "academics.de" in (item.source or "").lower():
-                full_link = f"https://www.academics.de{clean_link}"
-            elif "euraxess" in (item.source or "").lower():
-                full_link = f"https://euraxess.ec.europa.eu{clean_link}"
-
         # parse_deadline_iso scans the full text for a keyword-anchored date
         # and returns the real ISO string (past OR future) or None (no anchor).
         deadline_iso = parse_deadline_iso(text)
@@ -796,6 +941,9 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
             continue
 
         region = compute_region(item.source, full_link, text, inst_tier)
+        city = extract_city(f"{title} {snippet} {full_link}")
+        department = extract_department(title, snippet)
+        country = "Germany" if region == "germany" else ("Europe" if region == "europe" else "Other")
 
         matched_terms = list({
             t for t in (POSITION_TERMS + TOPIC_CORE + TOPIC_ADJACENT + VACANCY_SIGNALS)
@@ -809,7 +957,10 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         results.append(
             PostdocRecord(
                 institution=institution,
+                department=department,
                 research_focus=snippet[:300],
+                country=country,
+                city=city,
                 link=full_link,
                 deadline=deadline_iso,
                 match_score=score,

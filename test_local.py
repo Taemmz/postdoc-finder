@@ -120,6 +120,58 @@ async def test_rss():
 
 
 # ──────────────────────────────────────────────────────────────
+# TEST: deadline
+# ──────────────────────────────────────────────────────────────
+def test_deadline():
+    print("\n📅 Testing German & English Deadline Disambiguation...\n")
+    from app.processor import parse_deadline_string
+
+    cases = [
+        (
+            "Have we sparked your interest? Then we look forward to receiving your application by August 23, 2026 at the University of Münster. Starting on December 1, 2026, limited to a term ending June 30, 2030.",
+            "2026-08-23",
+            "Münster start date vs application deadline disambiguation"
+        ),
+        (
+            "Starting November 1, 2026 ... Then apply by 30.8.2026 by email with the usual documents",
+            "2026-08-30",
+            "Starting date vs apply by date disambiguation"
+        ),
+        (
+            "Bewerbungsfrist bis zum 15.09.2026. Arbeitsbeginn zum 01.11.2026.",
+            "2026-09-15",
+            "German Bewerbungsfrist with start date"
+        ),
+        (
+            "Wissenschaftliche Stelle. Befristet bis 30.06.2030. Keine Bewerbungsfrist angegeben.",
+            None,
+            "Contract duration (2030) ignored when no deadline present"
+        ),
+        (
+            "Postdoc-Position. Bewerbungsschluss: 30. Oktober 2026. Vertragslaufzeit bis 31.12.2029.",
+            "2026-10-30",
+            "German textual month with future contract end date"
+        ),
+        (
+            "Frist: Ende Oktober 2026",
+            "2026-10-28",
+            "Ende Month deadline parsing"
+        ),
+    ]
+
+    all_passed = True
+    for text, expected, desc in cases:
+        result = parse_deadline_string(text)
+        status = "✅" if result == expected else "❌"
+        if result != expected:
+            all_passed = False
+        print(f"  {status} [{desc}]")
+        print(f"     Expected: {expected} | Got: {result}")
+
+    print("\n✅ All deadline disambiguation tests passed!" if all_passed else "\n⚠️ Some deadline tests failed.")
+
+
+# ──────────────────────────────────────────────────────────────
 # TEST: process
 # ──────────────────────────────────────────────────────────────
 def test_process():
@@ -128,54 +180,56 @@ def test_process():
     from app.processor import process_vacancies
 
     mocks = [
+        # 1. Valid core postdoc
         RawVacancy(
             source="Academic Boards",
             title="Postdoctoral Researcher in Graduate Employability — University of Leipzig",
             link="https://uni-leipzig.de/jobs/postdoc-employability",
-            snippet="We are hiring a postdoctoral researcher to join our labour market transitions project. Applications are open. Deadline: 30 September 2027.",
+            snippet="We are hiring a postdoctoral researcher to join our labour market transitions project. Applications are open. Deadline: 30 September 2026.",
         ),
+        # 2. Excluded: PhD candidate (title exclude)
         RawVacancy(
             source="Reddit",
             title="PhD candidate wanted at TU Berlin",
             link="https://reddit.com/r/AskAcademia/phd-candidate-tu-berlin",
             snippet="Doctoral position in mechanical engineering available.",
         ),
-        RawVacancy(
-            source="RSS HigherEdJobs",
-            title="Research Fellow in Workforce Development — Humboldt University Berlin",
-            link="https://hu-berlin.de/jobs/research-fellow-workforce",
-            snippet="Open position for research fellow. Closing date: 15 October 2027. No German required.",
-        ),
-        RawVacancy(
-            source="RSS HigherEdJobs",
-            title="Postdoctoral Research Associate in Psychometrics — University of Cologne",
-            link="https://uni-koeln.de/jobs/postdoc-psychometrics",
-            snippet="Rolling application — no fixed deadline. Research associate position in educational assessment and mixed methods. Apply now.",
-        ),
+        # 3. Excluded: Pre-doctoral PhD position (75% TV-L 13 with doctorate framework)
         RawVacancy(
             source="Academic Boards",
-            title="Postdoc in Labour Market Research — DZHW",
-            link="https://dzhw.eu/jobs/postdoc-labour-market",
-            snippet="In the 2025 call, 4 fellows were accepted. PhD completed after January 2024 required. New round now open for workforce development research.",
+            title="Wissenschaftlicher Mitarbeiter (m/w/d) 75% TV-L 13",
+            link="https://uni-muenster.de/jobs/wiss-mitarbeiter-75",
+            snippet="Academic qualification within the framework of a doctorate. Interest in pursuing a doctorate in experimental teaching/learning research. Apply by 30.08.2026.",
         ),
+        # 4. Excluded: Physical / Hard Science (Tropical Dynamics)
         RawVacancy(
             source="Academic Boards",
-            title="Wissenschaftliche/r Mitarbeiter/in Bildungsforschung — Uni Heidelberg",
-            link="https://uni-heidelberg.de/jobs/wiss-mitarbeiter-bildungsforschung",
-            snippet="Bewerbungsfrist bis zum 15.09.2027. Bereich Hochschulforschung und Kompetenzentwicklung.",
+            title="Research Fellow in Tropical Dynamics — University of Hamburg",
+            link="https://uni-hamburg.de/jobs/research-fellow-tropical-dynamics",
+            snippet="Research fellow position in tropical dynamics, atmospheric physics, and fluid mechanics. Deadline: 15 October 2026.",
         ),
+        # 5. Excluded: Senior Chair W2
         RawVacancy(
             source="Academic Boards",
             title="W2-Professur für Arbeitspsychologie — University of Leipzig",
             link="https://uni-leipzig.de/jobs/w2-prof-arbeitspsychologie",
             snippet="W2-Professur für Arbeitspsychologie und Organisationsentwicklung zu besetzen. Deadline: 15.11.2026.",
         ),
+        # 6. Excluded: Pure / Clinical Psychology (Approbation)
         RawVacancy(
             source="Academic Boards",
             title="Postdoc in Klinische Psychologie und Psychotherapie — Uni Frankfurt",
             link="https://uni-frankfurt.de/jobs/postdoc-klinische-psychologie",
             snippet="Forschungsprojekt Psychotherapie und Approbation gefordert. Bewerbungsfrist: 30.10.2026.",
         ),
+        # 7. Valid: PostDoc-Stelle with institution & department extraction
+        RawVacancy(
+            source="Academic Boards",
+            title="PostDoc-Stelle , Arbeits- und Organisationspsychologie, Universität Bamberg",
+            link="https://uni-bamberg.de/jobs/postdoc-aop",
+            snippet="100% TV-L E13. Postdoktorand/in im Bereich Organisationsentwicklung und Kompetenzentwicklung gesucht. Bewerbungen bis 15.11.2026.",
+        ),
+        # 8. Valid: W1 Tenure Track Juniorprofessur
         RawVacancy(
             source="Academic Boards",
             title="W1-Professur (Tenure Track) für Hochschulforschung — TU Berlin",
@@ -186,17 +240,20 @@ def test_process():
 
     results = process_vacancies(mocks)
     print(f"  Input : {len(mocks)} raw vacancies")
-    print(f"  Output: {len(results)} scored records\n")
+    print(f"  Output: {len(results)} scored records (Expected: 3 passing, 5 excluded)\n")
     for r in results:
-        print(f"  ✅ {r.institution}")
-        print(f"     Score        : {r.match_score}/10")
-        print(f"     German       : {r.german_required}")
-        print(f"     Region       : {r.research_data.get('region_tier')}")
-        print(f"     Deadline ISO : {r.deadline}")
-        print(f"     Matched      : {r.research_data.get('matched_terms', [])[:5]}")
+        print(f"  ✅ Inst     : {r.institution}")
+        print(f"     Dept     : {r.department or 'N/A'}")
+        print(f"     City     : {r.city or 'N/A'}")
+        print(f"     Country  : {r.country}")
+        print(f"     Score    : {r.match_score}/10")
+        print(f"     German   : {r.german_required}")
+        print(f"     Region   : {r.research_data.get('region_tier')}")
+        print(f"     Deadline : {r.deadline}")
+        print(f"     Matched  : {r.research_data.get('matched_terms', [])[:5]}")
         print()
 
-    print("✅ Processor working correctly." if results else "⚠️  No records passed the filter — check keyword logic.")
+    print("✅ Processor working correctly." if len(results) == 3 else f"⚠️ Expected 3 results, got {len(results)}.")
 
 
 # ──────────────────────────────────────────────────────────────
@@ -328,6 +385,7 @@ COMMANDS = {
     "exa": (test_exa, True),
     "rss": (test_rss, True),
     "process": (test_process, False),
+    "deadline": (test_deadline, False),
     "supabase": (test_supabase, True),
     "telegram": (test_telegram, True),
     "full": (test_full, True),
