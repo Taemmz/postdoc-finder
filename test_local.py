@@ -192,7 +192,7 @@ def test_process():
             source="Reddit",
             title="PhD candidate wanted at TU Berlin",
             link="https://reddit.com/r/AskAcademia/phd-candidate-tu-berlin",
-            snippet="Doctoral position in mechanical engineering available.",
+            snippet="Doctoral position in mechanical engineering available. Apply now if interested in doctorate.",
         ),
         # 3. Excluded: Pre-doctoral PhD position (75% TV-L 13 with doctorate framework)
         RawVacancy(
@@ -222,14 +222,49 @@ def test_process():
             link="https://uni-frankfurt.de/jobs/postdoc-klinische-psychologie",
             snippet="Forschungsprojekt Psychotherapie und Approbation gefordert. Bewerbungsfrist: 30.10.2026.",
         ),
-        # 7. Valid: PostDoc-Stelle with institution & department extraction
+        # 7. Excluded: Country Leakage — University of Leeds (UK)
+        RawVacancy(
+            source="Academic Boards",
+            title="Postdoctoral Research Associate — University of Leeds",
+            link="https://jobs.leeds.ac.uk/postdoc-workforce",
+            snippet="Full-time postdoctoral research associate in workforce development and labour market transitions in Leeds, United Kingdom.",
+        ),
+        # 8. Excluded: Country Leakage — University of Vienna (Austria)
+        RawVacancy(
+            source="Academic Boards",
+            title="Postdoc in Educational Evaluation — University of Vienna",
+            link="https://univie.ac.at/jobs/postdoc-evaluation",
+            snippet="Postdoctoral researcher position in educational assessment and psychometrics at University of Vienna, Austria.",
+        ),
+        # 9. Excluded: Dead / Placeholder Page
+        RawVacancy(
+            source="XING",
+            title="Postdoc-Stelle — Über diesen Job",
+            link="https://xing.com/jobs/stellenanzeige-12345",
+            snippet="Über diesen Job. Diese Stellenanzeige ist nicht mehr verfügbar.",
+        ),
+        # 10. Excluded: Off-Target Domain — Volkswirtschaftslehre (Economics)
+        RawVacancy(
+            source="Academic Boards",
+            title="Postdoc in Volkswirtschaftslehre — Uni Bonn",
+            link="https://uni-bonn.de/jobs/postdoc-vwl",
+            snippet="Postdoktorand/in im Bereich Volkswirtschaftslehre, Ökonometrie und Makroökonomie gesucht.",
+        ),
+        # 11. Excluded: Off-Target Domain — Computer Science / Informatik
+        RawVacancy(
+            source="Academic Boards",
+            title="Postdoctoral Researcher in Computer Science — TU München",
+            link="https://tum.de/jobs/postdoc-cs",
+            snippet="Postdoctoral fellow in computer science, robotics, and electrical engineering.",
+        ),
+        # 12. Valid: PostDoc-Stelle with institution & department extraction
         RawVacancy(
             source="Academic Boards",
             title="PostDoc-Stelle , Arbeits- und Organisationspsychologie, Universität Bamberg",
             link="https://uni-bamberg.de/jobs/postdoc-aop",
             snippet="100% TV-L E13. Postdoktorand/in im Bereich Organisationsentwicklung und Kompetenzentwicklung gesucht. Bewerbungen bis 15.11.2026.",
         ),
-        # 8. Valid: W1 Tenure Track Juniorprofessur
+        # 13. Valid: W1 Tenure Track Juniorprofessur
         RawVacancy(
             source="Academic Boards",
             title="W1-Professur (Tenure Track) für Hochschulforschung — TU Berlin",
@@ -240,7 +275,7 @@ def test_process():
 
     results = process_vacancies(mocks)
     print(f"  Input : {len(mocks)} raw vacancies")
-    print(f"  Output: {len(results)} scored records (Expected: 3 passing, 5 excluded)\n")
+    print(f"  Output: {len(results)} scored records (Expected: 3 passing, 10 excluded)\n")
     for r in results:
         print(f"  ✅ Inst     : {r.institution}")
         print(f"     Dept     : {r.department or 'N/A'}")

@@ -185,22 +185,90 @@ HARD_EXCLUSIONS = [
     "animal health", "livestock",
 ]
 
-# Foreign location blacklist — instantly drops non-German positions
+# ---------------------------------------------------------------------------
+# 1. GEOGRAPHY HARD GATE: Germany Only
+# ---------------------------------------------------------------------------
 NON_GERMAN_LOCATIONS = [
-    re.compile(p, re.I) for p in [
-        r"\bindia\b", r"\bnagaland\b", r"\bsingapore\b", r"\bmalaysia\b",
-        r"\bchina\b", r"\bjapan\b", r"\bbrazil\b", r"\bsouth africa\b",
-        r"\bpakistan\b", r"\bbangladesh\b", r"\bnigeria\b", r"\bkenya\b",
-        r"\bindonesia\b", r"\bphilippines\b", r"\bvietnam\b",
-        r"\buk\b", r"\bunited kingdom\b", r"\blondon\b", r"\bleeds\b",
-        r"\bmanchester\b", r"\bcambridge\b", r"\boxford\b", r"\bedinburgh\b",
-        r"\bcanada\b", r"\btoronto\b", r"\baustralia\b", r"\bsydney\b",
-        r"\bmelbourne\b", r"\bnew zealand\b", r"\busa\b", r"\bunited states\b",
-        r"\bfrance\b", r"\bparis\b", r"\bnetherlands\b", r"\bamsterdam\b",
-        r"\bswitzerland\b", r"\bzurich\b", r"\bbelgium\b", r"\bbrussels\b",
-        r"\bsweden\b", r"\bdenmark\b", r"\bnorway\b", r"\bfinland\b",
-    ]
+    r"\baustria\b", r"\bösterreich\b", r"\boesterreich\b", r"\bvienna\b", r"\bwien\b", r"\bgraz\b", r"\binnsbruck\b", r"\blinz\b", r"\bsalzburg\b",
+    r"\bunited\s+kingdom\b", r"\buk\b", r"\bleeds\b", r"\blondon\b", r"\boxford\b", r"\bcambridge\b", r"\bmanchester\b", r"\bedinburgh\b", r"\bbirmingham\b", r"\bglasgow\b", r"\bbristol\b", r"\bwarwick\b",
+    r"\bswitzerland\b", r"\bschweiz\b", r"\bzürich\b", r"\bzurich\b", r"\bgeneva\b", r"\bgenf\b", r"\bbasel\b", r"\blausanne\b", r"\bbern\b",
+    r"\basia\b", r"\bnetherlands\b", r"\bamsterdam\b", r"\butrecht\b", r"\bleiden\b", r"\brotterdam\b",
+    r"\busa\b", r"\bunited\s+states\b", r"\bcanada\b", r"\btoronto\b", r"\baustralia\b", r"\bsydney\b", r"\bmelbourne\b",
+    r"\bfrance\b", r"\bparis\b", r"\bbelgium\b", r"\bbrussels\b", r"\bsweden\b", r"\bdenmark\b", r"\bnorway\b", r"\bfinland\b",
+    r"\bindia\b", r"\bnagaland\b", r"\bsingapore\b", r"\bmalaysia\b", r"\bchina\b", r"\bjapan\b", r"\bbrazil\b",
+    r"\bsouth\s+africa\b", r"\bpakistan\b", r"\bbangladesh\b", r"\bnigeria\b", r"\bkenya\b", r"\bindonesia\b", r"\bphilippines\b", r"\bvietnam\b",
+    r"\bnew\s+zealand\b", r"\bauckland\b", r"\bireland\b", r"\bdublin\b", r"\bpoland\b", r"\bitaly\b", r"\bspain\b",
 ]
+NON_GERMAN_REGEX = re.compile("|".join(NON_GERMAN_LOCATIONS), re.IGNORECASE)
+
+# ---------------------------------------------------------------------------
+# 2. OFF-TARGET DOMAIN HARD GATE
+# ---------------------------------------------------------------------------
+OFF_TARGET_DOMAINS = [
+    # Physical, Earth & Hard Sciences
+    r"\btropical\b", r"\bdynamics\b", r"\bmeteorolog\w*", r"\bphysics\b", r"\bgeophysic\w*",
+    r"\bchemistry\b", r"\bbiolog\w*", r"\bquantum\b", r"\bfluid\b", r"\bmechanics\b",
+    r"\bastronomy\b", r"\bastronomie\b", r"\bastrophysics\b", r"\boceanography\b", r"\bozeanographie\b",
+    r"\bclimatology\b", r"\bgeology\b", r"\bgeowissenschaften\b", r"\bthermodynamics\b",
+    r"\bmaterials\s+science\b", r"\bnanotechnology\b", r"\btooth\s+enamel\b", r"\bdentistry\b",
+    # Hard Tech / Engineering
+    r"\bcomputer\s+science\b", r"\binformatik\b", r"\brobotics\b", r"\belectrical\s+engineering\b",
+    r"\bsystemsimulation\b", r"\btechnische\s+mechanik\b", r"\bregelungs[-\s]?technik\b",
+    # Pure Macro/Micro Economics & Senior Chairs
+    r"\bvolkswirtschaftslehre\b", r"\beconometrics\b", r"\bw2\b", r"\bw3\b", r"\bw2/w3\b", r"\bw3/w2\b",
+    r"\blehrstuhl\b", r"\blehrstuhlinhaber\b", r"\buniversity\s+professor\b", r"\buniv\.-prof\b",
+    r"\bordentliche[r]?\s+professor\b", r"\btenured\s+full\s+professor\b",
+    # Clinical medicine / trials / animal science
+    r"\bclinical\s+trial\b", r"\boncology\b", r"\bpharmacology\b", r"\bveterinary\b", r"\btierhygiene\b",
+]
+OFF_TARGET_REGEX = re.compile("|".join(OFF_TARGET_DOMAINS), re.IGNORECASE)
+
+# ---------------------------------------------------------------------------
+# 3. DEAD ADS & AGGREGATOR WRAPPER PLACEHOLDERS
+# ---------------------------------------------------------------------------
+DEAD_PAGE_PATTERNS = [
+    r"this job (?:ad\s+)?is(?:n't| not) available",
+    r"job (?:posting\s+)?(?:has\s+)?expired",
+    r"diese (?:stellen)?anzeige ist nicht mehr verfügbar",
+    r"die gewünschte seite wurde nicht gefunden",
+    r"die gesuchte seite wurde nicht gefunden",
+    r"ausschreibung nicht mehr verfügbar",
+    r"position no longer available",
+    r"the requested job could not be found",
+    r"404 not found",
+    r"page not found",
+    r"seite nicht gefunden",
+    r"über diesen job",
+]
+DEAD_PAGE_REGEX = re.compile("|".join(DEAD_PAGE_PATTERNS), re.IGNORECASE)
+
+
+def is_dead_or_placeholder(title: str, text: str) -> bool:
+    """Returns True if the page content indicates a removed or empty listing."""
+    combined = f"{title} {text}".strip().lower()
+    if DEAD_PAGE_REGEX.search(combined):
+        return True
+    if len(text.strip()) < 80:
+        return True
+    return False
+
+
+def strictly_qualifies(title: str, text: str, url: str) -> Tuple[bool, str]:
+    corpus = f"{title} {text}".lower()
+
+    # Gate 1: Drop dead ads and UI fragments
+    if is_dead_or_placeholder(title, text):
+        return False, "Dead ad / Empty placeholder"
+
+    # Gate 2: Drop non-German countries
+    if NON_GERMAN_REGEX.search(corpus):
+        return False, "Excluded: Non-German institution/location"
+
+    # Gate 3: Drop off-target domains (Physics, IT, Economics, W2/W3)
+    if OFF_TARGET_REGEX.search(corpus):
+        return False, "Excluded: Off-target discipline or senior chair"
+
+    return True, "Passed"
 
 # German geographic whitelist — at least one must be present
 GERMAN_SIGNALS = [
@@ -849,6 +917,14 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         title = _safe_str(item.title)
         snippet = _safe_str(item.snippet)
 
+        # ── Strict Production Quality Filter ──────────────────────────────
+        # Gate 1: Dead ads / empty placeholders
+        # Gate 2: Non-German countries (Austria, UK, Switzerland, USA, etc.)
+        # Gate 3: Off-target domains (Physics, IT, Pure Economics, W2/W3 chairs)
+        qualifies, reason = strictly_qualifies(title, snippet, clean_link)
+        if not qualifies:
+            continue
+
         # Exclusion filters
         if _contains_exclude(title, EXCLUDE_TITLES):
             continue
@@ -859,17 +935,9 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         lower = text.lower()
         url = clean_link.lower()
 
-        # Qualification gates: Senior Chair (W2/W3) & Pure/Clinical Psychology
+        # Qualification gates: Senior Chair (W2/W3), Pure/Clinical Psychology, Pre-Doc / PhD
         passes_qual, _ = passes_qualification_gates(title, text)
         if not passes_qual:
-            continue
-
-        # ── Guard 2: Hard science terms → immediate drop ───────────────────
-        if any(term in lower for term in HARD_EXCLUSIONS):
-            continue
-
-        # ── Guard 3: Germany-only gate ─────────────────────────────────────
-        if not is_strictly_germany(clean_link, text):
             continue
 
         # Match position terms: list check covers normal text; regex catches
@@ -900,7 +968,10 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         if canonical and canonical in seen_canonical:
             continue
 
-        # Base score
+        # ── Match Scoring Logic ──────────────────────────────────────────
+        # High scores (8-10) require Target Core matches.
+        # Adjacent-only matches score 5-7.
+        # Listings without target core or adjacent topic drop below threshold.
         has_strong = any(t in lower for t in STRONG_VACANCY_SIGNALS)
         if has_core and has_strong:
             base = 10
@@ -912,13 +983,15 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
             base = 7
         elif has_adjacent and trusted:
             base = 6
-        else:
+        elif has_adjacent:
             base = 5
+        else:
+            base = 3
 
         # Junior Professorship bonus: W1 Professur or Juniorprofessur on a core/adjacent
         # topic is a rare, high-value opening — bump base score up
         PROFESSORSHIP_TERMS = ["w1", "juniorprofessur", "juniorprofessor", "tenure track", "tenure-track"]
-        if any(p in lower for p in PROFESSORSHIP_TERMS):
+        if any(p in lower for p in PROFESSORSHIP_TERMS) and (has_core or has_adjacent or trusted):
             base = max(base, 9 if has_core else 7)
 
         inst_bonus, inst_tier = compute_institution_bonus(text, clean_link)
@@ -930,6 +1003,10 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         german = detect_german(text)
         if german in ("c1", "c2"):
             score = min(score, 4)
+
+        # Drop listings scoring below actionable threshold (unless high-value W1/Juniorprofessur)
+        if score < 5:
+            continue
 
         # parse_deadline_iso scans the full text for a keyword-anchored date
         # and returns the real ISO string (past OR future) or None (no anchor).
@@ -986,13 +1063,16 @@ async def enrich_missing_deadlines(
     """
     Only fetches full pages for candidates missing a deadline date.
     Keeps network traffic low while solving the 150-char snippet truncation issue.
+    Also acts as a dead-page guard to drop soft-404 and expired listings.
     """
     if not candidates:
         return candidates
 
+    active_candidates: List[PostdocRecord] = []
     async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
         fetched = 0
         for item in candidates:
+            is_dead = False
             if not item.deadline and fetched < max_fetches:
                 try:
                     resp = await client.get(
@@ -1011,15 +1091,23 @@ async def enrich_missing_deadlines(
                         for elem in soup(["script", "style", "noscript", "svg"]):
                             elem.decompose()
                         page_text = soup.get_text(separator=" ", strip=True)[:4000]
-                        resolved_deadline = parse_deadline_string(page_text)
-                        if resolved_deadline:
-                            item.deadline = resolved_deadline
-                            if isinstance(item.research_data, dict):
-                                item.research_data["deadline_text"] = resolved_deadline
+
+                        # Check for dead page / expired ad on landing page
+                        if DEAD_PAGE_REGEX.search(page_text[:1500]) or len(page_text.strip()) < 80:
+                            is_dead = True
+                        else:
+                            resolved_deadline = parse_deadline_string(page_text)
+                            if resolved_deadline:
+                                item.deadline = resolved_deadline
+                                if isinstance(item.research_data, dict):
+                                    item.research_data["deadline_text"] = resolved_deadline
+                    elif resp.status_code in (404, 410, 500, 502, 503):
+                        is_dead = True
                     fetched += 1
                 except Exception:
-                    continue
+                    pass
 
-    # Filter out any candidates whose newly resolved deadline is confirmed past
-    active_candidates = [c for c in candidates if not is_deadline_expired(c.deadline)]
+            if not is_dead and not is_deadline_expired(item.deadline):
+                active_candidates.append(item)
+
     return active_candidates
