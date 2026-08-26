@@ -4,8 +4,8 @@ main.py — Entrypoint for the SkillEdgeUp Post-Doc Finder.
 Run manually:
     python main.py
 
-Coolify scheduled task (Mon/Wed/Fri 08:00):
-    cron: 0 8 * * 1,3,5
+Coolify scheduled task (Daily 08:00):
+    cron: 0 8 * * *
     command: python main.py
 """
 
