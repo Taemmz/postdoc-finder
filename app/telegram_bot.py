@@ -107,6 +107,49 @@ def build_digest(records: List[PostdocRecord]) -> str:
 
 
 
+def build_pipeline_summary(
+    raw_count: int,
+    valid_count: int,
+    inserted_count: int,
+    dashboard_url: str = "https://www.skilledgeup.de/admin/postdoc",
+) -> str:
+    """Build high-level markdown summary card for Telegram."""
+    return (
+        "🚀 *SkillEdgeUp Post-Doc Run Complete*\n\n"
+        f"• *Scraped:* `{raw_count}` raw items\n"
+        f"• *Filtered:* `{valid_count}` valid candidates\n"
+        f"• *Added:* `{inserted_count}` new records\n\n"
+        f"👉 [Open Admin Dashboard]({dashboard_url})"
+    )
+
+
+async def send_pipeline_summary(
+    client: httpx.AsyncClient,
+    raw_count: int,
+    valid_count: int,
+    inserted_count: int,
+    dashboard_url: str = "https://www.skilledgeup.de/admin/postdoc",
+) -> None:
+    """Send high-level summary card to Telegram."""
+    url = f"https://api.telegram.org/bot{settings.TELEGRAM_POSTDOC_BOT_TOKEN}/sendMessage"
+    text = build_pipeline_summary(raw_count, valid_count, inserted_count, dashboard_url)
+    try:
+        res = await client.post(
+            url,
+            json={
+                "chat_id": settings.TELEGRAM_POSTDOC_CHAT_ID,
+                "text": text,
+                "parse_mode": "Markdown",
+                "disable_web_page_preview": True,
+            },
+            timeout=15.0,
+        )
+        res.raise_for_status()
+        print("  [telegram] Pipeline summary sent successfully.")
+    except Exception as exc:
+        print(f"  [telegram] Failed to send pipeline summary — {exc}")
+
+
 async def send_telegram_alert(client: httpx.AsyncClient, text: str) -> None:
     url = f"https://api.telegram.org/bot{settings.TELEGRAM_POSTDOC_BOT_TOKEN}/sendMessage"
 

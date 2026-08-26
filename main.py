@@ -15,7 +15,7 @@ import httpx
 from app.scrapers import scrape_all_sources
 from app.processor import enrich_missing_deadlines, process_vacancies
 from app.supabase_db import get_existing_links, insert_postdocs, log_activity
-from app.telegram_bot import build_digest, send_telegram_alert
+from app.telegram_bot import build_digest, send_pipeline_summary, send_telegram_alert
 
 
 async def main() -> None:
@@ -23,7 +23,7 @@ async def main() -> None:
     print("SkillEdgeUp Post-Doc Finder — starting run")
     print("=" * 60)
 
-    # 1. Scrape all 17 sources concurrently
+    # 1. Scrape all 18 sources concurrently
     print("\n[1/4] Scraping all sources...")
     raw_vacancies = await scrape_all_sources()
     print(f"      Raw items collected: {len(raw_vacancies)}")
@@ -49,10 +49,17 @@ async def main() -> None:
             await insert_postdocs(client, fresh_records)
             await log_activity(client, len(fresh_records))
 
-        # 4. Build and send Telegram digest
-        print("\n[4/4] Sending Telegram digest...")
-        digest = build_digest(fresh_records)
-        await send_telegram_alert(client, digest)
+        # 4. Build and send Telegram summary & digest
+        print("\n[4/4] Sending Telegram summary and digest...")
+        await send_pipeline_summary(
+            client,
+            raw_count=len(raw_vacancies),
+            valid_count=len(candidates),
+            inserted_count=len(fresh_records),
+        )
+        if fresh_records:
+            digest = build_digest(fresh_records)
+            await send_telegram_alert(client, digest)
 
     print("\n" + "=" * 60)
     print("Run complete.")
