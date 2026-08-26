@@ -1,8 +1,8 @@
 # SkillEdgeUp Post-Doc Finder 🔬
 
-An automated post-doctoral vacancy aggregator for **Dr. Faloye**, targeting positions in graduate employability, labour market research, organisational development, and related fields — primarily at German and European universities.
+An automated post-doctoral vacancy aggregator for **Dr. Faloye**, targeting positions in Empirical Educational Research (*Empirische Bildungsforschung*), Higher Education Innovation, Learning Analytics, Educational Evaluation & Quality Development, Science Management (*Wissenschaftsmanagement*), Academic Governance, and Labour Market Research — primarily at German universities and research institutes.
 
-Runs on a **Mon / Wed / Fri 08:00** cron schedule via Coolify, scrapes 17 sources concurrently, scores and deduplicates results, saves them to Supabase, and delivers a ranked digest via Telegram.
+Runs on a **Daily 08:00 UTC** cron schedule via Coolify, scrapes 18 sources concurrently (including direct university portals), scores and deduplicates results, saves them to Supabase, and delivers a ranked digest via Telegram.
 
 ---
 
@@ -10,8 +10,8 @@ Runs on a **Mon / Wed / Fri 08:00** cron schedule via Coolify, scrapes 17 source
 
 ```
 main.py
- ├── scrapers.py      → 17 concurrent sources (Serper, SerpAPI, Exa AI, RSS, SSR HTML)
- ├── processor.py     → Keyword scoring, deduplication, institution tier ranking
+ ├── scrapers.py      → 18 concurrent sources (Serper, SerpAPI, Exa AI, RSS, Direct SSR HTML)
+ ├── processor.py     → Keyword scoring, deduplication, institution tier ranking & hard gates
  ├── supabase_db.py   → Supabase REST API (fetch existing + bulk insert)
  └── telegram_bot.py  → Regional digest builder + Telegram delivery
 ```
@@ -24,17 +24,25 @@ main.py
 | Search (SerpAPI) | Google News |
 | Semantic AI | Exa AI (4 queries) |
 | RSS Feeds | Bund.de, HigherEdJobs, AcademicKeys Social Sciences, AcademicKeys Education |
-| Direct HTML (SSR) | Academics.de, EURAXESS, UniversityPositions.eu |
+| Direct Portals (SSR) | Uni Münster Vacancies, Academics.de, EURAXESS, UniversityPositions.eu, PsychJob.eu |
 
-## Scoring Logic
+## Scoring Logic & Quality Gates
 
-Each vacancy receives a **1–10 match score** based on:
+Each vacancy passes strict pre-filters and receives a **1–10 match score**:
 
-- **Base score** (5–10): presence of core topic terms + vacancy signals + trusted domain
-- **Institution bonus** (+1–2): Tier 1 (DZHW, IZA, WZB…) or Tier 2 (TU Berlin, LMU, Oxford…)
-- **Negative discipline penalty** (−1 to −3): hard sciences not relevant to the role
-- **Social source penalty** (−1): Reddit, Facebook, Twitter/X, ResearchGate
-- **German language cap**: C1/C2 requirement caps score at 4
+- **Hard Pre-Filters (Dropped before scoring):**
+  - **Dead / Soft-404 placeholder listings** (*"This job ad isn't available"*, *"Über diesen Job"*, text < 80 chars)
+  - **Non-German locations** (Austria, UK, Switzerland, USA, etc.)
+  - **Off-target domains** (Physics, Tropical Dynamics, Engineering, IT / Computer Science, Pure Macro/Micro Economics)
+  - **Senior chairs** (W2/W3 Professorships and tenured chairs requiring Habilitation)
+  - **Pure/Clinical psychology** (Clinical Approbation, Psychotherapy)
+  - **Pre-doc / PhD positions** ($\le 75\%$ TV-L 13 requiring dissertation completion)
+
+- **Match Scoring:**
+  - **Base score** (5–10): presence of core topic terms (*Empirische Bildungsforschung, Wissenschaftsmanagement, Hochschulforschung, Evaluation, Labour Market, Learning Analytics*) + vacancy signals
+  - **Target Core Requirement**: Scores $\ge 7/10$ require a Target Core match.
+  - **Institution bonus** (+1–2): Tier 1 (DZHW, IZA, WZB, DIPF, BIBB…) or Tier 2 (Uni Münster, TU Berlin, LMU, Uni Leipzig, Uni Bamberg…)
+  - **German language cap**: C1/C2 requirement caps score at 4
 
 ## Project Structure
 
@@ -44,8 +52,8 @@ postdoc-finder/
 │   ├── __init__.py
 │   ├── config.py          # Pydantic-settings — all config from .env
 │   ├── models.py          # RawVacancy + PostdocRecord schemas
-│   ├── scrapers.py        # All 17 sources
-│   ├── processor.py       # Full scoring & dedup engine
+│   ├── scrapers.py        # All 18 sources (including direct Uni portals)
+│   ├── processor.py       # Full scoring, dedup & hard exclusion engine
 │   ├── supabase_db.py     # Supabase queries & inserts
 │   └── telegram_bot.py    # Digest + Telegram delivery
 ├── main.py                # Entrypoint
@@ -97,7 +105,8 @@ python main.py
 2. Coolify auto-detects the `Dockerfile`
 3. In **Environment Variables**, paste all variables from `.env.example` with real values
 4. In **Scheduled Tasks**, add:
-   - **Schedule:** `0 8 * * 1,3,5`
+   - **Task Name:** `germany-postdoc-scraper`
+   - **Schedule:** `0 8 * * *`
    - **Command:** `python main.py`
    - **Timezone:** `Europe/Berlin`
 
@@ -109,7 +118,10 @@ The app writes to `skilledgeup_postdoc`. Required columns:
 create table skilledgeup_postdoc (
   id              uuid primary key default gen_random_uuid(),
   institution     text not null,
+  department      text,
   research_focus  text,
+  country         text default 'Germany',
+  city            text,
   link            text not null unique,
   deadline        date,
   match_score     int,
