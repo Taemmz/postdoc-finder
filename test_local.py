@@ -264,12 +264,12 @@ def test_process():
             link="https://uni-bamberg.de/jobs/postdoc-aop",
             snippet="100% TV-L E13. Postdoktorand/in im Bereich Organisationsentwicklung und Kompetenzentwicklung gesucht. Bewerbungen bis 15.11.2026.",
         ),
-        # 13. Valid: W1 Tenure Track Juniorprofessur in Target Core
+        # 13. Valid: Postdoc in Hochschulforschung
         RawVacancy(
             source="Academic Boards",
-            title="W1-Professur (Tenure Track) für Hochschulforschung — TU Berlin",
-            link="https://jobs.tu-berlin.de/jobs/w1-hochschulforschung",
-            snippet="Open position for Juniorprofessur / W1-Professur in Hochschulforschung and Bildungsforschung. Deadline: 01.12.2026.",
+            title="Wissenschaftliche/r Mitarbeiter/in (Postdoc) für Hochschulforschung — DIPF Frankfurt",
+            link="https://dipf.de/jobs/postdoc-hochschulforschung",
+            snippet="100% TV-L E13. Postdoktorand/in im Bereich Hochschulforschung und Bildungsforschung gesucht. Deadline: 01.12.2026.",
         ),
         # 14. Valid: Higher Education & Science Management / Governance
         RawVacancy(

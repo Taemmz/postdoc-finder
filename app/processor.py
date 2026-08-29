@@ -40,25 +40,53 @@ EXCLUDE_DESC = [
     "promotion vorgesehen",
 ]
 
-# Disallow senior professorships (W2, W3, full chair / Lehrstuhl / permanent professorships)
-SENIOR_CHAIR_BLOCKLIST = [
-    r"\bw3\b",
-    r"\bw2\b",
-    r"\bw2/w3\b",
-    r"\bw3/w2\b",
-    r"\buniversity\s+professor\b",
-    r"\buniv\.-prof\b",
-    r"\blehrstuhlinhaber",
-    r"\blehrstuhl\b",
-    r"\bordentliche[r]?\s+professor",
-    r"\btenured\s+(?:full\s+)?professor\b",
+# ---------------------------------------------------------------------------
+# 4-Layer Clean-Up Filters
+# ---------------------------------------------------------------------------
+
+# 1. Strict Professorship & Senior Chair Exclusion
+EXCLUDED_ACADEMIC_RANKS = [
+    r"\bw[123][- ]professur\b",
+    r"\bw[123]\b",
+    r"\bprofessur\b",
+    r"\bprofessor(?:in)?\b",
     r"\bfull\s+professor(?:ship)?\b",
+    r"\btenure[- ]track\s+(?:assistant\s+)?professor\b",
+    r"\buniv(?:ersitäts)?[- ]professur\b",
+    r"\bjuniorprofessur\b",
+    r"\bassistant\s+professor\b",
+    r"\bassociate\s+professor\b",
+    r"\blehrstuhl\b",
+    r"\blehrstuhlinhaber\b",
+    r"\bhabilitat\w*\b",
+    r"\bordinariat\b",
+    r"\bstudentische\s+hilfskraft\b",
+    r"\bhiwi\b",
+    r"\bkindertagesstätte\b",
+    r"\bkita[- ]leitung\b",
     r"\bprofessur\s+auf\s+lebenszeit\b",
     r"\bpermanent\s+professorship\b",
-    r"\bordinariat\b",
 ]
+EXCLUDED_ACADEMIC_RANKS_REGEX = re.compile("|".join(EXCLUDED_ACADEMIC_RANKS), re.IGNORECASE)
 
-SENIOR_CHAIR_REGEX = re.compile("|".join(SENIOR_CHAIR_BLOCKLIST), re.IGNORECASE)
+# 2. Disciplinary Blacklist (STEM, Heavy Tech, Medicine, Theology)
+EXCLUDED_ACADEMIC_FIELDS = [
+    r"\bmaschinenbau\b",
+    r"\bbauingenieur\w*\b",
+    r"\bchemie\b",
+    r"\bphysik\b",
+    r"\bmedizin\w*\b",
+    r"\bonkolog\w*\b",
+    r"\bnephrolog\w*\b",
+    r"\bavionik\b",
+    r"\brobotik\b",
+    r"\bspace\s+engineering\b",
+    r"\bfertigungstechnik\b",
+    r"\btheolog\w*\b",
+    r"\bkirchenrecht\b",
+    r"\blebensmittel\w*\b",
+]
+EXCLUDED_ACADEMIC_FIELDS_REGEX = re.compile("|".join(EXCLUDED_ACADEMIC_FIELDS), re.IGNORECASE)
 
 # Block hard-gated psychology tracks that require a primary Psychology B.Sc./M.Sc.
 PURE_PSYCH_BLOCKLIST = [
@@ -72,7 +100,6 @@ PURE_PSYCH_BLOCKLIST = [
     r"\bpsychotherapy\b",
     r"\bapprobation\b",
 ]
-
 PURE_PSYCH_REGEX = re.compile("|".join(PURE_PSYCH_BLOCKLIST), re.IGNORECASE)
 
 # Hard gate on Pre-Doc / PhD / Dissertation pursuit listings
@@ -109,15 +136,12 @@ POSTDOC_AFFIRMATIVE = [
     r"promotion\s+vorausgesetzt",
     r"phd\s+required",
     r"completed\s+phd",
-    r"habilitation",
-    r"\bw1\b",
-    r"\bjuniorprofessur\b",
     r"100\s*%\s*(?:tv[-\s]?l|tvöd)",
 ]
 POSTDOC_AFFIRMATIVE_REGEX = re.compile("|".join(POSTDOC_AFFIRMATIVE), re.IGNORECASE)
 
 # ---------------------------------------------------------------------------
-# Keyword banks
+# Keyword banks: Positive Alignment Filter
 # ---------------------------------------------------------------------------
 POSITION_TERMS = [
     # English postdoc / staff researcher
@@ -141,11 +165,6 @@ POSITION_TERMS = [
     # German contract grades (strong signal of postdoc-level academic role)
     "tv-l e13", "tv-l e14", "tv-l 13", "tv-l 14", "tvöd e13", "tvöd e14",
     "wisszeitvg",
-    # Junior Professorships & early faculty (W1, Juniorprofessur, Tenure Track)
-    "juniorprofessur", "juniorprofessor", "juniorprofessorin",
-    "w1", "w1-professur",
-    "tenure track", "tenure-track",
-    "assistant professor",
 ]
 TOPIC_CORE = [
     # Empirical Educational Research & Higher Education
@@ -350,10 +369,6 @@ GERMAN_POSITION_REGEX = re.compile(
     r"post[-\s]?doktorand(?:in)?|"
     # Wissenschaftliche(r/n) Mitarbeiter(in) — handles slug 'wissenschaftliche-r-mitarbeiterin'
     r"wissenschaftliche[-\s]?[rn]?[-\s]+mitarbeiter(?:in)?|"
-    # Junior professorships: W1-Professur, Juniorprofessur, Tenure Track
-    r"(?:w1|junior|tenure[-\s]?track)?[-\s]?professur|"
-    r"(?:junior[-\s]?)?professor(?:in)?|"
-    r"tenure[-\s]?track|"
     # Akademischer Rat / Rätin
     r"akademische[-\s]?[rn]?[-\s]+(?:rat|rätin|mitarbeiter(?:in)?)|"
     # Research roles (with optional hyphen between words)
@@ -856,17 +871,13 @@ def compute_region(source: str, link: str, text: str, institution_tier: int) -> 
 def passes_qualification_gates(title: str, text: str) -> Tuple[bool, str]:
     full_corpus = f"{title} {text}".lower()
 
-    # Gate 1: Check for W2/W3 senior chair blocklist
-    if SENIOR_CHAIR_REGEX.search(full_corpus):
-        return False, "Excluded: Senior Professorship (W2/W3 / Tenured Chair)"
+    # Gate 1: Strict Professorship & Excluded Academic Ranks
+    if EXCLUDED_ACADEMIC_RANKS_REGEX.search(title) or EXCLUDED_ACADEMIC_RANKS_REGEX.search(full_corpus):
+        return False, "Excluded: Professorship, Chair, Student Assistant, or Kita position"
 
-    # Gate 1b: General Professorships — Any title with 'professur' or 'professor'
-    # MUST be an early-career junior position (W1 / Juniorprofessur) AND have a target core match
-    if re.search(r"\bprofess(?:ur|or(?:in)?)\b", title, re.IGNORECASE):
-        is_junior = bool(re.search(r"\b(?:w1|juniorprofessur|juniorprofessor(?:in)?)\b", title, re.IGNORECASE))
-        has_core_topic = any(t in full_corpus for t in TOPIC_CORE)
-        if not (is_junior and has_core_topic):
-            return False, "Excluded: Non-target or tenured Professorship"
+    # Gate 1b: Disciplinary Blacklist (STEM, Heavy Tech, Medicine, Theology)
+    if EXCLUDED_ACADEMIC_FIELDS_REGEX.search(title) or EXCLUDED_ACADEMIC_FIELDS_REGEX.search(full_corpus):
+        return False, "Excluded: STEM, Medicine, Heavy Tech, or Theology field"
 
     # Gate 2: Check for pure psychology requirements
     if PURE_PSYCH_REGEX.search(full_corpus):
@@ -1037,11 +1048,6 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
             base = 5
         else:
             base = 3
-
-        # Junior Professorship bonus: W1 Professur or Juniorprofessur on a core topic
-        PROFESSORSHIP_TERMS = ["w1", "juniorprofessur", "juniorprofessor", "tenure track", "tenure-track"]
-        if any(p in lower for p in PROFESSORSHIP_TERMS) and has_core:
-            base = max(base, 9)
 
         inst_bonus, inst_tier = compute_institution_bonus(text, clean_link)
         neg_hits = [d for d in NEGATIVE_DISCIPLINES if d in lower]
