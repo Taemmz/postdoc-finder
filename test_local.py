@@ -264,7 +264,7 @@ def test_process():
             link="https://uni-bamberg.de/jobs/postdoc-aop",
             snippet="100% TV-L E13. Postdoktorand/in im Bereich Organisationsentwicklung und Kompetenzentwicklung gesucht. Bewerbungen bis 15.11.2026.",
         ),
-        # 13. Valid: W1 Tenure Track Juniorprofessur
+        # 13. Valid: W1 Tenure Track Juniorprofessur in Target Core
         RawVacancy(
             source="Academic Boards",
             title="W1-Professur (Tenure Track) für Hochschulforschung — TU Berlin",
@@ -278,11 +278,46 @@ def test_process():
             link="https://lmu.de/jobs/referent-wissenschaftsmanagement",
             snippet="100% TV-L E13. Dekanatsreferat sucht Referentin für Wissenschaftsmanagement, Qualitätsentwicklung und Evaluation von Studium und Lehre. Bewerbungsschluss: 20.11.2026.",
         ),
+        # 15. Excluded: Daycare / Kita Role
+        RawVacancy(
+            source="Service.bund.de",
+            title="Leitung für die Kindertagesstätte Wahle I",
+            link="https://www.service.bund.de/IMPORTE/Stellenangebote/interamt/2026/08/1478416.html",
+            snippet="Leitung für die Kindertagesstätte gesucht. Pädagogische Fachkraft.",
+        ),
+        # 16. Excluded: Student Assistant / Hilfskraft
+        RawVacancy(
+            source="academics.de",
+            title="Studentische / Wissenschaftliche Hilfskraft im Bereich Wissenschaftsorientiertes Ressourcenmanagement im IAB",
+            link="https://www.academics.de/jobs/studentische-hilfskraft-iab-1110248",
+            snippet="Institut für Arbeitsmarkt- und Berufsforschung Nürnberg sucht studentische Hilfskraft.",
+        ),
+        # 17. Excluded: Tenured Professorship without W2 in title
+        RawVacancy(
+            source="academics.de",
+            title="Professur für Fertigungstechnik Hochschule München",
+            link="https://www.academics.de/jobs/professur-fuer-fertigungstechnik-1110257",
+            snippet="Professur für Fertigungstechnik an der Hochschule München zu besetzen.",
+        ),
+        # 18. Excluded: W1 Juniorprofessur in Off-Target Engineering
+        RawVacancy(
+            source="academics.de",
+            title="W1-Juniorprofessur Design and Technologies of Advanced Power Electronic Components",
+            link="https://www.academics.de/jobs/w1-juniorprofessur-power-electronics-1110353",
+            snippet="RWTH Aachen University sucht Juniorprofessor für Leistungselektronik.",
+        ),
+        # 19. Excluded: Corporate Management-Trainee with C2 German
+        RawVacancy(
+            source="academics.de",
+            title="Management-Trainees bei der Bundesagentur für Arbeit",
+            link="https://www.academics.de/jobs/management-trainees-ba-1110025",
+            snippet="Vollzeit Traineeprogramm. Erfordert Deutschkenntnisse auf C2-Niveau (muttersprachlich).",
+        ),
     ]
 
     results = process_vacancies(mocks)
     print(f"  Input : {len(mocks)} raw vacancies")
-    print(f"  Output: {len(results)} scored records (Expected: 4 passing, 10 excluded)\n")
+    print(f"  Output: {len(results)} scored records (Expected: 4 passing, 15 excluded)\n")
     for r in results:
         print(f"  ✅ Inst     : {r.institution}")
         print(f"     Dept     : {r.department or 'N/A'}")

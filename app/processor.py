@@ -18,8 +18,18 @@ from app.models import PostdocRecord, RawVacancy
 # Exclusion lists
 # ---------------------------------------------------------------------------
 EXCLUDE_TITLES = [
+    # PhD / Pre-doc
     "phd candidate", "doctoral researcher", "doctoral student",
     "doktorand", "doktorandin", "promotionsstelle", "phd programme",
+    # Student / Assistant
+    "studentische hilfskraft", "studentische / wissenschaftliche hilfskraft",
+    "wissenschaftliche hilfskraft", "hilfskraft", "hiwi", "student assistant",
+    "werkstudent", "graduate research assistant",
+    # Daycare / Kita / Non-academic social care
+    "kindertagesstätte", "kita", "erzieher", "kinderpfleger", "kindergarten",
+    "pflegefachkraft", "pflegekraft", "aufsicht",
+    # Trainee / Non-academic corporate roles
+    "management-trainee", "trainee", "ausbildungsplätze", "ausbildung",
     "hr generalist", "recruiter", "sales", "marketing", "customer service",
 ]
 # NOTE: WissZeitVG removed — German postdoc contracts frequently cite this
@@ -30,7 +40,7 @@ EXCLUDE_DESC = [
     "promotion vorgesehen",
 ]
 
-# Disallow senior professorships (W2, W3, full chair / Lehrstuhl)
+# Disallow senior professorships (W2, W3, full chair / Lehrstuhl / permanent professorships)
 SENIOR_CHAIR_BLOCKLIST = [
     r"\bw3\b",
     r"\bw2\b",
@@ -39,8 +49,13 @@ SENIOR_CHAIR_BLOCKLIST = [
     r"\buniversity\s+professor\b",
     r"\buniv\.-prof\b",
     r"\blehrstuhlinhaber",
+    r"\blehrstuhl\b",
     r"\bordentliche[r]?\s+professor",
-    r"\btenured\s+full\s+professor\b",
+    r"\btenured\s+(?:full\s+)?professor\b",
+    r"\bfull\s+professor(?:ship)?\b",
+    r"\bprofessur\s+auf\s+lebenszeit\b",
+    r"\bpermanent\s+professorship\b",
+    r"\bordinariat\b",
 ]
 
 SENIOR_CHAIR_REGEX = re.compile("|".join(SENIOR_CHAIR_BLOCKLIST), re.IGNORECASE)
@@ -209,14 +224,18 @@ HARD_EXCLUSIONS = [
 # ---------------------------------------------------------------------------
 NON_GERMAN_LOCATIONS = [
     r"\baustria\b", r"\bösterreich\b", r"\boesterreich\b", r"\bvienna\b", r"\bwien\b", r"\bgraz\b", r"\binnsbruck\b", r"\blinz\b", r"\bsalzburg\b",
+    r"\bklagenfurt\b", r"\bwörthersee\b", r"\bwoerthersee\b", r"\bwirtschaftsuniversität\s+wien\b",
     r"\bunited\s+kingdom\b", r"\buk\b", r"\bleeds\b", r"\blondon\b", r"\boxford\b", r"\bcambridge\b", r"\bmanchester\b", r"\bedinburgh\b", r"\bbirmingham\b", r"\bglasgow\b", r"\bbristol\b", r"\bwarwick\b",
-    r"\bswitzerland\b", r"\bschweiz\b", r"\bzürich\b", r"\bzurich\b", r"\bgeneva\b", r"\bgenf\b", r"\bbasel\b", r"\blausanne\b", r"\bbern\b",
+    r"\bswitzerland\b", r"\bschweiz\b", r"\bzürich\b", r"\bzurich\b", r"\bgeneva\b", r"\bgenf\b", r"\bbasel\b", r"\blausanne\b", r"\bbern\b", r"\bfribourg\b", r"\briehen\b",
     r"\basia\b", r"\bnetherlands\b", r"\bamsterdam\b", r"\butrecht\b", r"\bleiden\b", r"\brotterdam\b",
-    r"\busa\b", r"\bunited\s+states\b", r"\bcanada\b", r"\btoronto\b", r"\baustralia\b", r"\bsydney\b", r"\bmelbourne\b",
-    r"\bfrance\b", r"\bparis\b", r"\bbelgium\b", r"\bbrussels\b", r"\bsweden\b", r"\bdenmark\b", r"\bnorway\b", r"\bfinland\b",
-    r"\bindia\b", r"\bnagaland\b", r"\bsingapore\b", r"\bmalaysia\b", r"\bchina\b", r"\bjapan\b", r"\bbrazil\b",
+    r"\busa\b", r"\bunited\s+states\b", r"\bcanada\b", r"\btoronto\b", r"\baustralia\b", r"\bsydney\b", r"\bmelbourne\b", r"\bunsw\b",
+    r"\bfrance\b", r"\bparis\b", r"\bbelgium\b", r"\bbrussels\b", r"\bsweden\b",
+    r"\bdenmark\b", r"\bdänemark\b", r"\bdaenemark\b", r"\baarhus\b", r"\bodense\b", r"\bcopenhagen\b", r"\bkopenhagen\b",
+    r"\bnorway\b", r"\bfinland\b",
+    r"\bindia\b", r"\bnagaland\b", r"\bdelhi\b", r"\bnew\s+delhi\b", r"\bsingapore\b", r"\bmalaysia\b", r"\bchina\b", r"\bjapan\b", r"\bbrazil\b",
     r"\bsouth\s+africa\b", r"\bpakistan\b", r"\bbangladesh\b", r"\bnigeria\b", r"\bkenya\b", r"\bindonesia\b", r"\bphilippines\b", r"\bvietnam\b",
     r"\bnew\s+zealand\b", r"\bauckland\b", r"\bireland\b", r"\bdublin\b", r"\bpoland\b", r"\bitaly\b", r"\bspain\b",
+    r"\bmichigan\b", r"\bnew\s+york\b",
 ]
 NON_GERMAN_REGEX = re.compile("|".join(NON_GERMAN_LOCATIONS), re.IGNORECASE)
 
@@ -236,7 +255,7 @@ OFF_TARGET_DOMAINS = [
     # Pure Macro/Micro Economics & Senior Chairs
     r"\bvolkswirtschaftslehre\b", r"\beconometrics\b", r"\bw2\b", r"\bw3\b", r"\bw2/w3\b", r"\bw3/w2\b",
     r"\blehrstuhl\b", r"\blehrstuhlinhaber\b", r"\buniversity\s+professor\b", r"\buniv\.-prof\b",
-    r"\bordentliche[r]?\s+professor\b", r"\btenured\s+full\s+professor\b",
+    r"\bordentliche[r]?\s+professor\b", r"\btenured\s+(?:full\s+)?professor\b", r"\bfull\s+professor(?:ship)?\b",
     # Clinical medicine / trials / animal science
     r"\bclinical\s+trial\b", r"\boncology\b", r"\bpharmacology\b", r"\bveterinary\b", r"\btierhygiene\b",
 ]
@@ -258,6 +277,7 @@ DEAD_PAGE_PATTERNS = [
     r"page not found",
     r"seite nicht gefunden",
     r"über diesen job",
+    r"no longer accepting applications",
 ]
 DEAD_PAGE_REGEX = re.compile("|".join(DEAD_PAGE_PATTERNS), re.IGNORECASE)
 
@@ -273,13 +293,17 @@ def is_dead_or_placeholder(title: str, text: str) -> bool:
 
 
 def strictly_qualifies(title: str, text: str, url: str) -> Tuple[bool, str]:
-    corpus = f"{title} {text}".lower()
+    corpus = f"{title} {text} {url}".lower()
+
+    # Gate 0: Non-German LinkedIn country subdomains
+    if re.search(r"https?://(?:uk|ca|au|in|sg|ch|at|fr|nl|es|it|us|dk|se|no)\.linkedin\.com", url, re.I):
+        return False, "Excluded: Non-German LinkedIn domain"
 
     # Gate 1: Drop dead ads and UI fragments
     if is_dead_or_placeholder(title, text):
         return False, "Dead ad / Empty placeholder"
 
-    # Gate 2: Drop non-German countries
+    # Gate 2: Drop non-German countries & foreign TLDs
     if NON_GERMAN_REGEX.search(corpus):
         return False, "Excluded: Non-German institution/location"
 
@@ -833,8 +857,16 @@ def passes_qualification_gates(title: str, text: str) -> Tuple[bool, str]:
     full_corpus = f"{title} {text}".lower()
 
     # Gate 1: Check for W2/W3 senior chair blocklist
-    if SENIOR_CHAIR_REGEX.search(title):
+    if SENIOR_CHAIR_REGEX.search(full_corpus):
         return False, "Excluded: Senior Professorship (W2/W3 / Tenured Chair)"
+
+    # Gate 1b: General Professorships — Any title with 'professur' or 'professor'
+    # MUST be an early-career junior position (W1 / Juniorprofessur) AND have a target core match
+    if re.search(r"\bprofess(?:ur|or(?:in)?)\b", title, re.IGNORECASE):
+        is_junior = bool(re.search(r"\b(?:w1|juniorprofessur|juniorprofessor(?:in)?)\b", title, re.IGNORECASE))
+        has_core_topic = any(t in full_corpus for t in TOPIC_CORE)
+        if not (is_junior and has_core_topic):
+            return False, "Excluded: Non-target or tenured Professorship"
 
     # Gate 2: Check for pure psychology requirements
     if PURE_PSYCH_REGEX.search(full_corpus):
@@ -861,15 +893,10 @@ def passes_relevance_gate(
     if not has_position:
         return False
 
-    # Professorship bypass: W1, Juniorprofessur, Tenure Track on a trusted
-    # German portal are rare, high-value openings. Skip the topic gate for these
-    # since the position type itself IS the relevance signal.
-    PROF_TERMS = ["w1", "juniorprofessur", "juniorprofessor", "tenure track", "tenure-track"]
-    if trusted and any(p in lower for p in PROF_TERMS):
-        return True
-
+    # Topic gate is STRICTLY MANDATORY: must match either core or adjacent discipline
     if not has_core and not has_adjacent:
         return False
+
     has_strong = any(t in lower for t in STRONG_VACANCY_SIGNALS)
     return trusted or has_strong or any(t in lower for t in WEAK_VACANCY_SIGNALS)
 
@@ -1011,11 +1038,10 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         else:
             base = 3
 
-        # Junior Professorship bonus: W1 Professur or Juniorprofessur on a core/adjacent
-        # topic is a rare, high-value opening — bump base score up
+        # Junior Professorship bonus: W1 Professur or Juniorprofessur on a core topic
         PROFESSORSHIP_TERMS = ["w1", "juniorprofessur", "juniorprofessor", "tenure track", "tenure-track"]
-        if any(p in lower for p in PROFESSORSHIP_TERMS) and (has_core or has_adjacent or trusted):
-            base = max(base, 9 if has_core else 7)
+        if any(p in lower for p in PROFESSORSHIP_TERMS) and has_core:
+            base = max(base, 9)
 
         inst_bonus, inst_tier = compute_institution_bonus(text, clean_link)
         neg_hits = [d for d in NEGATIVE_DISCIPLINES if d in lower]
@@ -1024,10 +1050,10 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         score = max(1, min(10, base + inst_bonus + neg_penalty))
 
         german = detect_german(text)
-        if german in ("c1", "c2"):
-            score = min(score, 4)
+        if german in ("c1", "c2") or re.search(r"\b(?:c1[-\s]?niveau|c2[-\s]?niveau|sprachniveau\s+c[12]|level\s+c[12]|verhandlungssicher|muttersprachlich|native\s+german)\b", lower):
+            continue
 
-        # Drop listings scoring below actionable threshold (unless high-value W1/Juniorprofessur)
+        # Drop listings scoring below actionable threshold
         if score < 5:
             continue
 
