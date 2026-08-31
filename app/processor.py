@@ -124,7 +124,6 @@ PRE_DOC_BLOCKLIST = [
     r"\bphd\s+candidate\b",
     r"even\s+if\s+you\s+have\s+not\s+yet\s+completed\s+your\s+studies",
     r"studium\s+noch\s+nicht\s+abgeschlossen",
-    r"\b(?:50|65|70|75)\s*%\s*(?:tv[-\s]?l|tvöd)\b",
 ]
 PRE_DOC_REGEX = re.compile("|".join(PRE_DOC_BLOCKLIST), re.IGNORECASE)
 
@@ -137,6 +136,12 @@ POSTDOC_AFFIRMATIVE = [
     r"phd\s+required",
     r"completed\s+phd",
     r"100\s*%\s*(?:tv[-\s]?l|tvöd)",
+    r"\blehrinnovation\b",
+    r"\bhochschuldidaktik\b",
+    r"\btransformative\s+hochschullehre\b",
+    r"\bwissenschaftsmanagement\b",
+    r"\bprojektkoordinat\w*\b",
+    r"\bprorektorat\b",
 ]
 POSTDOC_AFFIRMATIVE_REGEX = re.compile("|".join(POSTDOC_AFFIRMATIVE), re.IGNORECASE)
 
@@ -151,19 +156,30 @@ POSITION_TERMS = [
     # German postdoc / staff researcher
     "wissenschaftliche mitarbeiter", "wissenschaftlicher mitarbeiter",
     "wissenschaftliche mitarbeiterin", "postdoktorand", "postdoktorandin",
+    "wiss. mitarbeiter", "wiss. mitarbeiterin", "wiss. mitarbeiter*in",
     "nachwuchswissenschaftler", "nachwuchswissenschaftlerin",
     "akademischer rat", "akademische rätin", "junior research group",
-    "qualifikationsstelle", "akademische mitarbeiter",
+    "qualifikationsstelle", "akademische mitarbeiter", "akademische mitarbeiterin",
+    "akademischer mitarbeiter", "akademische*r mitarbeiter*in",
     # Higher Education & Science Management / Academic Governance
     "wissenschaftsmanagement", "wissenschaftsmanager", "wissenschaftsmanagerin",
+    "projektkoordinator", "projektkoordinatorin", "projektmanager", "projektmanagerin",
+    "projektleitung", "projektleiter", "projektleiterin",
+    "programmmanager", "programmmanagerin",
+    "qualitätsmanager", "qualitätsmanagerin", "qualitätsmanagerin hochschulentwicklung",
     "dekanatsreferat", "dekanatsreferent", "dekanatsreferentin",
     "referent für forschung", "referentin für forschung",
     "referent für lehre", "referentin für lehre",
+    "referent für studium und lehre", "referentin für studium und lehre",
+    "koordinator für studium und lehre", "koordinatorin für studium und lehre",
+    "prorektorat", "prorektorat lehre", "prorektorat lehre und studium",
     "studiengangskoordinator", "studiengangskoordinatorin",
     "studiengangsentwicklung", "qualitätsentwicklung", "qualitätsmanagement",
     "hochschuldidaktik", "hochschulentwicklung", "academic governance",
+    "lehrinnovation", "transformative hochschullehre",
     # German contract grades (strong signal of postdoc-level academic role)
     "tv-l e13", "tv-l e14", "tv-l 13", "tv-l 14", "tvöd e13", "tvöd e14",
+    "e 13", "e 14", "eg 13", "eg 14",
     "wisszeitvg",
 ]
 TOPIC_CORE = [
@@ -173,6 +189,12 @@ TOPIC_CORE = [
     "higher education research", "hochschulforschung", "bildungsforschung",
     "lehr-lernforschung", "lehr-lern-forschung", "teaching and learning research",
     "learning analytics", "kompetenzmessung", "wirkungsanalyse", "impact analysis",
+    "lehrinnovation", "hochschuldidaktik", "transformative hochschullehre", "transformative bildung",
+    "campus im dialog", "cadena", "lehrwerkstatt", "stiftung innovation in der hochschullehre",
+    "stiftung für innovation in der hochschullehre", "future skills", "futures literacy",
+    "studium und lehre", "lehre und studium", "prorektorat", "prorektorat lehre",
+    "wissenschaftsmanagement", "hochschulentwicklung", "studiengangsentwicklung",
+    "studiengangskoordination", "curriculum", "curricula", "curriculumentwicklung",
     # Labour Market, Employability & Organisation
     "employability", "graduate employability", "labour market", "labor market",
     "workforce development", "organisational development", "organizational development",
@@ -196,6 +218,8 @@ TOPIC_ADJACENT = [
     "curriculumentwicklung", "studienreform", "evaluation von studium und lehre",
     "studienerfolg", "studienabbruch", "academic assessment", "institutional research",
     "hochschuldidaktik", "qualitätsentwicklung", "hochschulentwicklung",
+    "whole institution approach", "networked improvement communities",
+    "service learning", "community-based learning", "demokratie- und nachhaltigkeitsbildung",
     # Psychology & Education sub-disciplines
     "wirtschaftspsychologie", "gesundheitspsychologie", "sozialpsychologie",
     "pädagogische psychologie", "pädagogik", "erziehungswissenschaft",
@@ -334,7 +358,7 @@ def strictly_qualifies(title: str, text: str, url: str) -> Tuple[bool, str]:
 
 # German geographic whitelist — at least one must be present
 GERMAN_SIGNALS = [
-    ".de/", "germany", "deutschland",
+    ".de/", "germany", "deutschland", "ph-freiburg.de",
     # Major cities already in scrapers
     "berlin", "münchen", "munich", "hamburg", "köln", "cologne",
     "frankfurt", "stuttgart", "leipzig", "heidelberg", "mannheim",
@@ -347,15 +371,16 @@ GERMAN_SIGNALS = [
     "bamberg", "witten", "herdecke", "bochum", "giessen", "siegen",
     "braunschweig", "koblenz", "magdeburg", "halle saale",
     # Pay grades and legal frameworks → unambiguous Germany signals
-    "tv-l", "tvöd", "e13", "e14", "wisszeitvg",
+    "tv-l", "tvöd", "tv-h", "e13", "e14", "eg13", "eg14", "wisszeitvg",
     # Academic language / institutional markers
-    "universität", "hochschule", "wissenschaft",
+    "universität", "hochschule", "pädagogische hochschule", "wissenschaft",
     # Funding bodies and research orgs
     "dfg", "daad", "mpg.de", "helmholtz", "leibniz", "fraunhofer",
-    "max-planck-institut", "mlu", "mpi",
+    "max-planck-institut", "mlu", "mpi", "stiftung innovation in der hochschullehre", "stil",
     # Germany-only job portals — any URL on these is definitionally German
     "psychjob.eu", "academics.de", "hsozkult.de", "stellenwerk.de",
-    "akademische-jobs.de", "hochschul-job.de",
+    "akademische-jobs.de", "hochschul-job.de", "stellenangebote.ph-freiburg.de",
+    "wissenschaftsmanagement-online.de",
 ]
 
 # Regex to detect gender-inclusive German title variants found in URL slugs and
@@ -367,20 +392,24 @@ GERMAN_POSITION_REGEX = re.compile(
     r"post[-\s]?doc(?:torand(?:in)?)?|"
     # German: postdoktorand(in), post-doktorand(in)
     r"post[-\s]?doktorand(?:in)?|"
-    # Wissenschaftliche(r/n) Mitarbeiter(in) — handles slug 'wissenschaftliche-r-mitarbeiterin'
-    r"wissenschaftliche[-\s]?[rn]?[-\s]+mitarbeiter(?:in)?|"
-    # Akademischer Rat / Rätin
-    r"akademische[-\s]?[rn]?[-\s]+(?:rat|rätin|mitarbeiter(?:in)?)|"
+    # Wissenschaftliche(r/n) Mitarbeiter(in) or Wiss. Mitarbeiter(in)
+    r"(?:wiss\.|wissenschaftliche)[-\s]?[rn*]*[-\s]+mitarbeiter(?:in)?|"
+    # Akademischer Rat / Rätin / Akademische(r) Mitarbeiter(in)
+    r"akademische[-\s]?[rn*]*[-\s]+(?:rat|rätin|mitarbeiter(?:in)?)|"
     # Research roles (with optional hyphen between words)
     r"research[-\s]+(?:associate|fellow|assistant|scientist)|"
-    # German-only academic terms & Science Management
+    # German-only academic terms & Science Management / Project Coordination
     r"nachwuchswissenschaftler(?:in)?|qualifikationsstelle|"
     r"wissenschaftsmanagement|wissenschaftsmanager(?:in)?|"
+    r"projektkoordinator(?:in)?|projektmanager(?:in)?|projektleiter(?:in)?|"
+    r"programmmanager(?:in)?|qualit[äa]tsmanager(?:in)?|"
+    r"referent(?:in)?\s+f[üu]r\s+(?:studium|lehre|forschung)|"
+    r"koordinator(?:in)?\s+f[üu]r\s+(?:studium|lehre)|"
     r"dekanatsreferat|dekanatsreferent(?:in)?|"
     r"studiengangskoordinator(?:in)?|studiengangsentwicklung|"
-    r"qualitätsentwicklung|hochschuldidaktik|"
+    r"qualitätsentwicklung|hochschuldidaktik|lehrinnovation|transformative\s+hochschullehre|"
     # Pay grades — unambiguous postdoc signal in Germany (tvoed = umlaut-stripped tvöd)
-    r"tv[-\s]?l[-\s]?e?1[34]|tv(?:\u00f6d|oed)[-\s]?e?1[34]"
+    r"tv[-\s]?l[-\s]?e?1[34]|tv[-\s]?h[-\s]?e?1[34]|tv(?:\u00f6d|oed)[-\s]?e?1[34]"
     r")"
     # Optional gender suffix: (m/w/d), (m/f/d/x), -m-w-d etc.
     r"(?:[-\s]*\(?[mwdxf/]+\)?)?",
@@ -397,6 +426,7 @@ TRUSTED_JOB_DOMAINS = [
     "hsozkult.de",          # H-Soz-Kult: social science & humanities jobs
     "stellenwerk.de",       # Multi-campus university job network
     "hochschulverband.de",  # DHV: German academic association
+    "wissenschaftsmanagement-online.de",
     # German research institutes
     "mpg.de", "helmholtz.de", "leibniz-gemeinschaft.de", "fraunhofer.de",
     "gesis.org", "iab.de", "dzhw.eu", "wzb.eu",
@@ -404,7 +434,8 @@ TRUSTED_JOB_DOMAINS = [
     # German universities (domain-based)
     "charite.de", "kit.edu", "rwth-aachen.de",
     "lmu.de", "hu-berlin.de", "jobs.tu-berlin.de", "uni-leipzig.de",
-    "uni-heidelberg.de", "stellenwerk-koeln.de",
+    "uni-heidelberg.de", "stellenwerk-koeln.de", "ph-freiburg.de",
+    "stellenangebote.ph-freiburg.de",
     # Professional networks (Germany)
     "linkedin.com/jobs", "xing.com/jobs",
     # RSS aggregators
@@ -418,6 +449,14 @@ TRUSTED_JOB_DOMAINS = [
     # Direct university scraper source names (matched against item.source)
     "LMU München Direct", "HU Berlin Direct", "TU Berlin Direct",
     "Uni Leipzig Direct", "Uni Heidelberg Direct", "Uni Köln Direct",
+    "WissManagement Online SSR", "PH Freiburg Direct", "Karriere BW Direct",
+    "karriere.baden-wuerttemberg.de", "MLU Halle Direct", "uni-halle.de",
+    "TU Dresden Direct", "tu-dresden.de", "Uni Jena Direct", "uni-jena.de",
+    "jobs.uni-jena.de", "OVGU Magdeburg Direct", "ovgu.de", "ovgu.b-ite.careers",
+    "EAH Jena Direct", "eah-jena.de", "jobs.eah-jena.de",
+    "HS Magdeburg-Stendal Direct", "h2.de",
+    "HTWK Leipzig Direct", "htwk-leipzig.de", "jobs.htwk-leipzig.de",
+    "HS Merseburg Direct", "hs-merseburg.de",
 ]
 
 
@@ -512,6 +551,7 @@ DURATION_IGNORE_PATTERNS = [
     r"beginn\s+ab",
     r"einstellung\s+zum",
     r"zum\s+(?:nächstmöglichen\s+zeitpunkt|frühestmöglichen\s+zeitpunkt)",
+    r"zum\s+\d{1,2}[./\-]\d{1,2}[./\-]\d{2,4}",
 ]
 
 # Explicit application anchors (Highest Priority for Deadline Detection)
@@ -523,7 +563,8 @@ APPLICATION_ANCHOR_PATTERNS = [
     r"bewerbungsfrist\s+(?:bis\s+zum|bis)?",
     r"bewerbungsschluss\s+(?:bis\s+zum|bis)?",
     r"einsendeschluss\s+(?:bis\s+zum|bis)?",
-    r"bewerbungen\s+bis\s+(?:zum)?",
+    r"(?:online-)?bewerbung(?:en)?\s+(?:bis\s+spätestens|bis\s+zum|bis)",
+    r"bis\s+spätestens",
     r"frist\s+(?:bis\s+zum|bis)?",
     r"ausschreibungsende",
 ]
@@ -555,6 +596,7 @@ INSTITUTION_PATTERNS = [
     (r"(?:technische\s+universit[äa]t\s+m[üu]nchen|tum)\b", "TU München"),
     (r"(?:rwth\s+aachen|rheinisch-westf[äa]lische\s+technische\s+hochschule)", "RWTH Aachen"),
     (r"(?:karlsruher\s+institut\s+f[üu]r\s+technologie|kit|karlsruhe\s+institute\s+of\s+technology)\b", "Karlsruhe Institute of Technology (KIT)"),
+    (r"(?:p[äa]dagogische\s+hochschule|ph)\s+([A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?)", r"Pädagogische Hochschule \1"),
     (r"(?:hochschule)\s+([A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?)", r"Hochschule \1"),
     (r"\bdzhw\b", "Deutsches Zentrum für Hochschul- und Wissenschaftsforschung (DZHW)"),
     (r"\biab\b", "Institut für Arbeitsmarkt- und Berufsforschung (IAB)"),
@@ -632,8 +674,9 @@ def guess_institution(title: str, text: str = "", url: str = "") -> str:
 
 
 def extract_position_title(title: str) -> str:
-    parts = re.split(r"[-–|]", title)
-    return parts[0].strip() if len(parts) > 1 else title.strip()
+    clean = re.sub(r"\([^)]*\)", "", title).strip()
+    parts = re.split(r"[–|]", clean)
+    return parts[0].strip() if len(parts) > 1 else clean.strip()
 
 
 def normalize_dedup(text: str) -> str:
@@ -967,8 +1010,15 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         ]
         _NON_JOB_SUFFIXES = [".pdf", ".php", "/", "/news", "/presse", "/aktuell"]
         is_trusted_portal = any(p in clean_link for p in _TRUSTED_PORTALS)
-        has_job_path = any(s in clean_link.lower() for s in _JOB_PATH_SIGNALS)
-        ends_with_noise = any(clean_link.lower().rstrip("/").endswith(s) for s in [".pdf", "pressemitteilungen", "promotion", "forschen", "startseite"])
+        is_official_notice_pdf = clean_link.lower().endswith(".pdf") and (
+            any(p in clean_link.lower() for p in ["/ausschr/", "/stellenangebot", "/stellenausschreibung", "/jobs/", "/bekanntmachung"])
+            or "direct" in (item.source or "").lower()
+        )
+        has_job_path = any(s in clean_link.lower() for s in _JOB_PATH_SIGNALS) or is_official_notice_pdf
+        ends_with_noise = (
+            any(clean_link.lower().rstrip("/").endswith(s) for s in ["pressemitteilungen", "promotion", "forschen", "startseite"])
+            or (clean_link.lower().rstrip("/").endswith(".pdf") and not is_official_notice_pdf)
+        )
         if not is_trusted_portal and not has_job_path:
             continue
         if ends_with_noise:

@@ -49,17 +49,14 @@ async def main() -> None:
             await insert_postdocs(client, fresh_records)
             await log_activity(client, len(fresh_records))
 
-        # 4. Build and send Telegram summary & digest
-        print("\n[4/4] Sending Telegram summary and digest...")
+        # 4. Build and send clean Telegram summary
+        print("\n[4/4] Sending Telegram summary card...")
         await send_pipeline_summary(
             client,
             raw_count=len(raw_vacancies),
             valid_count=len(candidates),
             inserted_count=len(fresh_records),
         )
-        if fresh_records:
-            digest = build_digest(fresh_records)
-            await send_telegram_alert(client, digest)
 
     print("\n" + "=" * 60)
     print("Run complete.")

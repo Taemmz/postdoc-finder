@@ -96,9 +96,14 @@ def build_digest(records: List[PostdocRecord]) -> str:
                 else ""
             )
             source = r.research_data.get("source", "Web")
+            title = r.research_data.get("title_raw") or (r.department or r.research_focus[:60])
+            matched = r.research_data.get("matched_terms", [])[:3]
+            tags = " | ".join(matched) if matched else ""
+            tag_line = f"\n   🏷️ {tags}" if tags else ""
             msg += (
                 f"\n{i}. {stars} {r.match_score}/10 — {r.institution}\n"
-                f"   {deadline_str}{german_flag}\n"
+                f"   💼 {title}\n"
+                f"   {deadline_str}{german_flag}{tag_line}\n"
                 f"   [{source}]\n"
                 f"   {r.link}\n"
             )
@@ -113,13 +118,13 @@ def build_pipeline_summary(
     inserted_count: int,
     dashboard_url: str = "https://www.skilledgeup.de/admin/postdoc",
 ) -> str:
-    """Build high-level markdown summary card for Telegram."""
+    """Build high-level clean summary card for Telegram."""
+    today = datetime.now().strftime("%d %b %Y")
+    count_str = f"{inserted_count} new opportunit{'y' if inserted_count == 1 else 'ies'} found"
     return (
-        "🚀 *SkillEdgeUp Post-Doc Run Complete*\n\n"
-        f"• *Scraped:* `{raw_count}` raw items\n"
-        f"• *Filtered:* `{valid_count}` valid candidates\n"
-        f"• *Added:* `{inserted_count}` new records\n\n"
-        f"👉 [Open Admin Dashboard]({dashboard_url})"
+        f"🔬 *SkillEdgeUp Post-Doc & Academic Finder — {today}*\n\n"
+        f"✨ *{count_str}*\n\n"
+        f"👉 [Open Dashboard]({dashboard_url})"
     )
 
 

@@ -38,3 +38,8 @@ htmlcov/
 # Logs
 *.log
 logs/
+
+# Local databases
+*.db
+opportunities.db
+
