@@ -446,6 +446,7 @@ TRUSTED_JOB_DOMAINS = [
     # University name is encoded in subdomain: uni-leipzig.b-ite.careers
     "b-ite.careers", "dvinci-hr.com", "softgarden.io", "persis.de",
     "interamt.de",   # German federal/state public sector vacancies
+    "service.bund.de", "bund.de", "RSS Bund.de",
     # Direct university scraper source names (matched against item.source)
     "LMU München Direct", "HU Berlin Direct", "TU Berlin Direct",
     "Uni Leipzig Direct", "Uni Heidelberg Direct", "Uni Köln Direct",
