@@ -1,5 +1,5 @@
 import os
-import requests
+import httpx
 from typing import Dict, Any
 
 try:
@@ -42,7 +42,7 @@ def send_telegram_alert(job: Dict[str, Any]) -> bool:
     }
 
     try:
-        res = requests.post(url, json=payload, timeout=10)
+        res = httpx.post(url, json=payload, timeout=10)
         return res.status_code == 200
     except Exception as e:
         print(f"Failed to send Telegram alert: {e}")

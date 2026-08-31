@@ -10,7 +10,7 @@ Direct scrapers for regional institutions around Halle (Saale):
 import re
 from typing import Any, Dict, List
 import httpx
-import requests
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 from app.models import RawVacancy
@@ -32,7 +32,7 @@ def scrape_eah_jena() -> List[Dict[str, Any]]:
     """Scrapes active staff and teaching vacancies from EAH Jena."""
     url = "https://www.eah-jena.de/hochschule/stellenangebote"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200:
             return []
     except Exception:
@@ -42,7 +42,7 @@ def scrape_eah_jena() -> List[Dict[str, Any]]:
     jobs, seen = [], set()
     for link in soup.select("a[href*='jobposting/'], a[href*='stellenangebot'], a[href*='.pdf']"):
         href = link.get("href", "")
-        full_url = requests.compat.urljoin(url, href)
+        full_url = urljoin(url, href)
         title = link.get_text(strip=True)
         if (
             len(title) < 6
@@ -84,7 +84,7 @@ async def fetch_direct_eah_jena(client: httpx.AsyncClient) -> List[RawVacancy]:
         if res.status_code == 200:
             soup = BeautifulSoup(res.text, "html.parser")
             for link in soup.select("a[href*='jobposting/'], a[href*='stellenangebot'], a[href*='.pdf']"):
-                full_url = requests.compat.urljoin(url, link.get("href", ""))
+                full_url = urljoin(url, link.get("href", ""))
                 title = link.get_text(strip=True)
                 if (
                     len(title) < 6
@@ -119,7 +119,7 @@ def scrape_h2_magdeburg() -> List[Dict[str, Any]]:
     """Scrapes active vacancies from Hochschule Magdeburg-Stendal."""
     url = "https://www.h2.de/hochschule/jobs-und-karriere/stellenangebote.html"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200:
             return []
     except Exception:
@@ -131,7 +131,7 @@ def scrape_h2_magdeburg() -> List[Dict[str, Any]]:
         link = item.find("a", href=True) if item.name != "a" else item
         if not link:
             continue
-        full_url = requests.compat.urljoin(url, link.get("href", ""))
+        full_url = urljoin(url, link.get("href", ""))
         title = link.get_text(strip=True)
 
         if len(title) < 8 or full_url in seen or "stellenangebote" in title.lower():
@@ -168,7 +168,7 @@ async def fetch_direct_h2_magdeburg(client: httpx.AsyncClient) -> List[RawVacanc
                 link = item.find("a", href=True) if item.name != "a" else item
                 if not link:
                     continue
-                full_url = requests.compat.urljoin(url, link.get("href", ""))
+                full_url = urljoin(url, link.get("href", ""))
                 title = link.get_text(strip=True)
                 if len(title) < 8 or full_url in seen or "stellenangebote" in title.lower():
                     continue
@@ -200,7 +200,7 @@ def scrape_htwk_leipzig() -> List[Dict[str, Any]]:
     }
     jobs = []
     try:
-        res = requests.post(url, json=payload, headers=HEADERS, timeout=15)
+        res = httpx.post(url, json=payload, headers=HEADERS, timeout=15)
         if res.status_code == 200:
             for p in res.json().get("jobPostings", []):
                 title = p.get("title", "")
@@ -262,7 +262,7 @@ def scrape_hs_merseburg() -> List[Dict[str, Any]]:
     """Scrapes vacancies from Hochschule Merseburg."""
     url = "https://www.hs-merseburg.de/hochschule/information/stellenausschreibungen/"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200:
             return []
     except Exception:
@@ -272,7 +272,7 @@ def scrape_hs_merseburg() -> List[Dict[str, Any]]:
     jobs, seen = [], set()
     for link in soup.select("a[href*='neuigkeiten/details/'], a[href*='stellenangebote'], a[href*='.pdf']"):
         href = link.get("href", "")
-        full_url = requests.compat.urljoin(url, href)
+        full_url = urljoin(url, href)
         title = link.get_text(strip=True)
 
         if len(title) < 8 or full_url in seen or "uebersicht" in title.lower() or "stellenangebote" in title.lower():
@@ -307,7 +307,7 @@ async def fetch_direct_hs_merseburg(client: httpx.AsyncClient) -> List[RawVacanc
         if res.status_code == 200:
             soup = BeautifulSoup(res.text, "html.parser")
             for link in soup.select("a[href*='neuigkeiten/details/'], a[href*='stellenangebote'], a[href*='.pdf']"):
-                full_url = requests.compat.urljoin(url, link.get("href", ""))
+                full_url = urljoin(url, link.get("href", ""))
                 title = link.get_text(strip=True)
                 if len(title) < 8 or full_url in seen or "uebersicht" in title.lower() or "stellenangebote" in title.lower():
                     continue

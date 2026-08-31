@@ -923,7 +923,7 @@ async def fetch_direct_tu_dresden(client: httpx.AsyncClient) -> List[RawVacancy]
                 text = parent.get_text(" ", strip=True)
                 title = a.get_text(strip=True)
                 href = a["href"]
-                full_url = href if href.startswith("http") else requests.compat.urljoin(url, href) if 'requests' in globals() else f"https://www.verw.tu-dresden.de/StellAus/{href.lstrip('/')}"
+                full_url = href if href.startswith("http") else urljoin(url, href) if 'requests' in globals() else f"https://www.verw.tu-dresden.de/StellAus/{href.lstrip('/')}"
                 if full_url in seen:
                     continue
                 seen.add(full_url)
@@ -1006,10 +1006,10 @@ async def fetch_direct_ovgu_magdeburg(client: httpx.AsyncClient) -> List[RawVaca
 
 def scrape_mlu_halle() -> List[Dict[str, Any]]:
     """Synchronous scraper for MLU Halle."""
-    import requests
+    from urllib.parse import urljoin
     url = "https://personal.verwaltung.uni-halle.de/jobs/wissmi/"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200: return []
     except Exception: return []
 
@@ -1020,7 +1020,7 @@ def scrape_mlu_halle() -> List[Dict[str, Any]]:
         if not ("Reg. No." in text or "Reg.-Nr." in text or "Research Associate" in text or "Wissenschaftliche" in text):
             continue
         link = p.find("a", href=True)
-        full_url = requests.compat.urljoin(url, link["href"]) if link else url
+        full_url = urljoin(url, link["href"]) if link else url
         deadline_match = re.search(r"(?:accepted until|Bewerbungen bis|Frist:?)\s*([A-Za-z0-9\.,\s]+2026|[0-9]{2}\.[0-9]{2}\.[0-9]{2,4})", text, re.I)
         reg_match = re.search(r"Reg\.\s*(?:No\.|Nr\.)\s*([0-9\/\-A-Za-z]+)", text)
         lines = [l.strip() for l in p.get_text("\n").split("\n") if l.strip()]
@@ -1042,10 +1042,10 @@ def scrape_mlu_halle() -> List[Dict[str, Any]]:
 
 def scrape_uni_leipzig() -> List[Dict[str, Any]]:
     """Synchronous scraper for Universität Leipzig."""
-    import requests
+    from urllib.parse import urljoin
     url = "https://www.uni-leipzig.de/universitaet/arbeiten-an-der-universitaet-leipzig/stellenausschreibungen"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200: return []
     except Exception: return []
 
@@ -1054,7 +1054,7 @@ def scrape_uni_leipzig() -> List[Dict[str, Any]]:
     for item in soup.select(".news-list-item, .item, article, [class*='news-list'], div.ce-div"):
         link = item.select_one("a[href*='newsdetail'], a[href*='artikel'], a[href*='stelle'], a")
         if not link: continue
-        full_url = requests.compat.urljoin(url, link.get("href", ""))
+        full_url = urljoin(url, link.get("href", ""))
         if full_url in seen: continue
         seen.add(full_url)
         heading = item.select_one("h2, h3, h4, .header, strong")
@@ -1078,10 +1078,10 @@ def scrape_uni_leipzig() -> List[Dict[str, Any]]:
 
 def scrape_uni_jena() -> List[Dict[str, Any]]:
     """Synchronous scraper for Uni Jena."""
-    import requests
+    from urllib.parse import urljoin
     url = "https://www.uni-jena.de/122166/stellenangebote"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200: return []
     except Exception: return []
 
@@ -1089,7 +1089,7 @@ def scrape_uni_jena() -> List[Dict[str, Any]]:
     jobs, seen = [], set()
     for link in soup.select("a[href]"):
         title = link.get_text(strip=True)
-        full_url = requests.compat.urljoin(url, link.get("href", ""))
+        full_url = urljoin(url, link.get("href", ""))
         if len(title) < 10 or full_url in seen: continue
         container = link.find_parent(["div", "li", "tr", "article"]) or link
         text = container.get_text(" ", strip=True)
@@ -1113,10 +1113,10 @@ def scrape_uni_jena() -> List[Dict[str, Any]]:
 
 def scrape_ovgu_magdeburg() -> List[Dict[str, Any]]:
     """Synchronous scraper for OVGU Magdeburg."""
-    import requests
+    from urllib.parse import urljoin
     url = "https://www.ovgu.de/Karriere_WissenschaftlichesPersonal.html"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200: return []
     except Exception: return []
 
@@ -1126,7 +1126,7 @@ def scrape_ovgu_magdeburg() -> List[Dict[str, Any]]:
         text = link.get_text(" ", strip=True)
         if not ("Research Associate" in text or "Wissenschaftliche" in text or "Postdoc" in text or "Ref. No." in text):
             continue
-        full_url = requests.compat.urljoin(url, link.get("href", ""))
+        full_url = urljoin(url, link.get("href", ""))
         if full_url in seen: continue
         seen.add(full_url)
         title_match = re.search(r"^(.*?)(?:Faculty|Department|Application|$)", text, re.I)
@@ -1149,10 +1149,10 @@ def scrape_ovgu_magdeburg() -> List[Dict[str, Any]]:
 
 def scrape_tu_dresden() -> List[Dict[str, Any]]:
     """Synchronous scraper for TU Dresden."""
-    import requests
+    from urllib.parse import urljoin
     url = "https://www.verw.tu-dresden.de/StellAus/stellen.asp?kat=2&lang=de"
     try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
+        res = httpx.get(url, follow_redirects=True, headers=HEADERS, timeout=15)
         if res.status_code != 200: return []
     except Exception: return []
 
@@ -1161,7 +1161,7 @@ def scrape_tu_dresden() -> List[Dict[str, Any]]:
     for li in soup.select("li:has(a), p:has(a)"):
         link = li.find("a", href=True)
         if not link: continue
-        full_url = requests.compat.urljoin(url, link["href"])
+        full_url = urljoin(url, link["href"])
         if full_url in seen: continue
         seen.add(full_url)
         title = link.get_text(strip=True)

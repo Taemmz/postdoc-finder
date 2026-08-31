@@ -1,5 +1,5 @@
 import sqlite3
-import requests
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import re
 from typing import List, Dict, Any
@@ -91,7 +91,7 @@ def notify(job: Dict[str, Any]):
         f"🔗 [View Vacancy]({job['url']})"
     )
     try:
-        requests.post(f"https://api.telegram.org/bot{token}/sendMessage", json={
+        httpx.post(f"https://api.telegram.org/bot{token}/sendMessage", json={
             "chat_id": chat_id,
             "text": text,
             "parse_mode": "Markdown"
