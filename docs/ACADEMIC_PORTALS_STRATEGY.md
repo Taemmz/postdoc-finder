@@ -171,3 +171,57 @@ Instead of building 400 separate university scrapers, the pipeline achieves 99% 
 * **Direct SSR URL:** `https://stellenangebote.ph-freiburg.de/stellenangebote.html`
 * **Layout Structure:** Standard table rows (`table tbody tr`) with anchors targeting `a[href*="job_angebot"]` or `a[href*="/job/"]`.
 * **Exclusion Rules:** Skip generic UI buttons like `"view job"`, `"zu den stellenangeboten"`, or `"stellenbezeichnung"`.
+
+---
+
+## 7. EURAXESS & Baden-Württemberg Portals
+
+### EURAXESS Germany
+* **Portal Purpose:** The central European Commission portal for international research positions, Marie Skłodowska-Curie fellowships, and German academic institutes.
+* **Listing Endpoint:** `https://euraxess.ec.europa.eu/jobs/search?keywords={query}&f%5B0%5D=country%3Agermany`
+* **JSON API:** `https://euraxess.ec.europa.eu/api/jobs` (filtering with `keywords`, `country: DE`, `page: 0`).
+
+### Karriere Baden-Württemberg (`karriere.baden-wuerttemberg.de`)
+* **Portal Purpose:** The central state civil service & university portal for Baden-Württemberg (MWK ministry, state universities, colleges).
+* **URL:** `https://karriere.baden-wuerttemberg.de/de/startseite/stellenanzeigen`
+* **Card Structure:** Links targeting `a[href*="/einzelansicht/job/"]` or `a[href*="/job/"]`.
+* **Note on Service-BW:** `service-bw.de/zufi/cms/stellenangebote` is an informational gateway that redirects directly to `karriere.baden-wuerttemberg.de`.
+
+---
+
+## 8. Complete 7-Source Scraper Suite Overview
+
+| # | Portal / Source | Scope | Integration Type | Module Location |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | **Wissenschaftsmanagement-online.de** | Science management, QA, higher ed governance | BeautifulSoup / HTML | `app/scrapers_wissman.py` |
+| **2** | **Academics.de** | Nationwide German Postdocs & University roles | REST / BeautifulSoup | `app/scrapers.py` |
+| **3** | **Service.bund.de** | Federal gazette & Public universities (TV-L / TVöD) | Session / HTML | `app/scrapers_bund.py` |
+| **4** | **Interamt.de** | State university & public service recruitment | JSON REST / HTML | `app/scrapers_interamt.py` |
+| **5** | **EURAXESS Germany** | EU & DAAD funded research / Postdoc fellowships | JSON / HTML | `app/scrapers_euraxess.py` |
+| **6** | **PH Freiburg / Rexx ATS** | Direct Education University template | DOM Parser | `app/scrapers.py` |
+| **7** | **Karriere Baden-Württemberg** | State ministries & regional university governance | HTML / JSON API | `app/scrapers_karriere_bw.py` |
+
+---
+
+## 9. Profile Matching Criteria & Alert Weights
+
+The profile matcher evaluates candidates using four weighted pillars:
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ 1. Core Domains (40% Weight):                                 │
+│    Hochschuldidaktik, Lehrinnovation, Studienqualität,        │
+│    Wissenschaftsmanagement, Dekanat, Bildungsforschung        │
+├────────────────────────────────────────────────────────────────┤
+│ 2. Methodology (25% Weight):                                  │
+│    Qualitative Forschung, Grounded Theory, Inhaltsanalyse,    │
+│    Mixed Methods, Evaluation, Empirische Bildungsforschung    │
+├────────────────────────────────────────────────────────────────┤
+│ 3. Future Topics (20% Weight):                                │
+│    KI in der Lehre, Artificial Intelligence, Digitalisierung, │
+│    Generative KI, EdTech                                      │
+├────────────────────────────────────────────────────────────────┤
+│ 4. Pay Grade & Contract (15% Weight):                         │
+│    TV-L E 13, TV-L E 14, Postdoc, Akademische*r Mitarbeiter    │
+└────────────────────────────────────────────────────────────────┘
+```
