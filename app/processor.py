@@ -637,6 +637,18 @@ def _safe_str(v) -> str:
     return str(v)
 
 
+def sanitize_job_url(url: str) -> str:
+    """Strips transient session IDs (sid, jsessionid) and tracking tags (utm_*, ref)
+    so the same job at the same URL always resolves to an identical canonical string."""
+    if not url:
+        return ""
+    clean = re.sub(r";jsessionid=[^?#]+", "", str(url).strip())
+    clean = re.sub(r"[\?&](?:sid|sessionid|jsessionid|utm_[a-z]+|ref)=[^&#]*", "", clean, flags=re.I)
+    clean = re.sub(r"\?&", "?", clean).rstrip("?&")
+    return clean
+
+
+
 def extract_city(text: str) -> Optional[str]:
     for city in GERMAN_CITIES:
         if re.search(rf"\b{city}\b", text, re.IGNORECASE):
@@ -970,9 +982,11 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
     results: List[PostdocRecord] = []
 
     for item in raw_items:
-        clean_link = _safe_str(item.link).strip()
+        clean_link = sanitize_job_url(_safe_str(item.link).strip())
         if not clean_link or clean_link in seen_links:
             continue
+        seen_links.add(clean_link)
+        item.link = clean_link
 
         item.title = _safe_str(item.title).replace("\xad", "").replace("\u200b", "").strip()
         item.snippet = _safe_str(item.snippet).replace("\xad", "").replace("\u200b", "").strip()

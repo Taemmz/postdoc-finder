@@ -5,6 +5,7 @@ from typing import List, Set
 
 from app.config import settings
 from app.models import PostdocRecord
+from app.processor import sanitize_job_url
 
 _BASE_URL = f"https://{settings.SKILLEDGEUP_SUPABASE_PROJECT_REF}.supabase.co/rest/v1"
 
@@ -17,7 +18,7 @@ _HEADERS = {
 
 
 async def get_existing_links(client: httpx.AsyncClient) -> Set[str]:
-    """Return the set of all links already stored in Supabase."""
+    """Return the set of all links already stored in Supabase (sanitized)."""
     try:
         res = await client.get(
             f"{_BASE_URL}/skilledgeup_postdoc?select=link",
@@ -25,7 +26,7 @@ async def get_existing_links(client: httpx.AsyncClient) -> Set[str]:
             timeout=15.0,
         )
         res.raise_for_status()
-        return {row["link"] for row in res.json() if "link" in row}
+        return {sanitize_job_url(row["link"]) for row in res.json() if "link" in row}
     except Exception as exc:
         print(f"  [supabase] Warning: could not fetch existing links — {exc}")
         return set()

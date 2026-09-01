@@ -13,7 +13,7 @@ import asyncio
 import httpx
 
 from app.scrapers import scrape_all_sources
-from app.processor import enrich_missing_deadlines, process_vacancies
+from app.processor import enrich_missing_deadlines, process_vacancies, sanitize_job_url
 from app.supabase_db import get_existing_links, insert_postdocs, log_activity
 from app.telegram_bot import build_digest, send_pipeline_summary, send_telegram_alert
 
@@ -42,7 +42,15 @@ async def main() -> None:
     print("\n[3/4] Checking against Supabase and inserting new records...")
     async with httpx.AsyncClient() as client:
         existing_links = await get_existing_links(client)
-        fresh_records = [c for c in candidates if c.link not in existing_links]
+        fresh_records = []
+        seen_this_run = set()
+        for c in candidates:
+            clean_url = sanitize_job_url(c.link)
+            c.link = clean_url
+            if clean_url in existing_links or clean_url in seen_this_run:
+                continue
+            seen_this_run.add(clean_url)
+            fresh_records.append(c)
         print(f"      New records to insert: {len(fresh_records)}")
 
         if fresh_records:
