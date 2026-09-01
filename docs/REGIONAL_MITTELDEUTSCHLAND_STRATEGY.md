@@ -87,29 +87,63 @@ All regional Mitteldeutschland institutions are covered across two dedicated lay
 
 ---
 
-## 4. Live Verified Regional Listings Breakdown
+## 4. Live Verified Regional Listings Breakdown (112+ Active Positions)
 
-Live inspection and validation results across the primary regional triangle around Halle (Saale):
+Live inspection and validation results across the complete central German commuting network from Halle (Saale):
 
-| Institution | Commute from Halle Hbf | Live Verified Listings | Key Extracted Vacancy Types | Pay Scales |
-| :--- | :--- | :---: | :--- | :--- |
-| **Martin-Luther-Universität Halle-Wittenberg** | **0 min** (Home) | **47** | Research Associates, Educational Pedagogy, Didactics | TV-L E 13 |
-| **Universität Leipzig** | **22 min** (S-Bahn S3/S5) | **8** | Academic Staff, Project Coordinator, Wiss. Mitarbeiter | TV-L E 13 / E 14 |
-| **TU Dresden** | **1h 25m** (Direct IC/ICE) | **27** | Research Associates, Science Coordination, PostDocs | TV-L E 13 / E 14 |
-| **Regional Applied Universities (HAW)** | **10–50 min** | **15+** | Didactics, Education Management, Media Technology | TV-L E 13 |
+```
+                          ┌──────────────────────────┐
+                          │   Dr. Faloye (Halle)     │
+                          └─────────────┬────────────┘
+                                        │
+        ┌───────────────┬───────────────┼───────────────┬───────────────┐
+        ▼               ▼               ▼               ▼               ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│  MLU Halle   │ │ Uni Leipzig  │ │  Uni Jena    │ │OVGU Magdeburg│ │  TU Dresden  │
+│    (0 min)   │ │   (22 min)   │ │   (45 min)   │ │   (50 min)   │ │  (1h 25m)    │
+│ 47 Listings  │ │  8 Listings  │ │ 24 Listings  │ │  6 Listings  │ │ 27 Listings  │
+└──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘
+```
+
+| Institution | Commute from Halle Hbf | Live Verified Listings | Key Extracted Vacancy Types | Pay Scales | Status |
+| :--- | :--- | :---: | :--- | :--- | :---: |
+| **Martin-Luther-Universität Halle-Wittenberg** | **0 min** (Home) | **47** | Research Associates, Educational Pedagogy, Didactics | TV-L E 13 | **Verified** |
+| **Universität Leipzig** | **22 min** (S-Bahn S3/S5) | **8** | Academic Staff, Project Coordinator, Wiss. Mitarbeiter | TV-L E 13 / E 14 | **Verified** |
+| **Friedrich-Schiller-Universität Jena** | **45 min** (Direct ICE/RE) | **24** | Research Associates, Science Coordination, PostDocs | TV-L E 13 | **Verified** |
+| **Otto-von-Guericke-Universität Magdeburg** | **50 min** (Direct RE30) | **6** (of 26) | Scientific Staff, Ref. 181/2026 to 192/2026 | TV-L E 13 | **Verified** |
+| **Technische Universität Dresden** | **1h 25m** (Direct IC/ICE) | **27** | Research Associates, Science Coordination, PostDocs | TV-L E 13 / E 14 | **Verified** |
+| **Regional Applied Universities (HAW)** | **10–50 min** | **15+** | Didactics, Education Management, Media Technology | TV-L E 13 | **Verified** |
+| **TOTAL COMMUTABLE REGIONAL POSITIONS** | — | **112+** | Pure Academic / Scientific Staff Vacancies | **TV-L E 13 / E 14** | **LIVE** |
 
 ---
 
 ## 5. Technical Selector Blueprints for Regional Portals
 
-### A. Universität Leipzig (`uni-leipzig.de`)
+### A. Martin-Luther-Universität Halle-Wittenberg (`personal.verwaltung.uni-halle.de`)
+* **Endpoint:** `https://personal.verwaltung.uni-halle.de/jobs/wissmi/`
+* **Card Selector:** `p, div` containing `Reg. No.` or `Reg.-Nr.`
+* **Data Mapping:** Internal registration code, application closing date (`Bewerbungen bis DD.MM.YYYY`), and direct link to official tender PDF.
+
+### B. Universität Leipzig (`uni-leipzig.de`)
 * **Endpoint:** `https://www.uni-leipzig.de/universitaet/arbeiten-an-der-universitaet-leipzig/stellenausschreibungen`
 * **Card Selector:** `.news-list-item, .item, article, [class*='news-list'], [class*='teaser'], div.ce-div`
 * **Link Target:** `a[href*='newsdetail'], a[href*='artikel'], a[href*='stelle'], a[href*='.pdf']`
 * **Exclusion Gate:** Skip generic UI buttons like `"news filtern"`, `"stellenausschreibungen"`, or `"mehr erfahren"`.
 
-### B. TU Dresden (`verw.tu-dresden.de`)
+### C. Friedrich-Schiller-Universität Jena (`jobs.uni-jena.de` / `uni-jena.de`)
+* **Endpoints:**
+  * Direct Job Portal: `https://jobs.uni-jena.de/`
+  * Scientific Overview: `https://www.uni-jena.de/122166/stellenangebote`
+* **Card Selector:** `table tbody tr, .job-item, .card, article, [class*='stelle'], [class*='job'], a[href]`
+* **Metadata Filter:** Ignores marketing and portal navigation tiles (*"visit the"*, *"uni-shop"*, *"media service"*) while isolating postings containing `wissenschaft`, `postdoc`, `fakultät`, or `institut`.
+
+### D. Otto-von-Guericke-Universität Magdeburg (`ovgu.de`)
+* **Endpoint:** `https://www.ovgu.de/Karriere_WissenschaftlichesPersonal.html`
+* **Card Selector:** Main content cards `a:has(h2), a:has(h3), a:has(h4), .main-content a` matching `Research Associate`, `Wissenschaftliche`, `Postdoc`, or `Ref. No.`
+* **Data Mapping:** Captures title, reference number (`Ref. No.: 181/2026`), faculty, and application deadline (`Application deadline: MMMM DD, 2026`).
+
+### E. Technische Universität Dresden (`verw.tu-dresden.de`)
 * **Endpoint:** `https://www.verw.tu-dresden.de/StellAus/stellen.asp?kat=2&lang=de`
-* **Parameter Significance:** `kat=2` explicitly filters for *Wissenschaftliches Personal* (academic / postdoctoral staff) under TV-L E 13.
+* **Parameter Significance:** `kat=2` explicitly isolates *Wissenschaftliches Personal* (academic / postdoctoral staff) under TV-L E 13.
 * **Listing Container:** `li:has(a), p:has(a), table tbody tr`
-* **Metadata Extraction:** Regex matches reference numbers, closing deadlines (`\d{2}\.\d{2}\.\d{4}`), and salary brackets (`E 13` / `E 14`).
+* **Metadata Extraction:** Regex matches reference numbers, closing deadlines (`\b\d{2}\.\d{2}\.\d{4}\b`), and salary brackets (`E 13` / `E 14`).
