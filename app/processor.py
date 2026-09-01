@@ -59,8 +59,10 @@ EXCLUDED_ACADEMIC_RANKS = [
     r"\blehrstuhl\b",
     r"\blehrstuhlinhaber\b",
     r"\bhabilitat\w*\b",
-    r"\bordinariat\b",
     r"\bstudentische\s+hilfskraft\b",
+    r"\bstudentische[r\*n\s]+mitarbeiter\w*\b",
+    r"\btvstud\b",
+    r"\bstudent\s+assistant\b",
     r"\bhiwi\b",
     r"\bkindertagesstätte\b",
     r"\bkita[- ]leitung\b",
@@ -193,7 +195,9 @@ TOPIC_CORE = [
     "campus im dialog", "cadena", "lehrwerkstatt", "stiftung innovation in der hochschullehre",
     "stiftung für innovation in der hochschullehre", "future skills", "futures literacy",
     "studium und lehre", "lehre und studium", "prorektorat", "prorektorat lehre",
-    "wissenschaftsmanagement", "hochschulentwicklung", "studiengangsentwicklung",
+    "wissenschaftsmanagement", "wissenschaftsmanager", "wissenschaftsmanagerin",
+    "qualitätsmanagement", "dekanatsgeschäftsführung", "transferreferent",
+    "hochschulentwicklung", "studiengangsentwicklung",
     "studiengangskoordination", "curriculum", "curricula", "curriculumentwicklung",
     # Labour Market, Employability & Organisation
     "employability", "graduate employability", "labour market", "labor market",
@@ -969,6 +973,9 @@ def process_vacancies(raw_items: List[RawVacancy]) -> List[PostdocRecord]:
         clean_link = _safe_str(item.link).strip()
         if not clean_link or clean_link in seen_links:
             continue
+
+        item.title = _safe_str(item.title).replace("\xad", "").replace("\u200b", "").strip()
+        item.snippet = _safe_str(item.snippet).replace("\xad", "").replace("\u200b", "").strip()
 
         # ── Guard 1: LinkedIn posts/shares are not job listings ──────────────
         if "linkedin.com" in clean_link and "/jobs/view/" not in clean_link:

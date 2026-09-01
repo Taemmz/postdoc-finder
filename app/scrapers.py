@@ -369,8 +369,8 @@ async def fetch_direct_bund_search(client: httpx.AsyncClient) -> List[RawVacancy
                 
                 title_el = li.select_one(".title-wrapper, td:first-child") or link_el
                 text = title_el.get_text(" ", strip=True)
-                clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).strip()
-                snippet = li.get_text(" ", strip=True)[:400]
+                clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).replace("\xad", "").replace("\u200b", "").strip()
+                snippet = li.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")[:400]
 
                 if len(clean_title) >= 5:
                     results.append(RawVacancy(
@@ -1261,7 +1261,7 @@ def scrape_service_bund(query: str = "Wissenschaftsmanagement") -> List[Dict[str
 
         title_el = li.select_one(".title-wrapper, td:first-child") or link_el
         text = title_el.get_text(" ", strip=True)
-        clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).strip()
+        clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).replace("\xad", "").replace("\u200b", "").strip()
         date_m = re.findall(r"\b\d{2}\.\d{2}\.\d{4}\b", li.get_text())
         deadline = date_m[-1] if date_m else "Check listing"
         pay_match = re.search(r"(?:E|EG|TV-L|BesGr|W)\s*(?:E\s*)?(?:10|11|12|13|14|15|A\s*13)", li.get_text(), re.I)
