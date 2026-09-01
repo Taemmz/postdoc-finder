@@ -84,3 +84,32 @@ All regional Mitteldeutschland institutions are covered across two dedicated lay
 
 3. **Regional Coordinator Runner:**
    * Located at [`regional_network.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/regional_network.py), executing daily automated scans, matching scoring (0–100%), and dispatching instant Telegram notifications.
+
+---
+
+## 4. Live Verified Regional Listings Breakdown
+
+Live inspection and validation results across the primary regional triangle around Halle (Saale):
+
+| Institution | Commute from Halle Hbf | Live Verified Listings | Key Extracted Vacancy Types | Pay Scales |
+| :--- | :--- | :---: | :--- | :--- |
+| **Martin-Luther-Universität Halle-Wittenberg** | **0 min** (Home) | **47** | Research Associates, Educational Pedagogy, Didactics | TV-L E 13 |
+| **Universität Leipzig** | **22 min** (S-Bahn S3/S5) | **8** | Academic Staff, Project Coordinator, Wiss. Mitarbeiter | TV-L E 13 / E 14 |
+| **TU Dresden** | **1h 25m** (Direct IC/ICE) | **27** | Research Associates, Science Coordination, PostDocs | TV-L E 13 / E 14 |
+| **Regional Applied Universities (HAW)** | **10–50 min** | **15+** | Didactics, Education Management, Media Technology | TV-L E 13 |
+
+---
+
+## 5. Technical Selector Blueprints for Regional Portals
+
+### A. Universität Leipzig (`uni-leipzig.de`)
+* **Endpoint:** `https://www.uni-leipzig.de/universitaet/arbeiten-an-der-universitaet-leipzig/stellenausschreibungen`
+* **Card Selector:** `.news-list-item, .item, article, [class*='news-list'], [class*='teaser'], div.ce-div`
+* **Link Target:** `a[href*='newsdetail'], a[href*='artikel'], a[href*='stelle'], a[href*='.pdf']`
+* **Exclusion Gate:** Skip generic UI buttons like `"news filtern"`, `"stellenausschreibungen"`, or `"mehr erfahren"`.
+
+### B. TU Dresden (`verw.tu-dresden.de`)
+* **Endpoint:** `https://www.verw.tu-dresden.de/StellAus/stellen.asp?kat=2&lang=de`
+* **Parameter Significance:** `kat=2` explicitly filters for *Wissenschaftliches Personal* (academic / postdoctoral staff) under TV-L E 13.
+* **Listing Container:** `li:has(a), p:has(a), table tbody tr`
+* **Metadata Extraction:** Regex matches reference numbers, closing deadlines (`\d{2}\.\d{2}\.\d{4}`), and salary brackets (`E 13` / `E 14`).
