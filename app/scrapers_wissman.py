@@ -33,47 +33,57 @@ def scrape_wissenschaftsmanagement_online() -> List[Dict[str, Any]]:
     leads: List[Dict[str, Any]] = []
     seen_urls = set()
 
-    main_region = soup.select_one("#content, #main, .region-content") or soup.body
+    for card in soup.select("div.text"):
+        card_text = card.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")
 
-    for a in main_region.find_all("a", href=True):
-        href = a["href"]
-        text = a.get_text(strip=True).replace("\xad", "").replace("\u200b", "")
-
-        # Exclude comment links, bookmarks, and non-job anchors
-        if "comment" in href or "#" in href or len(text) < 10 or "weiterlesen" in text.lower():
+        # Filter out opinion/editorial articles without job metadata
+        if not any(
+            kw in card_text
+            for kw in ["Location:", "Application deadline:", "Bewerbungsfrist:"]
+        ):
             continue
 
-        # Target explicit vacancy detail pages
-        if "/stellenangebot/" not in href:
+        # Extract the job title anchor (skip author links and user profiles)
+        title_link = None
+        for a in card.find_all("a", href=True):
+            text = a.get_text(strip=True).replace("\xad", "").replace("\u200b", "")
+            href = a["href"]
+            if (
+                "/users/" not in href
+                and "/user/" not in href
+                and not text.lower().startswith("by ")
+                and len(text) > 5
+            ):
+                title_link = a
+                break
+
+        if not title_link:
             continue
 
-        full_url = requests.compat.urljoin(url, href)
-        if full_url in seen_urls:
+        job_url = requests.compat.urljoin(url, title_link["href"])
+        if job_url in seen_urls:
             continue
-        seen_urls.add(full_url)
+        seen_urls.add(job_url)
 
-        parent = a.find_parent(["div", "article", "li", "tr"]) or a
-        snippet = parent.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")
+        title = title_link.get_text(strip=True).replace("\xad", "").replace("\u200b", "")
 
-        # Extract deadline if present (e.g., 25.09.26, 27.09.2026)
         deadline_match = re.search(
-            r"(?:Application deadline|Bewerbungsfrist|deadline|Frist)[:\s]*(\d{1,2}[./]\d{1,2}[./]\d{2,4})",
-            snippet,
+            r"(?:Application deadline|Bewerbungsfrist|Frist)[:\s]*(\d{1,2}[./]\d{1,2}[./]\d{2,4})",
+            card_text,
             re.I,
         )
-        deadline = deadline_match.group(1) if deadline_match else "Check listing"
-
-        # Extract location if present
-        location_match = re.search(r"Location:\s*([^\n,|]+)", snippet, re.I)
-        location = location_match.group(1).strip() if location_match else "Germany"
+        location_match = re.search(r"Location:\s*([^,\n|]+)", card_text, re.I)
 
         leads.append({
-            "title": text,
-            "url": full_url,
-            "deadline": deadline,
-            "location": location,
-            "snippet": snippet[:400],
+            "title": title,
+            "organization": "Wissenschaftsmanagement Online",
+            "location": (
+                location_match.group(1).strip() if location_match else "Germany"
+            ),
+            "deadline": deadline_match.group(1) if deadline_match else "Check listing",
+            "url": job_url,
             "source": "Wissenschaftsmanagement Online",
+            "snippet": card_text[:400],
         })
 
     return leads
