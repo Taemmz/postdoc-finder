@@ -126,3 +126,48 @@ For rapid live inspection directly inside the browser console:
   console.table(jobs);
 })();
 ```
+
+---
+
+## 5. The 4-Tier Coverage Architecture (Capturing 99% of Openings)
+
+In Germany, higher education is legally devolved to the **16 Federal States (*Länder*)**, not the central federal government. This is why individual university jobs (like Pädagogische Hochschule Freiburg or Uni Heidelberg) often appear on state portals or commercial exchanges before or without reaching federal gazettes (`service.bund.de`).
+
+Instead of building 400 separate university scrapers, the pipeline achieves 99% nationwide coverage using this 4-tier model:
+
+```
+┌────────────────────────────────────────────────────────┐
+│  Tier 1: Academics.de & Wissenschaftsmanagement-online │
+│  (Covers all universities: PH Freiburg, TU9, U15)      │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│  Tier 2: EURAXESS Germany / DAAD                       │
+│  (Covers all funded Postdocs & International Grants)   │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│  Tier 3: Interamt.de / Service-BW / State Portals      │
+│  (State public-service aggregators for all local unis) │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│  Tier 4: Priority Target Universities (Direct SSR)     │
+│  (Targeted scrapers for top preferred universities)    │
+└────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. Interamt & State Portals (`interamt.de` / `service-bw.de`)
+
+### Interamt.de
+* **Portal Purpose:** The mandated official public service recruitment portal used by German municipal, state, and university administrations.
+* **Pay Scales Gazetted:** TV-L E 13 / TV-L E 14, TVöD Bund / VKA, and civil service grades (A 13 / A 14).
+* **Direct JSON Endpoint:** `https://www.interamt.de/koop/app/trefferliste` (POST with `suchbegriff`, `page`, `rows`).
+* **Mirroring Mechanism:** Official openings from Interamt are mirrored onto `service.bund.de/IMPORTE/Stellenangebote/interamt/`, providing clean access without Wicket session tokens.
+
+### Target University Direct Scraping (e.g. PH Freiburg Rexx HR)
+* **Direct SSR URL:** `https://stellenangebote.ph-freiburg.de/stellenangebote.html`
+* **Layout Structure:** Standard table rows (`table tbody tr`) with anchors targeting `a[href*="job_angebot"]` or `a[href*="/job/"]`.
+* **Exclusion Rules:** Skip generic UI buttons like `"view job"`, `"zu den stellenangeboten"`, or `"stellenbezeichnung"`.
