@@ -891,39 +891,44 @@ async def fetch_direct_ph_freiburg(client: httpx.AsyncClient) -> List[RawVacancy
 
 
 async def fetch_direct_karriere_bw(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """Scrapes state university and public service notices from Karriere Baden-Württemberg."""
-    url = "https://karriere.baden-wuerttemberg.de/de/startseite/stellenanzeigen"
+    """Scrapes state university and public service notices from Karriere Baden-Württemberg JSON API."""
     results: List[RawVacancy] = []
     seen: set = set()
+    headers = {
+        **HEADERS,
+        "Accept": "application/json, text/plain, */*",
+        "Referer": "https://karriere.baden-wuerttemberg.de/de/startseite/stellenanzeigen",
+    }
     try:
-        res = await client.get(url, headers=HEADERS, timeout=15.0)
-        if res.status_code == 200:
-            soup = BeautifulSoup(res.text, "html.parser")
-            links = soup.select('a[href*="/einzelansicht/job/"], a[href*="/job/"]')
-            for link in links:
-                href = link.get("href", "")
-                full = href if href.startswith("http") else f"https://karriere.baden-wuerttemberg.de{href}"
-                if full in seen:
+        for page in range(1, 10):
+            api_url = f"https://karriere.baden-wuerttemberg.de/api/job-search?page={page}"
+            res = await client.get(api_url, headers=headers, timeout=12.0)
+            if res.status_code != 200:
+                break
+            data = res.json()
+            listings = data.get("listings", [])
+            if not listings:
+                break
+            for item in listings:
+                url = item.get("url", "")
+                title = item.get("title", "").strip()
+                if not url or url in seen or len(title) < 5:
                     continue
-                title = link.get_text(strip=True)
-                card = link.find_parent(["article", "li", "div"]) or link
-                if not title or len(title) < 5 or "stelle" in title.lower() or "ansehen" in title.lower():
-                    heading = card.find(["h2", "h3", "h4", "strong"])
-                    if heading:
-                        title = heading.get_text(strip=True)
-                if len(title) < 6:
-                    continue
-                seen.add(full)
-                snippet = card.get_text(" ", strip=True)[:400]
+                seen.add(url)
+                dept = item.get("department", "")
+                comp = item.get("compensation_short", "")
+                deadline = item.get("application_deadline", "")
+                desc = item.get("text", "")
+                snippet = f"{title} | {dept} | {comp} | Frist: {deadline} | {desc}"[:400]
                 results.append(RawVacancy(
                     source="Karriere BW Direct",
                     title=title,
-                    link=full,
+                    link=url,
                     snippet=snippet,
                     query_type="direct_uni_ssr",
                 ))
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"  [karriere_bw] Error: {e}")
     return results
 
 
