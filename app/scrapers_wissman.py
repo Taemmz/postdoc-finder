@@ -33,25 +33,31 @@ def scrape_wissenschaftsmanagement_online() -> List[Dict[str, Any]]:
     leads: List[Dict[str, Any]] = []
     seen_urls = set()
 
-    for item in soup.select(".views-row, .node-stellenanzeige, div[class*='views-field-title']"):
-        link_el = item.select_one("a[href]")
-        if not link_el:
+    main_region = soup.select_one("#content, #main, .region-content") or soup.body
+
+    for a in main_region.find_all("a", href=True):
+        href = a["href"]
+        text = a.get_text(strip=True).replace("\xad", "").replace("\u200b", "")
+
+        # Exclude comment links, bookmarks, and non-job anchors
+        if "comment" in href or "#" in href or len(text) < 10 or "weiterlesen" in text.lower():
             continue
 
-        title = link_el.get_text(strip=True).replace("\xad", "").replace("\u200b", "")
-        if not title or len(title) < 8 or "uebersicht" in title.lower():
+        # Target explicit vacancy detail pages
+        if "/stellenangebot/" not in href:
             continue
 
-        full_url = requests.compat.urljoin(url, link_el.get("href"))
+        full_url = requests.compat.urljoin(url, href)
         if full_url in seen_urls:
             continue
         seen_urls.add(full_url)
 
-        snippet = item.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")
+        parent = a.find_parent(["div", "article", "li", "tr"]) or a
+        snippet = parent.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")
 
-        # Extract deadline if present
+        # Extract deadline if present (e.g., 25.09.26, 27.09.2026)
         deadline_match = re.search(
-            r"(?:Application deadline|Bewerbungsfrist|Frist)[:\s]*(\d{1,2}[./]\d{1,2}[./]\d{2,4})",
+            r"(?:Application deadline|Bewerbungsfrist|deadline|Frist)[:\s]*(\d{1,2}[./]\d{1,2}[./]\d{2,4})",
             snippet,
             re.I,
         )
@@ -62,11 +68,11 @@ def scrape_wissenschaftsmanagement_online() -> List[Dict[str, Any]]:
         location = location_match.group(1).strip() if location_match else "Germany"
 
         leads.append({
-            "title": title,
+            "title": text,
             "url": full_url,
-            "snippet": snippet,
             "deadline": deadline,
             "location": location,
+            "snippet": snippet[:400],
             "source": "Wissenschaftsmanagement Online",
         })
 
