@@ -324,3 +324,20 @@ async def fetch_direct_hs_merseburg(client: httpx.AsyncClient) -> List[RawVacanc
     except Exception:
         pass
     return results
+
+
+def scrape_all_regional_haw() -> List[Dict[str, Any]]:
+    """Synchronously aggregates vacancies across all regional Universities of Applied Sciences."""
+    jobs = []
+    seen = set()
+    for fn in [scrape_htwk_leipzig, scrape_hs_merseburg, scrape_h2_magdeburg, scrape_eah_jena]:
+        try:
+            for j in fn():
+                u = j.get("url")
+                if u and u not in seen:
+                    seen.add(u)
+                    jobs.append(j)
+        except Exception:
+            pass
+    return jobs
+
