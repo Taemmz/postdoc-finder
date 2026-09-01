@@ -47,42 +47,62 @@ def scrape_service_bund(query: str = "Wissenschaft") -> List[Dict[str, Any]]:
 
     soup = BeautifulSoup(res.text, "html.parser")
     jobs: List[Dict[str, Any]] = []
-    seen_titles = set()
+    seen_urls = set()
 
-    # Search result items are in list elements with class 'result-item' or table rows
-    for item in soup.select("li.result-item, div.result-item, tr.result, .result-list > li"):
-        link_el = item.select_one("a[href]")
+    for item in soup.select("table tbody tr, .result-list > li, [class*='result']"):
+        link_el = item.select_one("a[href*='node.html'], a[href*='/Stellen/'], a[href*='nn='], a[href]")
         if not link_el:
             continue
 
-        title = link_el.get_text(strip=True).replace("\xad", "").replace("\u200b", "")
-        if len(title) < 8 or title in seen_titles:
-            continue
-        seen_titles.add(title)
-
         rel_href = link_el.get("href", "")
         full_url = requests.compat.urljoin(base_url, rel_href)
+        if full_url in seen_urls:
+            continue
+
+        first_cell = item.select_one("td:first-child, .title-wrapper") or item
+        lines = [l.strip() for l in first_cell.get_text("\n", strip=True).split("\n") if l.strip()]
+
+        title = ""
+        institution = "Public Body / University"
+        deadline = None
+
+        for i, line in enumerate(lines):
+            l_low = line.lower()
+            if "stellenbezeichnung" in l_low and i + 1 < len(lines):
+                title = lines[i + 1].replace("\xad", "").replace("\u200b", "").strip()
+            elif "arbeitgeber" in l_low and i + 1 < len(lines):
+                institution = lines[i + 1].replace("\xad", "").replace("\u200b", "").strip()
+            elif "bewerbungsfrist" in l_low and i + 1 < len(lines):
+                deadline = lines[i + 1].strip()
+
+        if not title:
+            # Fallback if label markers are absent
+            clean_lines = [
+                l for l in lines
+                if not l.lower().startswith(("stellenbezeichnung", "stellenangebot", "job title", "arbeitgeber"))
+            ]
+            title = clean_lines[0].replace("\xad", "").replace("\u200b", "") if clean_lines else link_el.get_text(strip=True)
+            if len(clean_lines) > 1 and institution == "Public Body / University":
+                institution = clean_lines[1].replace("\xad", "").replace("\u200b", "")
+
+        if len(title) < 6:
+            continue
+
+        seen_urls.add(full_url)
         item_text = item.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")
 
-        # Extract Deadline, Employer, Location
-        deadline_match = re.search(r"\b\d{2}\.\d{2}\.\d{4}\b", item_text)
+        # Extract pay grade if present
         pay_match = re.search(
-            r"(?:E|EG|TV-L|TVöD|BesGr|W|A)\s*(?:E\s*)?(?:10|11|12|13|14|15|A\s*13)",
+            r"(?:E|EG|TV-L|TV-H|TVöD|BesGr|W|A)\s*(?:E\s*)?(?:10|11|12|13|14|15|A\s*13|A\s*14)",
             item_text,
             re.I,
         )
 
-        # Institution name typically follows the title or is in a specific span
-        org_el = item.select_one(".institution, .author, .source, p")
-        org_name = org_el.get_text(strip=True) if org_el else "Public Institution"
-
         jobs.append({
             "title": title,
-            "organization": org_name,
+            "organization": institution,
             "location": "Germany",
-            "deadline": (
-                deadline_match.group(0) if deadline_match else "Check listing"
-            ),
+            "deadline": deadline if deadline else "Check listing",
             "pay_grade": pay_match.group(0) if pay_match else "TVöD / TV-L",
             "url": full_url,
             "source": "Service.bund.de",
@@ -90,6 +110,26 @@ def scrape_service_bund(query: str = "Wissenschaft") -> List[Dict[str, Any]]:
         })
 
     return jobs
+
+
+def scrape_all_bund_academic_tracks(max_pages: int = 1) -> List[Dict[str, Any]]:
+    """Runs all 4 primary academic, higher ed governance, and postdoc queries on Service.bund.de."""
+    queries = [
+        "Wissenschaftsmanagement",
+        "Hochschuldidaktik",
+        "Postdoktorand",
+        "Wissenschaftliche Mitarbeiterin",
+    ]
+    aggregated = []
+    seen = set()
+    for q in queries:
+        vacancies = scrape_service_bund(query=q)
+        for v in vacancies:
+            u = v.get("url", "").split("?")[0]
+            if u and u not in seen:
+                seen.add(u)
+                aggregated.append(v)
+    return aggregated
 
 
 def is_valid_tender_page(response_text: str) -> bool:
