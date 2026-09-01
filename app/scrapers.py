@@ -12,6 +12,7 @@ import re
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
+from urllib.parse import urljoin
 
 from app.config import settings
 from app.models import RawVacancy
@@ -334,6 +335,58 @@ async def fetch_bund_rss(client: httpx.AsyncClient) -> List[RawVacancy]:
         return []
 
 
+async def fetch_direct_bund_search(client: httpx.AsyncClient) -> List[RawVacancy]:
+    """Direct search scraper for service.bund.de HTML job portal.
+    
+    Queries specific academic, science management, and postdoctoral keywords directly:
+    Wissenschaftsmanagement, Hochschuldidaktik, Postdoktorand, Bildungsforschung.
+    """
+    queries = [
+        "Wissenschaftsmanagement",
+        "Hochschuldidaktik",
+        "Postdoktorand",
+        "Bildungsforschung",
+    ]
+    results: List[RawVacancy] = []
+    seen: set = set()
+
+    for q in queries:
+        url = f"https://www.service.bund.de/Content/DE/Stellen/Suche/Formular.html?searchResult=true&templateQueryString={q}"
+        try:
+            res = await client.get(url, headers=HEADERS, timeout=15.0)
+            if res.status_code != 200:
+                continue
+            soup = BeautifulSoup(res.text, "html.parser")
+            for li in soup.select(".result-list > li"):
+                link_el = li.find("a", href=True)
+                if not link_el:
+                    continue
+                href = link_el["href"].split(";")[0]
+                full_url = urljoin(url, href)
+                if full_url in seen:
+                    continue
+                seen.add(full_url)
+                
+                title_el = li.select_one(".title-wrapper, td:first-child") or link_el
+                text = title_el.get_text(" ", strip=True)
+                clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).strip()
+                snippet = li.get_text(" ", strip=True)[:400]
+
+                if len(clean_title) >= 5:
+                    results.append(RawVacancy(
+                        source="Bund.de Direct Search",
+                        title=clean_title,
+                        link=full_url,
+                        snippet=snippet,
+                        query_type="direct_bund_search",
+                    ))
+        except Exception:
+            continue
+
+    return results
+
+
+
 async def fetch_ssr_euraxess(client: httpx.AsyncClient) -> List[RawVacancy]:
     """Scrapes research, postdoctoral, and academic vacancies from EURAXESS Germany."""
     queries = ["postdoc", "higher+education", "educational+research"]
@@ -500,6 +553,7 @@ async def scrape_all_sources() -> List[RawVacancy]:
             fetch_exa(client),                # 4 Exa semantic queries (Germany-scoped)
             fetch_all_rss(client),            # 4 RSS feeds
             fetch_bund_rss(client),           # service.bund.de XML — federal/state vacancies
+            fetch_direct_bund_search(client), # service.bund.de Formular search — targeted academic keywords
             # ── SSR aggregators ────────────────────────────────────────────────
             fetch_ssr_academics(client),      # academics.de (postdoc + professorship queries + WissManagement hub)
             fetch_ssr_wissmanagement_online(client), # Wissenschaftsmanagement Online
@@ -1181,5 +1235,50 @@ def scrape_tu_dresden() -> List[Dict[str, Any]]:
             "raw_text": text
         })
     return jobs
+
+
+def scrape_service_bund(query: str = "Wissenschaftsmanagement") -> List[Dict[str, Any]]:
+    """Synchronous scraper for service.bund.de Formular.html."""
+    url = f"https://www.service.bund.de/Content/DE/Stellen/Suche/Formular.html?searchResult=true&templateQueryString={query}"
+    try:
+        res = httpx.get(url, headers=HEADERS, timeout=15.0, follow_redirects=True)
+        if res.status_code != 200:
+            return []
+    except Exception:
+        return []
+
+    soup = BeautifulSoup(res.text, "html.parser")
+    jobs, seen = [], set()
+    for li in soup.select(".result-list > li"):
+        link_el = li.find("a", href=True)
+        if not link_el:
+            continue
+        href = link_el["href"].split(";")[0]
+        full_url = urljoin(url, href)
+        if full_url in seen:
+            continue
+        seen.add(full_url)
+
+        title_el = li.select_one(".title-wrapper, td:first-child") or link_el
+        text = title_el.get_text(" ", strip=True)
+        clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).strip()
+        date_m = re.findall(r"\b\d{2}\.\d{2}\.\d{4}\b", li.get_text())
+        deadline = date_m[-1] if date_m else "Check listing"
+        pay_match = re.search(r"(?:E|EG|TV-L|BesGr|W)\s*(?:E\s*)?(?:10|11|12|13|14|15|A\s*13)", li.get_text(), re.I)
+
+        if len(clean_title) >= 5:
+            jobs.append({
+                "title": clean_title,
+                "ref_no": "N/A",
+                "organization": "service.bund.de Public Institution",
+                "location": "Germany",
+                "deadline": deadline,
+                "pay_grade": pay_match.group(0) if pay_match else "TV-L / Public Scale",
+                "url": full_url,
+                "source": "service.bund.de Search",
+                "raw_text": li.get_text(" ", strip=True),
+            })
+    return jobs
+
 
 
