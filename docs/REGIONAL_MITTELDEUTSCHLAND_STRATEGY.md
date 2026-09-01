@@ -147,3 +147,34 @@ Live inspection and validation results across the complete central German commut
 * **Parameter Significance:** `kat=2` explicitly isolates *Wissenschaftliches Personal* (academic / postdoctoral staff) under TV-L E 13.
 * **Listing Container:** `li:has(a), p:has(a), table tbody tr`
 * **Metadata Extraction:** Regex matches reference numbers, closing deadlines (`\b\d{2}\.\d{2}\.\d{4}\b`), and salary brackets (`E 13` / `E 14`).
+
+---
+
+## 6. Universities of Applied Sciences (HAW) & Specialist Academies by City
+
+Beyond the primary research universities, regional applied science universities (*Fachhochschulen*) and specialist academies frequently hire didactic advisors, quality managers, and teaching fellows:
+
+| City | Institution | Institution Type | Primary Recruitment Portal | Scraper Module |
+| :--- | :--- | :--- | :--- | :--- |
+| **Magdeburg** | **Hochschule Magdeburg-Stendal (h2)** | University of Applied Sciences | `https://www.h2.de/hochschule/stellenangebote.html` | `app/scrapers_haw.py` |
+| **Jena** | **Ernst-Abbe-Hochschule Jena (EAH)** | University of Applied Sciences | `https://www.eah-jena.de/stellenangebote` | `app/scrapers_haw.py` |
+| **Leipzig** | **HTWK Leipzig** | University of Applied Sciences | `https://www.htwk-leipzig.de/hochschule/stellenangebote` | `app/scrapers_haw.py` |
+| **Leipzig** | **HMT Leipzig** (Music & Theatre) | Specialist Academy | `https://www.hmt-leipzig.de/de/home/hochschule/stellenangebote` | Central State Mirror |
+| **Leipzig** | **HGB Leipzig** (Fine Arts) | Specialist Academy | `https://www.hgb-leipzig.de/hochschule/stellenangebote/` | Central State Mirror |
+| **Halle (Saale)** | **Burg Giebichenstein Kunsthochschule** | University of Art & Design | `https://www.burg-halle.de/` | Interamt / Service.bund.de |
+| **Merseburg** | **Hochschule Merseburg** *(10 min)* | University of Applied Sciences | `https://www.hs-merseburg.de/stellenangebote/` | `app/scrapers_haw.py` |
+| **Köthen / Bernburg** | **Hochschule Anhalt** *(25 min)* | University of Applied Sciences | `https://www.hs-anhalt.de/` | Interamt / Service.bund.de |
+
+---
+
+## 7. Multi-Layer Deduplication & Session Persistence Architecture
+
+### A. Fingerprint Deduplication (`app/dedup.py`)
+To prevent the same vacancy from appearing multiple times due to session IDs (`?sid=...`) or syndication across multiple boards (*Academics.de*, *Interamt*, *Service.bund.de*):
+1. **Title Hygiene (`is_valid_title`):** Drops placeholder titles where the title equals the institution name or contains incomplete sentence fragments (*"Hochschule und"*, *"Stellenangebote"*).
+2. **Canonical Normalization (`normalize_url`):** Strips tracking parameters (`utm_*`, `pk_*`, `sid`, `session`, `ref`) and trailing slashes.
+3. **Composite SHA-256 Fingerprint (`generate_fingerprint`):** Generates a unique content hash from `normalized(title) + normalized(organization) + deadline`. If the same position appears under differing URLs, the hash prunes it before database insertion.
+
+### B. Session-Persistent Gazette Scraper (`app/scrapers_bund.py`)
+* `service.bund.de` enforces stateful ASP.NET session tokens. Direct card URLs often expire or throw 404s without an active cookie jar.
+* The scraper uses `requests.Session()` with an initial handshake to establish persistent cookies, queries the static search endpoint, and runs `is_valid_tender_page` to prevent expired vacancies from being recorded.
