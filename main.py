@@ -87,6 +87,38 @@ async def main() -> None:
             await insert_postdocs(client, fresh_records)
             await log_activity(client, len(fresh_records))
 
+        # Source-level Telemetry Breakdown
+        telemetry = {}
+        for r in raw_vacancies:
+            s = r.source or "Unknown Source"
+            if s not in telemetry:
+                telemetry[s] = {"raw": 0, "eligible": 0, "historical": 0, "new": 0}
+            telemetry[s]["raw"] += 1
+
+        for c in candidates:
+            s = c.research_data.get("source") or c.institution or "Direct University"
+            if s not in telemetry:
+                telemetry[s] = {"raw": 0, "eligible": 0, "historical": 0, "new": 0}
+            telemetry[s]["eligible"] += 1
+
+        for c in fresh_records:
+            s = c.research_data.get("source") or c.institution or "Direct University"
+            if s in telemetry:
+                telemetry[s]["new"] += 1
+
+        for s, stats in telemetry.items():
+            stats["historical"] = max(0, stats["eligible"] - stats["new"])
+
+        print("\n" + "─" * 75)
+        print(f"{'Source Portal / Scraper':<38} | {'Raw':>5} | {'Eligible':>8} | {'Historical':>10} | {'NEW':>5}")
+        print("─" * 75)
+        for s in sorted(telemetry.keys()):
+            stats = telemetry[s]
+            if stats["raw"] > 0 or stats["eligible"] > 0:
+                print(f"{s[:38]:<38} | {stats['raw']:>5} | {stats['eligible']:>8} | {stats['historical']:>10} | {stats['new']:>5}")
+        print("─" * 75)
+        print(f"{'TOTAL':<38} | {len(raw_vacancies):>5} | {len(candidates):>8} | {len(candidates)-len(fresh_records):>10} | {len(fresh_records):>5}")
+        print("─" * 75)
 
         # 4. Build and send clean Telegram summary
         print("\n[4/4] Sending Telegram summary card...")
@@ -100,6 +132,7 @@ async def main() -> None:
     print("\n" + "=" * 60)
     print("Run complete.")
     print("=" * 60)
+
 
 
 if __name__ == "__main__":
