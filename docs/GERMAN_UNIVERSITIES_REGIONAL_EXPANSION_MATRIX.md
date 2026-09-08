@@ -62,14 +62,14 @@ Below is the verified record of all scraper functions and modules currently acti
 
 | Expansion Tier | Region / Zone | Total Target Institutions | Active in Scraper Suite | Queued for Integration |
 | :--- | :--- | :---: | :---: | :---: |
-| **Tier 1 (Immediate)** | **Mitteldeutschland (ST, SN, TH)** | 18 | **11 Active** | 7 Queued |
+| **Tier 1 (Immediate)** | **Mitteldeutschland (ST, SN, TH)** | 18 | **13 Active** | 5 Queued |
 | **Tier 2 (High Transit)** | **Berlin-Brandenburg Hub** | 12 | **6 Active** | 6 Queued |
-| **Tier 3 (Direct Rail)** | **Lower Saxony & Central-North** | 11 | **1 Active** | 10 Queued |
-| **Tier 4 (Didactics)** | **Baden-Württemberg (PHs & Unis)** | 15 | **5 Active** | 10 Queued |
+| **Tier 3 (Direct Rail)** | **Lower Saxony & Central-North** | 11 | **2 Active** | 9 Queued |
+| **Tier 4 (Didactics)** | **Baden-Württemberg (PHs & Unis)** | 15 | **8 Active** | 7 Queued |
 | **Tier 5 (Mega Density)** | **North Rhine-Westphalia (NRW)** | 16 | **3 Active** | 13 Queued |
 | **Tier 6 (National)** | **Bavaria, Hesse & Coastal Hubs** | 22 | **3 Active** | 19 Queued |
 | **National Aggregators**| **Federated Boards & Public Sector** | 6 | **6 Active** | 0 Queued |
-| **TOTALS** | — | **100 Institutions** | **35 Active** | **65 Queued** |
+| **TOTALS** | — | **100 Institutions** | **41 Active** | **59 Queued** |
 
 ---
 
@@ -90,10 +90,10 @@ Below is the verified record of all scraper functions and modules currently acti
 | ✅ **ACTIVE** | **Bauhaus-Universität Weimar** | Specialist Uni | Weimar (TH) | **50 min** | `scrape_uni_weimar()` in `scrapers_regional_tier1_tier2.py` | Lehrentwicklung, Digitale Bildungsformate |
 | ✅ **ACTIVE** | **Universität Erfurt** | Research Uni | Erfurt (TH) | **50 min** | `scrape_uni_erfurt()` in `scrapers_regional_tier1_tier2.py` | Erziehungswissenschaftliche Fakultät, Schulpädagogik |
 | ⏳ *Queued* | **TU Chemnitz** | Research Uni | Chemnitz (SN) | **1h 15m** | `tu-chemnitz.de/verwaltung/personal/stellen/` | Zentrum für Lehrerbildung, Philosophische Fakultät |
-| ⏳ *Queued* | **TU Bergakademie Freiberg** | Research Uni | Freiberg (SN) | **1h 30m** | `tu-freiberg.de/wirtschaft/karriere/stellenangebote` | Hochschuldidaktik, Qualität in der Lehre |
+| ✅ **ACTIVE** | **TU Bergakademie Freiberg** | Research Uni | Freiberg (SN) | **1h 30m** | `scrape_tu_freiberg()` in `scrapers_batch2.py` | Hochschuldidaktik, Qualität in der Lehre |
 | ⏳ *Queued* | **Hochschule Anhalt** | Applied Sci (HAW) | Köthen/Bernburg | **25 min** | `hs-anhalt.de/` (Syndicated to Interamt / Bund) | Didaktik & Hochschulentwicklung |
 | ⏳ *Queued* | **Burg Giebichenstein Halle** | Art & Design Uni | Halle (ST) | **0 min** | `burg-halle.de/` (Syndicated to Interamt / Bund) | Didaktische Beratung |
-| ⏳ *Queued* | **Hochschule Nordhausen** | Applied Sci (HAW) | Nordhausen (TH) | **1h 15m** | `hs-nordhausen.de/service/stellenangebote/` | Sozialmanagement, Lehrqualität |
+| ✅ **ACTIVE** | **Hochschule Nordhausen** | Applied Sci (HAW) | Nordhausen (TH) | **1h 15m** | `scrape_hs_nordhausen()` in `scrapers_batch2.py` | Sozialmanagement, Lehrqualität |
 | ⏳ *Queued* | **Hochschule Schmalkalden** | Applied Sci (HAW) | Schmalkalden (TH) | **1h 45m** | `hs-schmalkalden.de/hochschule/stellenangebote.html`| Didaktische Beratung & E-Learning |
 | ⏳ *Queued* | **Hochschule Harz** | Applied Sci (HAW) | Wernigerode (ST) | **1h 20m** | `hs-harz.de/stellenangebote/` | Verwaltungswissenschaften, Hochschulentwicklung |
 
@@ -125,7 +125,7 @@ Below is the verified record of all scraper functions and modules currently acti
 | Status | Institution | Type | City (State) | Scraper Function & File | Target Faculties & Focus |
 | :---: | :--- | :--- | :--- | :--- | :--- |
 | ✅ **ACTIVE** | **Universität Hildesheim** | Research Uni | Hildesheim (NI) | `scrape_uni_hildesheim()` in `scrapers_regional_tier1_tier2.py` | **High Focus:** Institut für Erziehungswissenschaft, Lehrerbildung |
-| ⏳ *Queued* | **Georg-August-Universität Göttingen** | Research Uni | Göttingen (NI) | `uni-goettingen.de/de/stellenangebote/` | Pädagogische Psychologie, Didaktik, DFG SFBs |
+| ✅ **ACTIVE** | **Georg-August-Universität Göttingen** | Research Uni | Göttingen (NI) | `scrape_uni_goettingen()` in `scrapers_batch2.py` | Pädagogische Psychologie, Didaktik, DFG SFBs |
 | ⏳ *Queued* | **Leibniz Universität Hannover** | Research Uni | Hannover (NI) | `uni-hannover.de/de/universitaet/jobs/stellenangebote/` | Zentrum für Qualitätssicherung in Studium und Lehre |
 | ⏳ *Queued* | **TU Braunschweig** | Research Uni | Braunschweig (NI)| `tu-braunschweig.de/stellenangebote` | Institut für Erziehungswissenschaft, Lehrinnovation |
 | ⏳ *Queued* | **Leuphana Universität Lüneburg** | Research Uni | Lüneburg (NI) | `leuphana.de/universitaet/offene-stellen.html` | Transformative Bildung, Educational Governance |
@@ -147,9 +147,9 @@ Below is the verified record of all scraper functions and modules currently acti
 | ✅ **ACTIVE** | **PH Karlsruhe** | Teacher Ed Uni | Karlsruhe (BW) | `fetch_ph_karlsruhe_vacancies()` in `scrapers_education.py` | Pädagogische Psychologie, Didaktische Entwicklung |
 | ✅ **ACTIVE** | **Universität Heidelberg** | Research Uni | Heidelberg (BW) | `fetch_direct_uni_heidelberg()` in `scrapers.py` | Psychologisches Institut, Hochschuldidaktik |
 | ✅ **ACTIVE** | **Karriere Baden-Württemberg** | State Portal | State-Wide (BW) | `scrape_karriere_bw()` in `scrapers_karriere_bw.py` | All BW Universities & Ministries (TV-L E 13/E 14) |
-| ⏳ *Queued* | **PH Heidelberg** | Teacher Ed Uni | Heidelberg (BW) | `ph-heidelberg.de/stellenangebote.html` | Erziehungswissenschaften, Qualität der Lehre |
-| ⏳ *Queued* | **PH Schwäbisch Gmünd** | Teacher Ed Uni | Schwäbisch Gmünd | `ph-gmuend.de/hochschule/stellenangebote` | Schulpädagogik, Kompetenzmessung |
-| ⏳ *Queued* | **PH Weingarten** | Teacher Ed Uni | Weingarten (BW) | `ph-weingarten.de/stellenangebote/` | Empirische Schulforschung, Didaktik |
+| ✅ **ACTIVE** | **PH Heidelberg** | Teacher Ed Uni | Heidelberg (BW) | `scrape_ph_heidelberg()` in `scrapers_batch2.py` | Erziehungswissenschaften, Qualität der Lehre |
+| ✅ **ACTIVE** | **PH Schwäbisch Gmünd** | Teacher Ed Uni | Schwäbisch Gmünd | `scrape_ph_gmuend()` in `scrapers_batch2.py` | Schulpädagogik, Kompetenzmessung |
+| ✅ **ACTIVE** | **PH Weingarten** | Teacher Ed Uni | Weingarten (BW) | `scrape_ph_weingarten()` in `scrapers_batch2.py` | Empirische Schulforschung, Didaktik |
 | ⏳ *Queued* | **Universität Tübingen** | Research Uni | Tübingen (BW) | `uni-tuebingen.de/.../stellenangebote/` | Hector-Institut für Empirische Bildungsforschung |
 | ⏳ *Queued* | **Universität Freiburg** | Research Uni | Freiburg (BW) | `uni-freiburg.de/universitaet/stellenangebote/` | Institut für Erziehungswissenschaft |
 | ⏳ *Queued* | **Universität Stuttgart** | Research Uni | Stuttgart (BW) | `uni-stuttgart.de/.../stellenangebote/` | Zentrum für Lehre & Qualitätsentwicklung |

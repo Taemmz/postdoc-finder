@@ -17,6 +17,7 @@ def record_telemetry(
     raw: int = 0,
     mode: str = "SINGLE_PAGE",
     completeness: str = "COMPLETE",
+    coverage: str = "VERIFIED",
     error: Optional[str] = None,
 ) -> None:
     """Records or updates source-level pagination and health telemetry."""
@@ -28,6 +29,7 @@ def record_telemetry(
             raw=existing.raw + raw,
             mode=mode if mode != "SINGLE_PAGE" else existing.mode,
             completeness="FAILED" if (existing.completeness == "FAILED" or completeness == "FAILED") else completeness,
+            coverage=coverage if coverage != "VERIFIED" else existing.coverage,
             error=error or existing.error,
         )
     else:
@@ -37,6 +39,7 @@ def record_telemetry(
             raw=raw,
             mode=mode,
             completeness=completeness,
+            coverage=coverage,
             error=error,
         )
 

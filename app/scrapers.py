@@ -29,6 +29,14 @@ from app.scrapers_regional_tier1_tier2 import (
     fetch_direct_uni_potsdam,
     fetch_direct_uni_hildesheim,
 )
+from app.scrapers_batch2 import (
+    scrape_tu_freiberg,
+    scrape_hs_nordhausen,
+    scrape_uni_goettingen,
+    scrape_ph_weingarten,
+    scrape_ph_gmuend,
+    scrape_ph_heidelberg,
+)
 
 HEADERS = {
     "User-Agent": (
@@ -616,6 +624,13 @@ async def scrape_all_sources() -> List[RawVacancy]:
             fetch_direct_uni_weimar(client),
             fetch_direct_uni_potsdam(client),
             fetch_direct_uni_hildesheim(client),
+            # ── Batch 2 Regional & Teacher Education (Pädagogische Hochschulen) ───
+            scrape_tu_freiberg(),
+            scrape_hs_nordhausen(),
+            scrape_uni_goettingen(),
+            scrape_ph_weingarten(),
+            scrape_ph_gmuend(),
+            scrape_ph_heidelberg(),
             # ── PsychJob direct — extracts individual /job/ links from categories ─
             fetch_psychjob_direct(client),
         ]
