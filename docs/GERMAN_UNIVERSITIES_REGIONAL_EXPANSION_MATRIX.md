@@ -10,12 +10,16 @@
 
 Below is the verified record of all scraper functions and modules currently active in the repository so we never re-implement existing endpoints:
 
-### 1. Regional Research Universities (Mitteldeutschland)
+### 1. Regional Research Universities (Mitteldeutschland & Direct Expansion)
 * **MLU Halle-Wittenberg:** `scrape_mlu_halle()` / `fetch_direct_mlu_halle()` in [`app/scrapers.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers.py)
 * **Universität Leipzig:** `scrape_uni_leipzig()` / `fetch_direct_uni_leipzig()` in [`app/scrapers.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers.py)
 * **TU Dresden:** `scrape_tu_dresden()` / `fetch_direct_tu_dresden()` in [`app/scrapers.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers.py)
 * **FSU Jena:** `scrape_uni_jena()` / `fetch_direct_uni_jena()` in [`app/scrapers.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers.py)
 * **OVGU Magdeburg:** `scrape_ovgu_magdeburg()` / `fetch_direct_ovgu_magdeburg()` in [`app/scrapers.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers.py)
+* **Universität Erfurt:** `scrape_uni_erfurt()` / `fetch_direct_uni_erfurt()` in [`app/scrapers_regional_tier1_tier2.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers_regional_tier1_tier2.py)
+* **Bauhaus-Universität Weimar:** `scrape_uni_weimar()` / `fetch_direct_uni_weimar()` in [`app/scrapers_regional_tier1_tier2.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers_regional_tier1_tier2.py)
+* **Universität Potsdam:** `scrape_uni_potsdam()` / `fetch_direct_uni_potsdam()` in [`app/scrapers_regional_tier1_tier2.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers_regional_tier1_tier2.py)
+* **Universität Hildesheim:** `scrape_uni_hildesheim()` / `fetch_direct_uni_hildesheim()` in [`app/scrapers_regional_tier1_tier2.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers_regional_tier1_tier2.py)
 
 ### 2. Regional Applied Sciences Universities (HAW)
 * **HTWK Leipzig:** `scrape_htwk_leipzig()` / `fetch_direct_htwk_leipzig()` in [`app/scrapers_haw.py`](file:///c:/Users/hp/Desktop/SkillEdgeup%20postdoc/postdoc-finder/app/scrapers_haw.py)
@@ -54,18 +58,18 @@ Below is the verified record of all scraper functions and modules currently acti
 
 ---
 
-## 📊 Summary of Current Coverage Status
+### 📊 Summary of Current Coverage Status
 
 | Expansion Tier | Region / Zone | Total Target Institutions | Active in Scraper Suite | Queued for Integration |
 | :--- | :--- | :---: | :---: | :---: |
-| **Tier 1 (Immediate)** | **Mitteldeutschland (ST, SN, TH)** | 18 | **9 Active** | 9 Queued |
-| **Tier 2 (High Transit)** | **Berlin-Brandenburg Hub** | 12 | **5 Active** | 7 Queued |
-| **Tier 3 (Direct Rail)** | **Lower Saxony & Central-North** | 11 | **0 Active** | 11 Queued |
+| **Tier 1 (Immediate)** | **Mitteldeutschland (ST, SN, TH)** | 18 | **11 Active** | 7 Queued |
+| **Tier 2 (High Transit)** | **Berlin-Brandenburg Hub** | 12 | **6 Active** | 6 Queued |
+| **Tier 3 (Direct Rail)** | **Lower Saxony & Central-North** | 11 | **1 Active** | 10 Queued |
 | **Tier 4 (Didactics)** | **Baden-Württemberg (PHs & Unis)** | 15 | **5 Active** | 10 Queued |
 | **Tier 5 (Mega Density)** | **North Rhine-Westphalia (NRW)** | 16 | **3 Active** | 13 Queued |
 | **Tier 6 (National)** | **Bavaria, Hesse & Coastal Hubs** | 22 | **3 Active** | 19 Queued |
 | **National Aggregators**| **Federated Boards & Public Sector** | 6 | **6 Active** | 0 Queued |
-| **TOTALS** | — | **100 Institutions** | **31 Active** | **69 Queued** |
+| **TOTALS** | — | **100 Institutions** | **35 Active** | **65 Queued** |
 
 ---
 
@@ -73,7 +77,7 @@ Below is the verified record of all scraper functions and modules currently acti
 *Commute from Halle (Saale): 0 to 85 minutes. Zero relocation required.*
 
 | Status | Institution | Type | City (State) | Commute from Halle | Scraper Function & File | Target Faculties & Focus |
-| :---: | :--- | :--- | :--- | :---: | :--- | :--- |
+| :---: | :--- | :--- | :--- | :--- | :--- | :--- |
 | ✅ **ACTIVE** | **MLU Halle-Wittenberg** | Research Uni | Halle (ST) | **0 min** | `scrape_mlu_halle()` in `scrapers.py` | Phil Fak III (Erziehungswiss.), ZSB, LLZ Didaktik |
 | ✅ **ACTIVE** | **Universität Leipzig** | Research Uni | Leipzig (SN) | **22 min** | `scrape_uni_leipzig()` in `scrapers.py` | Erziehungswissenschaftliche Fak., Hochschuldidaktik |
 | ✅ **ACTIVE** | **HTWK Leipzig** | Applied Sci (HAW) | Leipzig (SN) | **25 min** | `scrape_htwk_leipzig()` in `scrapers_haw.py` | Media/Informatics didactics, Quality Management |
@@ -83,10 +87,10 @@ Below is the verified record of all scraper functions and modules currently acti
 | ✅ **ACTIVE** | **Hochschule Magdeburg-Stendal** | Applied Sci (HAW) | Magdeburg (ST) | **50 min** | `scrape_h2_magdeburg()` in `scrapers_haw.py`| Angewandte Humanwissenschaften, Lehrdidaktik |
 | ✅ **ACTIVE** | **Hochschule Merseburg** | Applied Sci (HAW) | Merseburg (ST) | **10 min** | `scrape_hs_merseburg()` in `scrapers_haw.py`| Weiterbildung, Didaktische Beratung |
 | ✅ **ACTIVE** | **TU Dresden** | Research Uni | Dresden (SN) | **1h 25m** | `scrape_tu_dresden()` in `scrapers.py` | ZiLL (Interdisziplinäres Lehren & Lernen), Didaktik |
+| ✅ **ACTIVE** | **Bauhaus-Universität Weimar** | Specialist Uni | Weimar (TH) | **50 min** | `scrape_uni_weimar()` in `scrapers_regional_tier1_tier2.py` | Lehrentwicklung, Digitale Bildungsformate |
+| ✅ **ACTIVE** | **Universität Erfurt** | Research Uni | Erfurt (TH) | **50 min** | `scrape_uni_erfurt()` in `scrapers_regional_tier1_tier2.py` | Erziehungswissenschaftliche Fakultät, Schulpädagogik |
 | ⏳ *Queued* | **TU Chemnitz** | Research Uni | Chemnitz (SN) | **1h 15m** | `tu-chemnitz.de/verwaltung/personal/stellen/` | Zentrum für Lehrerbildung, Philosophische Fakultät |
 | ⏳ *Queued* | **TU Bergakademie Freiberg** | Research Uni | Freiberg (SN) | **1h 30m** | `tu-freiberg.de/wirtschaft/karriere/stellenangebote` | Hochschuldidaktik, Qualität in der Lehre |
-| ⏳ *Queued* | **Bauhaus-Universität Weimar** | Specialist Uni | Weimar (TH) | **50 min** | `uni-weimar.de/de/universitaet/aktuell/stellenausschreibungen/` | Lehrentwicklung, Digitale Bildungsformate |
-| ⏳ *Queued* | **Universität Erfurt** | Research Uni | Erfurt (TH) | **50 min** | `uni-erfurt.de/universitaet/arbeiten-an-der-uni/stellenausschreibungen` | Erziehungswissenschaftliche Fakultät, Schulpädagogik |
 | ⏳ *Queued* | **Hochschule Anhalt** | Applied Sci (HAW) | Köthen/Bernburg | **25 min** | `hs-anhalt.de/` (Syndicated to Interamt / Bund) | Didaktik & Hochschulentwicklung |
 | ⏳ *Queued* | **Burg Giebichenstein Halle** | Art & Design Uni | Halle (ST) | **0 min** | `burg-halle.de/` (Syndicated to Interamt / Bund) | Didaktische Beratung |
 | ⏳ *Queued* | **Hochschule Nordhausen** | Applied Sci (HAW) | Nordhausen (TH) | **1h 15m** | `hs-nordhausen.de/service/stellenangebote/` | Sozialmanagement, Lehrqualität |
@@ -105,7 +109,7 @@ Below is the verified record of all scraper functions and modules currently acti
 | ✅ **ACTIVE** | **TU Berlin** | Research Uni | Berlin (BE) | `fetch_direct_tu_berlin()` in `scrapers.py` | Zentraleinrichtung Wiss. Weiterbildung & Didaktik |
 | ✅ **ACTIVE** | **DIPF Leibniz Institute** | Research Inst | Berlin/Frankfurt | `fetch_dipf_vacancies()` in `scrapers_education.py` | Bildungsforschung, Bildungspsychologie |
 | ✅ **ACTIVE** | **DZHW (Higher Education Center)** | Research Inst | Berlin/Hannover | `fetch_dzhw_vacancies()` in `scrapers_education.py` | Higher Education Governance, Student Outcomes |
-| ⏳ *Queued* | **Universität Potsdam** | Research Uni | Potsdam (BB) | `uni-potsdam.de/de/arbeiten-an-der-up/stellenangebote/` | Humanwissenschaftliche Fakultät, Zentrum für Lehrerbildung |
+| ✅ **ACTIVE** | **Universität Potsdam** | Research Uni | Potsdam (BB) | `scrape_uni_potsdam()` in `scrapers_regional_tier1_tier2.py` | Humanwissenschaftliche Fakultät, Zentrum für Lehrerbildung |
 | ⏳ *Queued* | **WZB Social Science Center** | Research Inst | Berlin (BE) | `wzb.eu/de/service/stellenangebote` | Ausbildung & Arbeitsmarkt, Bildungssysteme |
 | ⏳ *Queued* | **Europa-Universität Viadrina** | Research Uni | Frankfurt/Oder | `europa-uni.de/.../stellenangebote/` | Didaktik, Wissenschaftsmanagement |
 | ⏳ *Queued* | **BTU Cottbus-Senftenberg** | Technical Uni | Cottbus (BB) | `b-tu.de/universitaet/karriere/stellenausschreibungen` | Lehr- und Lernforschung, Qualitätsentwicklung |
@@ -118,10 +122,10 @@ Below is the verified record of all scraper functions and modules currently acti
 ## 🚆 Tier 3: Lower Saxony & Central-North Hubs
 *Commute from Halle/Magdeburg: 60 to 100 minutes via direct IC/ICE.*
 
-| Status | Institution | Type | City (State) | Direct Career Portal | Target Faculties & Focus |
+| Status | Institution | Type | City (State) | Scraper Function & File | Target Faculties & Focus |
 | :---: | :--- | :--- | :--- | :--- | :--- |
+| ✅ **ACTIVE** | **Universität Hildesheim** | Research Uni | Hildesheim (NI) | `scrape_uni_hildesheim()` in `scrapers_regional_tier1_tier2.py` | **High Focus:** Institut für Erziehungswissenschaft, Lehrerbildung |
 | ⏳ *Queued* | **Georg-August-Universität Göttingen** | Research Uni | Göttingen (NI) | `uni-goettingen.de/de/stellenangebote/` | Pädagogische Psychologie, Didaktik, DFG SFBs |
-| ⏳ *Queued* | **Universität Hildesheim** | Research Uni | Hildesheim (NI) | `uni-hildesheim.de/stellenmarkt/` | **High Focus:** Institut für Erziehungswissenschaft, Lehrerbildung |
 | ⏳ *Queued* | **Leibniz Universität Hannover** | Research Uni | Hannover (NI) | `uni-hannover.de/de/universitaet/jobs/stellenangebote/` | Zentrum für Qualitätssicherung in Studium und Lehre |
 | ⏳ *Queued* | **TU Braunschweig** | Research Uni | Braunschweig (NI)| `tu-braunschweig.de/stellenangebote` | Institut für Erziehungswissenschaft, Lehrinnovation |
 | ⏳ *Queued* | **Leuphana Universität Lüneburg** | Research Uni | Lüneburg (NI) | `leuphana.de/universitaet/offene-stellen.html` | Transformative Bildung, Educational Governance |
