@@ -88,3 +88,13 @@ def generate_fingerprint(title: str, organization: str, deadline: str = "") -> s
 
     composite = f"{clean_title}|{clean_org}|{clean_deadline}"
     return hashlib.sha256(composite.encode("utf-8")).hexdigest()
+
+
+def generate_canonical_key(title: str, organization: str) -> str:
+    """Creates a normalized semantic canonical key (e.g. 'postdoc educational didactics|mlu halle')."""
+    clean_title = re.sub(r"[^\w\s]", "", (title or "").lower()).strip()
+    clean_title = re.sub(r"\s+", " ", clean_title)
+    clean_org = re.sub(r"[^\w\s]", "", (organization or "").lower()).strip()
+    clean_org = re.sub(r"\s+", " ", clean_org)
+    return f"{clean_title}|{clean_org}"
+
