@@ -14,6 +14,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 from app.models import RawVacancy
+from app.telemetry import record_telemetry
 
 HEADERS = {
     "User-Agent": (
@@ -77,37 +78,26 @@ def scrape_eah_jena() -> List[Dict[str, Any]]:
 async def fetch_direct_eah_jena(client: httpx.AsyncClient) -> List[RawVacancy]:
     """Async scraper for EAH Jena."""
     url = "https://www.eah-jena.de/hochschule/stellenangebote"
-    results: List[RawVacancy] = []
+    results = []
     seen = set()
     try:
         res = await client.get(url, headers=HEADERS, timeout=15.0)
         if res.status_code == 200:
             soup = BeautifulSoup(res.text, "html.parser")
-            for link in soup.select("a[href*='jobposting/'], a[href*='stellenangebot'], a[href*='.pdf']"):
-                full_url = urljoin(url, link.get("href", ""))
-                title = link.get_text(strip=True)
-                if (
-                    len(title) < 6
-                    or full_url in seen
-                    or "zurueck" in title.lower()
-                    or "datenschutz" in title.lower()
-                    or "inhalt" in title.lower()
-                    or title.lower() in ["stellenangebote", "karriere"]
-                    or full_url.rstrip("/").endswith("/stellenangebote")
-                ):
+            for a in soup.select("a[href*='jobposting/'], a[href*='stellenangebot'], a[href*='.pdf']"):
+                href = a.get("href", "")
+                full = href if href.startswith("http") else urljoin(url, href)
+                title = a.get_text(strip=True)
+                if len(title) < 6 or full in seen or any(x in title.lower() for x in ["stellenangebote", "karriere", "zurueck", "datenschutz"]):
                     continue
-                seen.add(full_url)
-                parent = link.find_parent(["tr", "li", "div", "article", "p"]) or link
+                seen.add(full)
+                parent = a.find_parent(["tr", "li", "div", "article", "p"]) or a
                 text = parent.get_text(" ", strip=True)
-                results.append(RawVacancy(
-                    source="EAH Jena Direct",
-                    title=title,
-                    link=full_url,
-                    snippet=text[:400],
-                    query_type="direct_uni_ssr",
-                ))
-    except Exception:
-        pass
+                results.append(RawVacancy(source="EAH Jena Direct", title=title, link=full, snippet=text[:400], query_type="direct_uni_ssr"))
+    except Exception as e:
+        record_telemetry("EAH Jena Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("EAH Jena Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -157,32 +147,27 @@ def scrape_h2_magdeburg() -> List[Dict[str, Any]]:
 
 async def fetch_direct_h2_magdeburg(client: httpx.AsyncClient) -> List[RawVacancy]:
     """Async scraper for Hochschule Magdeburg-Stendal."""
-    url = "https://www.h2.de/hochschule/jobs-und-karriere/stellenangebote.html"
-    results: List[RawVacancy] = []
+    url = "https://www.h2.de/hochschule/karriere/stellenangebote.html"
+    results = []
     seen = set()
     try:
         res = await client.get(url, headers=HEADERS, timeout=15.0)
         if res.status_code == 200:
             soup = BeautifulSoup(res.text, "html.parser")
-            for item in soup.select("table tbody tr, .job-item, article, li:has(a[href*='.pdf']), li:has(a[href*='stelle'])"):
-                link = item.find("a", href=True) if item.name != "a" else item
-                if not link:
+            for a in soup.select("a[href*='stellenanzeigen'], a[href*='.pdf'], a[href*='job']"):
+                href = a.get("href", "")
+                full = href if href.startswith("http") else urljoin(url, href)
+                title = a.get_text(strip=True)
+                if len(title) < 6 or full in seen or any(x in title.lower() for x in ["stellenangebote", "karriere", "zurueck"]):
                     continue
-                full_url = urljoin(url, link.get("href", ""))
-                title = link.get_text(strip=True)
-                if len(title) < 8 or full_url in seen or "stellenangebote" in title.lower():
-                    continue
-                seen.add(full_url)
-                text = item.get_text(" ", strip=True)
-                results.append(RawVacancy(
-                    source="HS Magdeburg-Stendal Direct",
-                    title=title,
-                    link=full_url,
-                    snippet=text[:400],
-                    query_type="direct_uni_ssr",
-                ))
-    except Exception:
-        pass
+                seen.add(full)
+                parent = a.find_parent(["tr", "li", "div", "article", "p"]) or a
+                text = parent.get_text(" ", strip=True)
+                results.append(RawVacancy(source="HS Magdeburg-Stendal Direct", title=title, link=full, snippet=text[:400], query_type="direct_uni_ssr"))
+    except Exception as e:
+        record_telemetry("HS Magdeburg-Stendal Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("HS Magdeburg-Stendal Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -225,32 +210,27 @@ def scrape_htwk_leipzig() -> List[Dict[str, Any]]:
 
 async def fetch_direct_htwk_leipzig(client: httpx.AsyncClient) -> List[RawVacancy]:
     """Async scraper for HTWK Leipzig."""
-    url = "https://jobs.b-ite.com/api/v1/postings/search"
-    payload = {
-        "key": "07459439a8d6d2568ef5398202d2346d855c9e12",
-        "locale": "de",
-        "channel": 0
-    }
-    results: List[RawVacancy] = []
+    url = "https://www.htwk-leipzig.de/hochschule/aktuelles/stellenangebote"
+    results = []
+    seen = set()
     try:
-        res = await client.post(url, json=payload, headers=HEADERS, timeout=15.0)
+        res = await client.get(url, headers=HEADERS, timeout=15.0)
         if res.status_code == 200:
-            for p in res.json().get("jobPostings", []):
-                title = p.get("title", "")
-                posting_id = p.get("id", "")
-                link = f"https://jobs.htwk-leipzig.de/jobposting/{posting_id}"
-                ends_on = p.get("endsOn", "")
-                deadline = ends_on[:10] if ends_on else ""
-                snippet = f"{title} HTWK Leipzig Bewerbungsschluss: {deadline}"
-                results.append(RawVacancy(
-                    source="HTWK Leipzig Direct",
-                    title=title,
-                    link=link,
-                    snippet=snippet,
-                    query_type="direct_uni_ssr",
-                ))
-    except Exception:
-        pass
+            soup = BeautifulSoup(res.text, "html.parser")
+            for a in soup.select("a[href*='newsdetail'], a[href*='stellenangebot'], a[href*='.pdf']"):
+                href = a.get("href", "")
+                full = href if href.startswith("http") else urljoin(url, href)
+                title = a.get_text(strip=True)
+                if len(title) < 6 or full in seen or any(x in title.lower() for x in ["stellenangebote", "karriere", "zurueck"]):
+                    continue
+                seen.add(full)
+                parent = a.find_parent(["tr", "li", "div", "article", "p"]) or a
+                text = parent.get_text(" ", strip=True)
+                results.append(RawVacancy(source="HTWK Leipzig Direct", title=title, link=full, snippet=text[:400], query_type="direct_uni_ssr"))
+    except Exception as e:
+        record_telemetry("HTWK Leipzig Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("HTWK Leipzig Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -300,29 +280,26 @@ def scrape_hs_merseburg() -> List[Dict[str, Any]]:
 async def fetch_direct_hs_merseburg(client: httpx.AsyncClient) -> List[RawVacancy]:
     """Async scraper for Hochschule Merseburg."""
     url = "https://www.hs-merseburg.de/hochschule/information/stellenausschreibungen/"
-    results: List[RawVacancy] = []
+    results = []
     seen = set()
     try:
         res = await client.get(url, headers=HEADERS, timeout=15.0)
         if res.status_code == 200:
             soup = BeautifulSoup(res.text, "html.parser")
-            for link in soup.select("a[href*='neuigkeiten/details/'], a[href*='stellenangebote'], a[href*='.pdf']"):
-                full_url = urljoin(url, link.get("href", ""))
-                title = link.get_text(strip=True)
-                if len(title) < 8 or full_url in seen or "uebersicht" in title.lower() or "stellenangebote" in title.lower():
+            for a in soup.select("a[href*='stellenausschreibungen/'], a[href*='.pdf'], a[href*='stelle']"):
+                href = a.get("href", "")
+                full = href if href.startswith("http") else urljoin(url, href)
+                title = a.get_text(strip=True)
+                if len(title) < 6 or full in seen or any(x in title.lower() for x in ["stellenausschreibungen", "karriere", "zurueck"]):
                     continue
-                seen.add(full_url)
-                parent = link.find_parent(["tr", "li", "div", "article", "p"]) or link
+                seen.add(full)
+                parent = a.find_parent(["tr", "li", "div", "article", "p"]) or a
                 text = parent.get_text(" ", strip=True)
-                results.append(RawVacancy(
-                    source="HS Merseburg Direct",
-                    title=title,
-                    link=full_url,
-                    snippet=text[:400],
-                    query_type="direct_uni_ssr",
-                ))
-    except Exception:
-        pass
+                results.append(RawVacancy(source="HS Merseburg Direct", title=title, link=full, snippet=text[:400], query_type="direct_uni_ssr"))
+    except Exception as e:
+        record_telemetry("HS Merseburg Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("HS Merseburg Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 

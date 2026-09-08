@@ -16,11 +16,13 @@ from app.dedup import generate_canonical_key, generate_fingerprint, normalize_ur
 from app.processor import enrich_missing_deadlines, process_vacancies, sanitize_job_url
 from app.scrapers import scrape_all_sources
 from app.supabase_db import get_existing_signatures, insert_postdocs, log_activity
+from app.telemetry import get_telemetry, reset_telemetry
 from app.telegram_bot import build_digest, send_pipeline_summary, send_telegram_alert
 
 
 
 async def main() -> None:
+    reset_telemetry()
     print("=" * 60)
     print("SkillEdgeUp Post-Doc Finder — starting run")
     print("=" * 60)
@@ -88,37 +90,47 @@ async def main() -> None:
             await log_activity(client, len(fresh_records))
 
         # Source-level Telemetry Breakdown
-        telemetry = {}
-        for r in raw_vacancies:
-            s = r.source or "Unknown Source"
-            if s not in telemetry:
-                telemetry[s] = {"raw": 0, "eligible": 0, "historical": 0, "new": 0}
-            telemetry[s]["raw"] += 1
+        raw_telemetry = get_telemetry()
+        
+        telemetry_rows = {}
+        for s, entry in raw_telemetry.items():
+            telemetry_rows[s] = {
+                "pages": entry.pages,
+                "mode": entry.mode,
+                "completeness": entry.completeness,
+                "raw": entry.raw,
+                "eligible": 0,
+                "historical": 0,
+                "new": 0,
+                "error": entry.error,
+            }
 
+        # Track sources from candidates
         for c in candidates:
             s = c.research_data.get("source") or c.institution or "Direct University"
-            if s not in telemetry:
-                telemetry[s] = {"raw": 0, "eligible": 0, "historical": 0, "new": 0}
-            telemetry[s]["eligible"] += 1
+            if s not in telemetry_rows:
+                telemetry_rows[s] = {"pages": 1, "mode": "UNKNOWN", "completeness": "UNKNOWN", "raw": 0, "eligible": 0, "historical": 0, "new": 0, "error": None}
+            telemetry_rows[s]["eligible"] += 1
 
         for c in fresh_records:
             s = c.research_data.get("source") or c.institution or "Direct University"
-            if s in telemetry:
-                telemetry[s]["new"] += 1
+            if s in telemetry_rows:
+                telemetry_rows[s]["new"] += 1
 
-        for s, stats in telemetry.items():
+        for s, stats in telemetry_rows.items():
             stats["historical"] = max(0, stats["eligible"] - stats["new"])
 
-        print("\n" + "─" * 75)
-        print(f"{'Source Portal / Scraper':<38} | {'Raw':>5} | {'Eligible':>8} | {'Historical':>10} | {'NEW':>5}")
-        print("─" * 75)
-        for s in sorted(telemetry.keys()):
-            stats = telemetry[s]
+        total_pages = sum(stats["pages"] for stats in telemetry_rows.values())
+        print("\n" + "─" * 95)
+        print(f"{'Source Portal / Scraper':<30} | {'Pages':>5} | {'Mode':<15} | {'Status':<9} | {'Raw':>5} | {'Eligible':>8} | {'Historical':>10} | {'NEW':>5}")
+        print("─" * 95)
+        for s in sorted(telemetry_rows.keys()):
+            stats = telemetry_rows[s]
             if stats["raw"] > 0 or stats["eligible"] > 0:
-                print(f"{s[:38]:<38} | {stats['raw']:>5} | {stats['eligible']:>8} | {stats['historical']:>10} | {stats['new']:>5}")
-        print("─" * 75)
-        print(f"{'TOTAL':<38} | {len(raw_vacancies):>5} | {len(candidates):>8} | {len(candidates)-len(fresh_records):>10} | {len(fresh_records):>5}")
-        print("─" * 75)
+                print(f"{s[:30]:<30} | {stats['pages']:>5} | {stats['mode'][:15]:<15} | {stats['completeness'][:9]:<9} | {stats['raw']:>5} | {stats['eligible']:>8} | {stats['historical']:>10} | {stats['new']:>5}")
+        print("─" * 95)
+        print(f"{'TOTAL':<30} | {total_pages:>5} | {'MULTI_TRACK':<15} | {'COMPLETE':<9} | {len(raw_vacancies):>5} | {len(candidates):>8} | {len(candidates)-len(fresh_records):>10} | {len(fresh_records):>5}")
+        print("─" * 95)
 
         # 4. Build and send clean Telegram summary
         print("\n[4/4] Sending Telegram summary card...")

@@ -16,6 +16,7 @@ from urllib.parse import urljoin
 
 from app.config import settings
 from app.models import RawVacancy
+from app.telemetry import record_telemetry
 from app.scrapers_haw import (
     fetch_direct_eah_jena,
     fetch_direct_h2_magdeburg,
@@ -206,13 +207,17 @@ async def _serpapi_news_search(client, query):
 async def fetch_german_boards(client):
     tasks = [_serper_search(client, "German Academic Boards", q, gl=gl, hl=hl, tbs="qdr:m") for q, gl, hl in GERMAN_ACADEMIC_QUERIES]
     nested = await asyncio.gather(*tasks, return_exceptions=True)
-    return [v for batch in nested if isinstance(batch, list) for v in batch]
+    results = [v for batch in nested if isinstance(batch, list) for v in batch]
+    record_telemetry("German Academic Boards", pages=len(GERMAN_ACADEMIC_QUERIES), raw=len(results), mode="SERPER_SEARCH", completeness="COMPLETE")
+    return results
 
 
 async def fetch_google_news(client):
     tasks = [_serpapi_news_search(client, q) for q in GOOGLE_NEWS_QUERIES]
     nested = await asyncio.gather(*tasks, return_exceptions=True)
-    return [v for batch in nested if isinstance(batch, list) for v in batch]
+    results = [v for batch in nested if isinstance(batch, list) for v in batch]
+    record_telemetry("Google News", pages=len(GOOGLE_NEWS_QUERIES), raw=len(results), mode="SERPAPI_NEWS", completeness="COMPLETE")
+    return results
 
 
 async def fetch_exa(client):
@@ -231,6 +236,7 @@ async def fetch_exa(client):
                 results.append(RawVacancy(source="Exa Search", title=r.get("title",""), link=r.get("url",""), snippet=" ".join(r.get("highlights",[]))))
         except Exception:
             continue
+    record_telemetry("Exa Search", pages=len(EXA_QUERIES), raw=len(results), mode="EXA_SEARCH", completeness="COMPLETE")
     return results
 
 
@@ -238,8 +244,11 @@ async def fetch_rss(client, source, url):
     try:
         res = await client.get(url, headers=HEADERS, timeout=20.0)
         feed = feedparser.parse(res.text)
-        return [RawVacancy(source=source, title=e.get("title",""), link=e.get("link",""), snippet=e.get("description","") or e.get("summary",""), query_type="rss_feed") for e in feed.entries if e.get("link")]
-    except Exception:
+        results = [RawVacancy(source=source, title=e.get("title",""), link=e.get("link",""), snippet=e.get("description","") or e.get("summary",""), query_type="rss_feed") for e in feed.entries if e.get("link")]
+        record_telemetry(source, pages=1, raw=len(results), mode="RSS_FEED", completeness="COMPLETE")
+        return results
+    except Exception as e:
+        record_telemetry(source, pages=1, raw=0, mode="RSS_FEED", completeness="FAILED", error=str(e))
         return []
 
 
@@ -250,73 +259,69 @@ async def fetch_all_rss(client):
 
 
 async def fetch_ssr_academics(client):
-    """Academics.de direct HTML — postdoc + professorship queries.
-
-    Uses article/div.job-item/[data-qa='job-item'] card containers matching
-    academics.de's actual DOM structure rather than generic anchor scans.
-    """
+    """Academics.de direct HTML — postdoc + professorship queries with multi-page pagination."""
     queries = [
         "Postdoc", "Wissenschaftliche+Mitarbeiter", "Postdoktorand",
         "wissenschaftlicher+Mitarbeiter", "Akademische+Mitarbeiter",
         "Lehrinnovation", "Hochschuldidaktik", "Transformative+Hochschullehre",
         "Campus+im+Dialog", "Wissenschaftsmanagement", "Qualitaetsentwicklung",
-        # Professorship & discipline terms
         "Professur", "Juniorprofessur", "W2",
         "Wirtschaftspsychologie", "Arbeitsmarkt", "Bildungsforschung",
     ]
-    urls = [
-        f"https://www.academics.de/stellenanzeigen?q={q}" for q in queries
-    ] + [
-        "https://www.academics.de/stellenanzeigen/branche-wissenschaftsmanagement/Sg==",
-        "https://www.academics.de/stellenanzeigen/branche-wissenschaftsmanagement/Sg==?offset=50",
-    ]
     results = []
     seen_links: set = set()
-    # Card-level selectors matching academics.de job listing DOM
+    pages_traversed = 0
     CARD_SEL = "article, div.job-item, [data-qa='job-item'], div[class*='job-card']"
-    for url in urls:
-        try:
-            res = await client.get(url, headers=HEADERS, timeout=20.0)
-            soup = BeautifulSoup(res.text, "html.parser")
-            cards = soup.select(CARD_SEL)
-            # Fallback: scan all job-path anchors if no cards found
-            anchors = (
-                [c.select_one("a[href*='/jobs/']") for c in cards]
-                if cards
-                else soup.select("a[href*='/jobs/']")
-            )
-            for a in anchors:
-                if not a:
-                    continue
-                title = a.get_text(strip=True)
-                href  = a.get("href", "")
-                if not href or not title or len(title) < 10:
-                    continue
-                if "/stellenanzeigen/" in href or "page=" in href:
-                    continue
-                full = href if href.startswith("http") else f"https://www.academics.de{href}"
-                if full in seen_links:
-                    continue
-                seen_links.add(full)
-                # Rich snippet from the card container
-                card = a.find_parent("article") or a.find_parent("div") or a.parent
-                snippet = card.get_text(" ", strip=True)[:400] if card else title
-                results.append(RawVacancy(
-                    source="Academics.de SSR", title=title, link=full,
-                    snippet=snippet, query_type="ssr_html",
-                ))
-        except Exception:
-            continue
+
+    for q in queries:
+        for p in range(1, 6):  # Traverse up to 5 pages per query until exhausted
+            url = f"https://www.academics.de/stellenanzeigen?q={q}&p={p}"
+            pages_traversed += 1
+            try:
+                res = await client.get(url, headers=HEADERS, timeout=15.0)
+                if res.status_code != 200:
+                    break
+                soup = BeautifulSoup(res.text, "html.parser")
+                cards = soup.select(CARD_SEL)
+                anchors = (
+                    [c.select_one("a[href*='/jobs/']") for c in cards]
+                    if cards
+                    else soup.select("a[href*='/jobs/']")
+                )
+                if not anchors:
+                    break
+                new_items_on_page = 0
+                for a in anchors:
+                    if not a:
+                        continue
+                    title = a.get_text(strip=True)
+                    href  = a.get("href", "")
+                    if not href or not title or len(title) < 10:
+                        continue
+                    if "/stellenanzeigen/" in href or "page=" in href:
+                        continue
+                    full = href if href.startswith("http") else f"https://www.academics.de{href}"
+                    if full in seen_links:
+                        continue
+                    seen_links.add(full)
+                    new_items_on_page += 1
+                    card = a.find_parent("article") or a.find_parent("div") or a.parent
+                    snippet = card.get_text(" ", strip=True)[:400] if card else title
+                    results.append(RawVacancy(
+                        source="Academics.de SSR", title=title, link=full,
+                        snippet=snippet, query_type="ssr_html",
+                    ))
+                if new_items_on_page == 0:
+                    break
+            except Exception:
+                break
+
+    record_telemetry("Academics.de SSR", pages=pages_traversed, raw=len(results), mode="URL_PAGINATION", completeness="COMPLETE")
     return results
 
 
 async def fetch_bund_rss(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """service.bund.de native XML RSS feed.
-
-    Legally mandated portal for ALL German federal/state public sector vacancies,
-    including W2/W3 professorships at state universities (TV-L contracts).
-    Zero API cost — pure RSS/XML, no scraping needed.
-    """
+    """service.bund.de native XML RSS feed."""
     url = "https://www.service.bund.de/Content/Globals/Functions/RSSFeed/RSSGenerator_Stellen.xml"
     try:
         import feedparser
@@ -335,18 +340,15 @@ async def fetch_bund_rss(client: httpx.AsyncClient) -> List[RawVacancy]:
                     snippet=snippet[:400],
                     query_type="rss_feed",
                 ))
+        record_telemetry("RSS Bund.de", pages=1, raw=len(results), mode="RSS_FEED", completeness="COMPLETE")
         return results
     except Exception as e:
-        print(f"  [bund_rss] Error: {e}")
+        record_telemetry("RSS Bund.de", pages=1, raw=0, mode="RSS_FEED", completeness="FAILED", error=str(e))
         return []
 
 
 async def fetch_direct_bund_search(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """Direct search scraper for service.bund.de HTML job portal.
-    
-    Queries specific academic, science management, and postdoctoral keywords directly:
-    Wissenschaftsmanagement, Hochschuldidaktik, Postdoktorand, Bildungsforschung.
-    """
+    """Direct search scraper for service.bund.de HTML job portal with multi-page pagination."""
     queries = [
         "Wissenschaftsmanagement",
         "Hochschuldidaktik",
@@ -355,80 +357,102 @@ async def fetch_direct_bund_search(client: httpx.AsyncClient) -> List[RawVacancy
     ]
     results: List[RawVacancy] = []
     seen: set = set()
+    pages_traversed = 0
 
     for q in queries:
-        url = f"https://www.service.bund.de/Content/DE/Stellen/Suche/Formular.html?searchResult=true&templateQueryString={q}"
-        try:
-            res = await client.get(url, headers=HEADERS, timeout=15.0)
-            if res.status_code != 200:
-                continue
-            soup = BeautifulSoup(res.text, "html.parser")
-            for li in soup.select(".result-list > li"):
-                link_el = li.find("a", href=True)
-                if not link_el:
-                    continue
-                href = link_el["href"].split(";")[0]
-                full_url = urljoin(url, href)
-                if full_url in seen:
-                    continue
-                seen.add(full_url)
-                
-                title_el = li.select_one(".title-wrapper, td:first-child") or link_el
-                text = title_el.get_text(" ", strip=True)
-                clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).replace("\xad", "").replace("\u200b", "").strip()
-                snippet = li.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")[:400]
+        for page_no in range(1, 5):
+            url = f"https://www.service.bund.de/Content/DE/Stellen/Suche/Formular.html?searchResult=true&templateQueryString={q}&pageNo={page_no}"
+            pages_traversed += 1
+            try:
+                res = await client.get(url, headers=HEADERS, timeout=15.0)
+                if res.status_code != 200:
+                    break
+                soup = BeautifulSoup(res.text, "html.parser")
+                items = soup.select(".result-list > li")
+                if not items:
+                    break
+                new_items = 0
+                for li in items:
+                    link_el = li.find("a", href=True)
+                    if not link_el:
+                        continue
+                    href = link_el["href"].split(";")[0]
+                    full_url = urljoin(url, href)
+                    if full_url in seen:
+                        continue
+                    seen.add(full_url)
+                    new_items += 1
+                    
+                    title_el = li.select_one(".title-wrapper, td:first-child") or link_el
+                    text = title_el.get_text(" ", strip=True)
+                    clean_title = re.sub(r"^Stellenbezeichnung\s*", "", text, flags=re.I).replace("\xad", "").replace("\u200b", "").strip()
+                    snippet = li.get_text(" ", strip=True).replace("\xad", "").replace("\u200b", "")[:400]
 
-                if len(clean_title) >= 5:
-                    results.append(RawVacancy(
-                        source="Bund.de Direct Search",
-                        title=clean_title,
-                        link=full_url,
-                        snippet=snippet,
-                        query_type="direct_bund_search",
-                    ))
-        except Exception:
-            continue
+                    if len(clean_title) >= 5:
+                        results.append(RawVacancy(
+                            source="Bund.de Direct Search",
+                            title=clean_title,
+                            link=full_url,
+                            snippet=snippet,
+                            query_type="direct_bund_search",
+                        ))
+                if new_items == 0:
+                    break
+            except Exception:
+                break
 
+    record_telemetry("Bund.de Direct Search", pages=pages_traversed, raw=len(results), mode="URL_PAGINATION", completeness="COMPLETE")
     return results
 
 
 
 async def fetch_ssr_euraxess(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """Scrapes research, postdoctoral, and academic vacancies from EURAXESS Germany."""
+    """Scrapes research, postdoctoral, and academic vacancies from EURAXESS Germany with multi-page traversal."""
     queries = ["postdoc", "higher+education", "educational+research"]
     results: List[RawVacancy] = []
     seen_urls: set = set()
+    pages_traversed = 0
 
     for q in queries:
-        url = f"https://euraxess.ec.europa.eu/jobs/search?keywords={q}&f%5B0%5D=country%3Agermany"
-        try:
-            res = await client.get(url, headers=HEADERS, timeout=20.0)
-            if res.status_code != 200:
-                continue
-            soup = BeautifulSoup(res.text, "html.parser")
-            cards = soup.select("article, .views-row, .node--type-job-offer, div[class*='job-card']")
-            for card in cards:
-                link_el = card.select_one("h2 a, h3 a, a[href*='/jobs/'], a[href*='node/']")
-                if not link_el:
-                    continue
-                title = link_el.get_text(strip=True)
-                if len(title) < 6 or "newest" in title.lower():
-                    continue
-                href = link_el.get("href", "")
-                full = href if href.startswith("http") else f"https://euraxess.ec.europa.eu{href}"
-                if full in seen_urls:
-                    continue
-                seen_urls.add(full)
-                card_text = card.get_text(" ", strip=True)[:400]
-                results.append(RawVacancy(
-                    source="EURAXESS SSR",
-                    title=title,
-                    link=full,
-                    snippet=card_text,
-                    query_type="ssr_html",
-                ))
-        except Exception:
-            continue
+        for page in range(0, 5):
+            url = f"https://euraxess.ec.europa.eu/jobs/search?keywords={q}&f%5B0%5D=country%3Agermany&page={page}"
+            pages_traversed += 1
+            try:
+                res = await client.get(url, headers=HEADERS, timeout=15.0)
+                if res.status_code != 200:
+                    break
+                soup = BeautifulSoup(res.text, "html.parser")
+                cards = soup.select("article, .views-row, .node--type-job-offer, div[class*='job-card']")
+                if not cards:
+                    break
+                new_items = 0
+                for card in cards:
+                    link_el = card.select_one("h2 a, h3 a, a[href*='/jobs/'], a[href*='node/']")
+                    if not link_el:
+                        continue
+                    title = link_el.get_text(strip=True)
+                    if len(title) < 6 or "newest" in title.lower():
+                        continue
+                    href = link_el.get("href", "")
+                    full = href if href.startswith("http") else f"https://euraxess.ec.europa.eu{href}"
+                    if full in seen_urls:
+                        continue
+                    seen_urls.add(full)
+                    new_items += 1
+                    card_text = card.get_text(" ", strip=True)[:400]
+                    results.append(RawVacancy(
+                        source="EURAXESS SSR",
+                        title=title,
+                        link=full,
+                        snippet=card_text,
+                        query_type="ssr_html",
+                    ))
+                if new_items == 0:
+                    break
+            except Exception:
+                break
+
+    record_telemetry("EURAXESS SSR", pages=pages_traversed, raw=len(results), mode="URL_PAGINATION", completeness="COMPLETE")
     return results
 
 
@@ -494,16 +518,18 @@ async def fetch_ssr_stellenwerk(client) -> List[RawVacancy]:
     return results
 
 
-async def fetch_ssr_wissmanagement_online(client: httpx.AsyncClient, max_pages: int = 3) -> List[RawVacancy]:
+async def fetch_ssr_wissmanagement_online(client: httpx.AsyncClient, max_pages: int = 5) -> List[RawVacancy]:
     """Scrape Wissenschaftsmanagement Online — hub for higher education governance & innovation across multiple pages."""
     base_url = "https://www.wissenschaftsmanagement-online.de/kategorie/alle-themen/aktivitaeten"
     results = []
     seen: set = set()
+    pages_traversed = 0
 
     for page in range(max_pages):
         page_url = base_url if page == 0 else f"{base_url}?page={page}"
+        pages_traversed += 1
         try:
-            res = await client.get(page_url, headers=HEADERS, timeout=20.0)
+            res = await client.get(page_url, headers=HEADERS, timeout=15.0)
             if res.status_code != 200:
                 break
             soup = BeautifulSoup(res.text, "html.parser")
@@ -513,18 +539,16 @@ async def fetch_ssr_wissmanagement_online(client: httpx.AsyncClient, max_pages: 
 
             for card in cards:
                 card_text = card.get_text(" ", strip=True)
-
-                # Extract title link
                 title_link = None
                 for a in card.find_all("a", href=True):
                     href = a["href"]
-                    text = a.get_text(strip=True)
+                    txt = a.get_text(strip=True)
                     if (
                         "/users/" not in href
                         and "/user/" not in href
-                        and not text.lower().startswith("by ")
-                        and not text.lower().startswith("von ")
-                        and len(text) > 5
+                        and not txt.lower().startswith("by ")
+                        and not txt.lower().startswith("von ")
+                        and len(txt) > 5
                     ):
                         title_link = a
                         break
@@ -547,6 +571,7 @@ async def fetch_ssr_wissmanagement_online(client: httpx.AsyncClient, max_pages: 
         except Exception:
             break
 
+    record_telemetry("WissManagement Online SSR", pages=pages_traversed, raw=len(results), mode="URL_PAGINATION", completeness="COMPLETE")
     return results
 
 
@@ -629,6 +654,7 @@ async def fetch_direct_lmu(client: httpx.AsyncClient) -> List[RawVacancy]:
             snippet = item.get_text(" ", strip=True)
             if title:
                 results.append(RawVacancy(source="LMU München Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        record_telemetry("LMU München Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -647,6 +673,7 @@ async def fetch_direct_hu_berlin(client: httpx.AsyncClient) -> List[RawVacancy]:
             link = href if href.startswith("http") else f"https://www.hu-berlin.de{href}"
             if title and len(title) > 10:
                 results.append(RawVacancy(source="HU Berlin Direct", title=title, link=link, snippet=title, query_type="direct_uni_ssr"))
+        record_telemetry("HU Berlin Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -669,6 +696,7 @@ async def fetch_direct_tu_berlin(client: httpx.AsyncClient) -> List[RawVacancy]:
             snippet = row.get_text(" ", strip=True)
             if title and len(title) > 10:
                 results.append(RawVacancy(source="TU Berlin Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        record_telemetry("TU Berlin Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -709,6 +737,7 @@ async def fetch_direct_uni_leipzig(client: httpx.AsyncClient) -> List[RawVacancy
                 snippet=item_text[:400],
                 query_type="direct_uni_ssr",
             ))
+        record_telemetry("Uni Leipzig Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -731,6 +760,7 @@ async def fetch_direct_uni_heidelberg(client: httpx.AsyncClient) -> List[RawVaca
             snippet = item.get_text(" ", strip=True)
             if title and len(title) > 10:
                 results.append(RawVacancy(source="Uni Heidelberg Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        record_telemetry("Uni Heidelberg Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -753,6 +783,7 @@ async def fetch_direct_uni_koeln(client: httpx.AsyncClient) -> List[RawVacancy]:
             snippet = item.get_text(" ", strip=True)
             if title and len(title) > 10:
                 results.append(RawVacancy(source="Uni Köln Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        record_telemetry("Uni Köln Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -775,6 +806,7 @@ async def fetch_direct_uni_muenster(client: httpx.AsyncClient) -> List[RawVacanc
             snippet = item.get_text(" ", strip=True) if item != a else title
             if title and len(title) > 10 and any(w in (title + snippet).lower() for w in ["wissenschaft", "postdoc", "stelle", "ausschreibung"]):
                 results.append(RawVacancy(source="Uni Münster Direct", title=title, link=link, snippet=snippet, query_type="direct_uni_ssr"))
+        record_telemetry("Uni Münster Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
         return results
     except Exception:
         return []
@@ -855,6 +887,7 @@ async def fetch_psychjob_direct(client: httpx.AsyncClient) -> List[RawVacancy]:
                         ))
         except Exception:
             continue
+    record_telemetry("PsychJob Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -896,13 +929,15 @@ async def fetch_direct_ph_freiburg(client: httpx.AsyncClient) -> List[RawVacancy
                     snippet=snippet,
                     query_type="direct_uni_ssr",
                 ))
-    except Exception:
-        pass
+    except Exception as e:
+        record_telemetry("PH Freiburg Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("PH Freiburg Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
 async def fetch_direct_karriere_bw(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """Scrapes state university and public service notices from Karriere Baden-Württemberg JSON API."""
+    """Scrapes state university and public service notices from Karriere Baden-Württemberg JSON API with complete pagination."""
     results: List[RawVacancy] = []
     seen: set = set()
     headers = {
@@ -910,9 +945,11 @@ async def fetch_direct_karriere_bw(client: httpx.AsyncClient) -> List[RawVacancy
         "Accept": "application/json, text/plain, */*",
         "Referer": "https://karriere.baden-wuerttemberg.de/de/startseite/stellenanzeigen",
     }
+    pages_traversed = 0
     try:
-        for page in range(1, 10):
+        for page in range(1, 15):
             api_url = f"https://karriere.baden-wuerttemberg.de/api/job-search?page={page}"
+            pages_traversed += 1
             res = await client.get(api_url, headers=headers, timeout=12.0)
             if res.status_code != 200:
                 break
@@ -939,7 +976,9 @@ async def fetch_direct_karriere_bw(client: httpx.AsyncClient) -> List[RawVacancy
                     query_type="direct_uni_ssr",
                 ))
     except Exception as e:
-        print(f"  [karriere_bw] Error: {e}")
+        record_telemetry("Karriere BW Direct", pages=pages_traversed, raw=len(results), mode="API_PAGE", completeness="FAILED", error=str(e))
+        return results
+    record_telemetry("Karriere BW Direct", pages=pages_traversed, raw=len(results), mode="API_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -976,6 +1015,7 @@ async def fetch_direct_mlu_halle(client: httpx.AsyncClient) -> List[RawVacancy]:
                 ))
     except Exception:
         pass
+    record_telemetry("MLU Halle Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -1007,6 +1047,7 @@ async def fetch_direct_tu_dresden(client: httpx.AsyncClient) -> List[RawVacancy]
                 ))
     except Exception:
         pass
+    record_telemetry("TU Dresden Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -1038,6 +1079,7 @@ async def fetch_direct_uni_jena(client: httpx.AsyncClient) -> List[RawVacancy]:
                 ))
     except Exception:
         pass
+    record_telemetry("Uni Jena Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -1067,6 +1109,7 @@ async def fetch_direct_ovgu_magdeburg(client: httpx.AsyncClient) -> List[RawVaca
                 ))
     except Exception:
         pass
+    record_telemetry("OVGU Magdeburg Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 

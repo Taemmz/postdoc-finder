@@ -13,6 +13,7 @@ import httpx
 import requests
 from bs4 import BeautifulSoup
 from app.models import RawVacancy
+from app.telemetry import record_telemetry
 
 HEADERS = {
     "User-Agent": (
@@ -93,8 +94,10 @@ async def fetch_direct_uni_erfurt(client: httpx.AsyncClient) -> List[RawVacancy]
                         snippet=f"{title} Universität Erfurt {text}"[:500],
                         query_type="direct_uni_ssr",
                     ))
-    except Exception:
-        pass
+    except Exception as e:
+        record_telemetry("Uni Erfurt Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("Uni Erfurt Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -168,8 +171,10 @@ async def fetch_direct_uni_weimar(client: httpx.AsyncClient) -> List[RawVacancy]
                         snippet=f"{title} Bauhaus-Universität Weimar {text}"[:500],
                         query_type="direct_uni_ssr",
                     ))
-    except Exception:
-        pass
+    except Exception as e:
+        record_telemetry("Bauhaus Weimar Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("Bauhaus Weimar Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -245,8 +250,10 @@ async def fetch_direct_uni_potsdam(client: httpx.AsyncClient) -> List[RawVacancy
                     snippet=f"{title} Universität Potsdam {text}"[:500],
                     query_type="direct_uni_ssr",
                 ))
-    except Exception:
-        pass
+    except Exception as e:
+        record_telemetry("Uni Potsdam Direct", pages=1, raw=0, mode="SINGLE_PAGE", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("Uni Potsdam Direct", pages=1, raw=len(results), mode="SINGLE_PAGE", completeness="COMPLETE")
     return results
 
 
@@ -298,15 +305,17 @@ def scrape_uni_hildesheim() -> List[Dict[str, Any]]:
 
 
 async def fetch_direct_uni_hildesheim(client: httpx.AsyncClient) -> List[RawVacancy]:
-    """Async scraper for Universität Hildesheim."""
+    """Async scraper for Universität Hildesheim with multi-category inspection."""
     urls = [
         "https://www.uni-hildesheim.de/universitaet/karriere-weiterbildung/stellenangebote/wissenschaftliche-mitarbeiterinnen/",
         "https://www.uni-hildesheim.de/universitaet/karriere-weiterbildung/stellenangebote/professuren/",
     ]
     results = []
     seen = set()
-    for url in urls:
-        try:
+    pages_traversed = 0
+    try:
+        for url in urls:
+            pages_traversed += 1
             res = await client.get(url, headers=HEADERS, timeout=15.0)
             if res.status_code == 200:
                 soup = BeautifulSoup(res.text, "html.parser")
@@ -330,6 +339,8 @@ async def fetch_direct_uni_hildesheim(client: httpx.AsyncClient) -> List[RawVaca
                         snippet=f"{title} Universität Hildesheim {text}"[:500],
                         query_type="direct_uni_ssr",
                     ))
-        except Exception:
-            pass
+    except Exception as e:
+        record_telemetry("Uni Hildesheim Direct", pages=pages_traversed, raw=0, mode="MULTI_CATEGORY", completeness="FAILED", error=str(e))
+        return []
+    record_telemetry("Uni Hildesheim Direct", pages=pages_traversed, raw=len(results), mode="MULTI_CATEGORY", completeness="COMPLETE")
     return results
