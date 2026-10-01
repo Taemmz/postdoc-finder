@@ -101,29 +101,52 @@ async def scrape_hs_harz() -> List[RawVacancy]:
             soup = BeautifulSoup(r.text, "html.parser")
             main = soup.find("main") or soup.find("div", id="content") or soup
             
-            for div in main.find_all(["div", "article", "tr", "li", "p"]):
-                a = div.find("a", href=True)
-                if a and ("/Stellenausschreibungen/" in a["href"] or "jobadid=" in a["href"]):
-                    full_url = urljoin(url, a["href"])
-                    if full_url in seen_links:
-                        continue
-                    seen_links.add(full_url)
-
-                    full_text = div.get_text(separator=" | ", strip=True)
-                    parts = [p.strip() for p in full_text.split(" | ") if len(p.strip()) > 5]
-                    title = parts[0] if parts else a.get_text(strip=True)
-                    for p in parts:
-                        if any(k in p.lower() for k in ["m/w/d", "mitarbeiter", "prof", "manager", "assistenz", "lehr", "standortmanager"]):
-                            title = p
-                            break
-
+            # Primary path: accordion job blocks
+            accordions = main.find_all("div", class_="nn__content-effect--accordion")
+            for acc in accordions:
+                title_el = acc.find(["h1", "h2", "h3", "h4", "strong"])
+                title = title_el.get_text(strip=True) if title_el else ""
+                
+                pdf_a = acc.find("a", href=lambda h: h and "Stellenausschreibung" in h and h.endswith(".pdf"))
+                app_a = acc.find("a", href=lambda h: h and "jobadid=" in h)
+                
+                link = None
+                if pdf_a:
+                    link = urljoin(url, pdf_a["href"])
+                elif app_a:
+                    link = urljoin(url, app_a["href"])
+                
+                if link and link not in seen_links:
+                    seen_links.add(link)
+                    full_text = acc.get_text(separator=" | ", strip=True)
                     if not any(skip in title.lower() for skip in ["datenschutz", "einwilligung"]):
                         vacancies.append(
                             RawVacancy(
                                 source=source_name,
                                 title=title,
-                                link=full_url,
+                                link=link,
                                 snippet=f"HS Harz: {full_text[:200]}",
+                            )
+                        )
+
+            # Fallback path if no accordions found
+            if not vacancies:
+                for a in main.find_all("a", href=True):
+                    href = a["href"]
+                    if any(skip in href.lower() for skip in ["datenschutz", "einwilligung"]):
+                        continue
+                    if "Stellenausschreibung" in href and href.endswith(".pdf"):
+                        full_url = urljoin(url, href)
+                        if full_url in seen_links:
+                            continue
+                        seen_links.add(full_url)
+                        title = a.get_text(strip=True) or href.split("/")[-1].replace(".pdf", "")
+                        vacancies.append(
+                            RawVacancy(
+                                source=source_name,
+                                title=title,
+                                link=full_url,
+                                snippet=f"HS Harz: {title}",
                             )
                         )
 
