@@ -93,15 +93,17 @@ def probe_endpoint(name: str, url: str) -> Dict:
         for a in soup.find_all("a", href=True):
             href = a["href"].strip()
             text = a.get_text(separator=" ", strip=True)
-            if not text or len(text) < 12:
+            if not text or len(text) < 4:
                 continue
-            if any(skip in href.lower() for skip in ["impressum", "datenschutz", "facebook", "linkedin", "instagram", "login"]):
+            if any(skip in href.lower() for skip in ["impressum", "datenschutz", "facebook", "linkedin", "instagram", "login", "/fachbereich-", "/studiengaenge/"]):
                 continue
 
             full_link = urljoin(res["final_url"], href)
-            if any(k in text.lower() or k in href.lower() for k in ["wiss", "mitarbeiter", "prof", "kennziffer", "doktor", "postdoc", "stelle", "lehrkraft"]):
+            if any(k in href.lower() for k in ["/stellenangebote/details/", "/ansicht-forschung-lehre/", "/ansicht-professuren/", "jobadid=", "/stellenausschreibung/"]) or (".pdf" in href.lower() and any(k in href.lower() for k in ["stellenausschreibung", "download"])):
                 academic_links.append({"title": text[:80], "link": full_link})
-            if ".pdf" in href.lower() or "download" in href.lower():
+            elif any(k in text.lower() for k in ["wiss. mitarbeiter", "wissenschaftliche/r mitarbeiter", "professur für", "postdoc", "doktorand"]):
+                academic_links.append({"title": text[:80], "link": full_link})
+            elif ".pdf" in href.lower() or "download" in href.lower():
                 pdf_links.append({"title": text[:80], "link": full_link})
 
         # Check for Pagination Elements
