@@ -37,6 +37,12 @@ from app.scrapers_batch2 import (
     scrape_ph_gmuend,
     scrape_ph_heidelberg,
 )
+from app.scrapers_batch3 import (
+    scrape_hs_schmalkalden,
+    scrape_hs_harz,
+    scrape_leuphana_lueneburg,
+    scrape_fh_potsdam,
+)
 
 HEADERS = {
     "User-Agent": (
@@ -631,6 +637,11 @@ async def scrape_all_sources() -> List[RawVacancy]:
             scrape_ph_weingarten(),
             scrape_ph_gmuend(),
             scrape_ph_heidelberg(),
+            # ── Batch 3C HRK-Discovered Institutions ─────────────────────────────
+            scrape_hs_schmalkalden(),
+            scrape_hs_harz(),
+            scrape_leuphana_lueneburg(),
+            scrape_fh_potsdam(),
             # ── PsychJob direct — extracts individual /job/ links from categories ─
             fetch_psychjob_direct(client),
         ]

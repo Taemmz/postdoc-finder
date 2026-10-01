@@ -62,14 +62,14 @@ Below is the verified record of all scraper functions and modules currently acti
 
 | Expansion Tier | Region / Zone | Total Target Institutions | Active in Scraper Suite | Queued for Integration |
 | :--- | :--- | :---: | :---: | :---: |
-| **Tier 1 (Immediate)** | **Mitteldeutschland (ST, SN, TH)** | 18 | **13 Active** | 5 Queued |
-| **Tier 2 (High Transit)** | **Berlin-Brandenburg Hub** | 12 | **6 Active** | 6 Queued |
-| **Tier 3 (Direct Rail)** | **Lower Saxony & Central-North** | 11 | **2 Active** | 9 Queued |
+| **Tier 1 (Immediate)** | **Mitteldeutschland (ST, SN, TH)** | 18 | **15 Active** | 3 Queued |
+| **Tier 2 (High Transit)** | **Berlin-Brandenburg Hub** | 12 | **7 Active** | 5 Queued |
+| **Tier 3 (Direct Rail)** | **Lower Saxony & Central-North** | 11 | **3 Active** | 8 Queued |
 | **Tier 4 (Didactics)** | **Baden-Württemberg (PHs & Unis)** | 15 | **8 Active** | 7 Queued |
 | **Tier 5 (Mega Density)** | **North Rhine-Westphalia (NRW)** | 16 | **3 Active** | 13 Queued |
 | **Tier 6 (National)** | **Bavaria, Hesse & Coastal Hubs** | 22 | **3 Active** | 19 Queued |
 | **National Aggregators**| **Federated Boards & Public Sector** | 6 | **6 Active** | 0 Queued |
-| **TOTALS** | — | **100 Institutions** | **41 Active** | **59 Queued** |
+| **TOTALS** | — | **100 Institutions** | **45 Active** | **55 Queued** |
 
 ---
 
@@ -94,8 +94,8 @@ Below is the verified record of all scraper functions and modules currently acti
 | ⏳ *Queued* | **Hochschule Anhalt** | Applied Sci (HAW) | Köthen/Bernburg | **25 min** | `hs-anhalt.de/` (Syndicated to Interamt / Bund) | Didaktik & Hochschulentwicklung |
 | ⏳ *Queued* | **Burg Giebichenstein Halle** | Art & Design Uni | Halle (ST) | **0 min** | `burg-halle.de/` (Syndicated to Interamt / Bund) | Didaktische Beratung |
 | ✅ **ACTIVE** | **Hochschule Nordhausen** | Applied Sci (HAW) | Nordhausen (TH) | **1h 15m** | `scrape_hs_nordhausen()` in `scrapers_batch2.py` | Sozialmanagement, Lehrqualität |
-| ⏳ *Queued* | **Hochschule Schmalkalden** | Applied Sci (HAW) | Schmalkalden (TH) | **1h 45m** | `hs-schmalkalden.de/hochschule/stellenangebote.html`| Didaktische Beratung & E-Learning |
-| ⏳ *Queued* | **Hochschule Harz** | Applied Sci (HAW) | Wernigerode (ST) | **1h 20m** | `hs-harz.de/stellenangebote/` | Verwaltungswissenschaften, Hochschulentwicklung |
+| ✅ **ACTIVE** | **Hochschule Schmalkalden** | Applied Sci (HAW) | Schmalkalden (TH) | **1h 45m** | `scrape_hs_schmalkalden()` in `scrapers_batch3.py` | Didaktische Beratung & E-Learning |
+| ✅ **ACTIVE** | **Hochschule Harz** | Applied Sci (HAW) | Wernigerode (ST) | **1h 20m** | `scrape_hs_harz()` in `scrapers_batch3.py` | Verwaltungswissenschaften, Hochschulentwicklung |
 
 ---
 
@@ -115,7 +115,7 @@ Below is the verified record of all scraper functions and modules currently acti
 | ⏳ *Queued* | **BTU Cottbus-Senftenberg** | Technical Uni | Cottbus (BB) | `b-tu.de/universitaet/karriere/stellenausschreibungen` | Lehr- und Lernforschung, Qualitätsentwicklung |
 | ⏳ *Queued* | **HTW Berlin** | Applied Sci (HAW) | Berlin (BE) | `htw-berlin.de/karriere/stellenangebote/` | Zentrum für Lehrentwicklung & Hochschuldidaktik |
 | ⏳ *Queued* | **HWR Berlin** | Applied Sci (HAW) | Berlin (BE) | `hwr-berlin.de/hwr-berlin/karriere/offene-stellen/` | Berufs- und Weiterbildung, Didaktische Innovation |
-| ⏳ *Queued* | **Fachhochschule Potsdam** | Applied Sci (HAW) | Potsdam (BB) | `fh-potsdam.de/.../stellenangebote` | Sozialpädagogik, Lehrinnovation |
+| ✅ **ACTIVE** | **Fachhochschule Potsdam** | Applied Sci (HAW) | Potsdam (BB) | `scrape_fh_potsdam()` in `scrapers_batch3.py` | Sozialpädagogik, Lehrinnovation |
 
 ---
 
@@ -128,7 +128,7 @@ Below is the verified record of all scraper functions and modules currently acti
 | ✅ **ACTIVE** | **Georg-August-Universität Göttingen** | Research Uni | Göttingen (NI) | `scrape_uni_goettingen()` in `scrapers_batch2.py` | Pädagogische Psychologie, Didaktik, DFG SFBs |
 | ⏳ *Queued* | **Leibniz Universität Hannover** | Research Uni | Hannover (NI) | `uni-hannover.de/de/universitaet/jobs/stellenangebote/` | Zentrum für Qualitätssicherung in Studium und Lehre |
 | ⏳ *Queued* | **TU Braunschweig** | Research Uni | Braunschweig (NI)| `tu-braunschweig.de/stellenangebote` | Institut für Erziehungswissenschaft, Lehrinnovation |
-| ⏳ *Queued* | **Leuphana Universität Lüneburg** | Research Uni | Lüneburg (NI) | `leuphana.de/universitaet/offene-stellen.html` | Transformative Bildung, Educational Governance |
+| ✅ **ACTIVE** | **Leuphana Universität Lüneburg** | Research Uni | Lüneburg (NI) | `scrape_leuphana_lueneburg()` in `scrapers_batch3.py` | Transformative Bildung, Educational Governance |
 | ⏳ *Queued* | **Universität Osnabrück** | Research Uni | Osnabrück (NI) | `uni-osnabrueck.de/universitaet/stellenangebote/` | Institut für Erziehungswissenschaft, Psychologie |
 | ⏳ *Queued* | **Universität Vechta** | Research Uni | Vechta (NI) | `uni-vechta.de/stellenangebote/` | Bildungs- und Erziehungswissenschaften |
 | ⏳ *Queued* | **TU Clausthal** | Technical Uni | Clausthal (NI) | `tu-clausthal.de/universitaet/karriere/stellenangebote` | Hochschuldidaktik, Studienqualität |
