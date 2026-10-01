@@ -1,0 +1,2704 @@
+{
+  "metadata": {
+    "source": "Hochschulrektorenkonferenz (HRK) - Stellenanzeigen der Mitgliedshochschulen",
+    "source_urls": [
+      "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "https://www.hrk.de/hrk/stellenanzeigen/stellenanzeigen-der-hochschulen/"
+    ],
+    "total_institutions": 269,
+    "generated_date": "2026-10-01",
+    "description": "National authoritative registry of official German university and HAW vacancy portals."
+  },
+  "institutions": [
+    {
+      "institution_name": "Akademie der Bildenden Künste München",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://www.adbk.de",
+      "vacancy_url": "https://www.adbk.de/de/aktuell/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Akademie der Bildenden Künste Nürnberg",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Bayern",
+      "city": "Nürnberg",
+      "official_url": "https://adbk-nuernberg.de",
+      "vacancy_url": "https://adbk-nuernberg.de/akademie/stellenanzeigen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Albert-Ludwigs-Universität Freiburg im Breisgau",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Freiburg im Breisgau",
+      "official_url": "https://uni-freiburg.de",
+      "vacancy_url": "https://uni-freiburg.de/universitaet/jobs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Alice Salomon Hochschule Berlin",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.ash-berlin.eu",
+      "vacancy_url": "https://www.ash-berlin.eu/hochschule/job-karriere/jobangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Augustana-Hochschule Neuendettelsau",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://augustana.de",
+      "vacancy_url": "http://augustana.de/aktuelles/stellen/stellen.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Bauhaus-Universität Weimar",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Thüringen",
+      "city": "Weimar",
+      "official_url": "https://www.uni-weimar.de",
+      "vacancy_url": "https://www.uni-weimar.de/de/universitaet/aktuell/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Bayerische Julius-Maximilians-Universität Würzburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Würzburg",
+      "official_url": "https://www.uni-wuerzburg.de",
+      "vacancy_url": "https://www.uni-wuerzburg.de/aktuelles/jobs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Bergische Universität Wuppertal",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Wuppertal",
+      "official_url": "https://stellenausschreibungen.uni-wuppertal.de",
+      "vacancy_url": "https://stellenausschreibungen.uni-wuppertal.de/qisserver/rds?state=change&type=3&nextdir=sva/bwmsas&subdir=sva/bwm&moduleParameter=bwmSearchResult&next=TableSelect.vm&subitem=svabwmstellenuebersicht&menu_open=n&noDBAction=y&init=y",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Berliner Hochschule für Technik",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.bht-berlin.de",
+      "vacancy_url": "https://www.bht-berlin.de/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Brandenburgische Technische Universität Cottbus-Senftenberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Brandenburg",
+      "city": "Cottbus",
+      "official_url": "http://www.b-tu.de",
+      "vacancy_url": "http://www.b-tu.de/universitaet/karriere/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Brandenburgische Technische Universität Cottbus-Senftenberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Brandenburg",
+      "city": "Cottbus",
+      "official_url": "https://www.b-tu.de",
+      "vacancy_url": "https://www.b-tu.de/universitaet/karriere-engagement/karriere/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Bucerius Law School, Hochschule für Rechtswissenschaft - Hamburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "http://www.law-school.de",
+      "vacancy_url": "http://www.law-school.de/deutsch/services/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Burg Giebichenstein Kunsthochschule Halle",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Sachsen-Anhalt",
+      "city": "Halle (Saale)",
+      "official_url": "https://www.burg-halle.de",
+      "vacancy_url": "https://www.burg-halle.de/institution/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Carl von Ossietzky Universität Oldenburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Oldenburg",
+      "official_url": "http://www.uni-oldenburg.de",
+      "vacancy_url": "http://www.uni-oldenburg.de/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Christian-Albrechts-Universität zu Kiel",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Schleswig-Holstein",
+      "city": "Kiel",
+      "official_url": "http://www.uni-kiel.de",
+      "vacancy_url": "http://www.uni-kiel.de/personal/de/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Constructor University Bremen",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Bremen",
+      "city": "Bremen",
+      "official_url": "https://www.jacobs-university.de",
+      "vacancy_url": "https://www.jacobs-university.de/jobs",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Deutsche Sporthochschule Köln",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Köln",
+      "official_url": "https://www.dshs-koeln.de",
+      "vacancy_url": "https://www.dshs-koeln.de/karriere/stellenangebote-der-dshs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Deutsche Universität für Verwaltungswissenschaften Speyer",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Rheinland-Pfalz",
+      "city": "Speyer",
+      "official_url": "https://www.uni-speyer.de",
+      "vacancy_url": "https://www.uni-speyer.de/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Duale Hochschule Baden-Württemberg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.dhbw.de",
+      "vacancy_url": "http://www.dhbw.de/die-dhbw/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Eberhard Karls Universität Tübingen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Tübingen",
+      "official_url": "https://uni-tuebingen.de",
+      "vacancy_url": "https://uni-tuebingen.de/universitaet/karriere/freie-stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "EBS Universität für Wirtschaft und Recht, Wiesbaden",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Wiesbaden",
+      "official_url": "https://www.ebs.edu",
+      "vacancy_url": "https://www.ebs.edu/de/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ernst-Abbe-Hochschule Jena",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Thüringen",
+      "city": "Jena",
+      "official_url": "https://www.eah-jena.de",
+      "vacancy_url": "https://www.eah-jena.de/hochschule/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Europa-Universität Flensburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Schleswig-Holstein",
+      "city": "Flensburg",
+      "official_url": "https://www.uni-flensburg.de",
+      "vacancy_url": "https://www.uni-flensburg.de/die-universitaet/aktuelle-stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Europa-Universität Viadrina Frankfurt (Oder)",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Frankfurt am Main",
+      "official_url": "http://www.europa-uni.de",
+      "vacancy_url": "http://www.europa-uni.de/de/struktur/verwaltung/dezernat_2/stellenausschreibung/index.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule Berlin",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "http://www.eh-berlin.de",
+      "vacancy_url": "http://www.eh-berlin.de/hochschule/stellenangebote/stellenangebote-der-ehb.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule Darmstadt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Darmstadt",
+      "official_url": "https://ehd.heavenhr.com",
+      "vacancy_url": "https://ehd.heavenhr.com/jobs",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule Freiburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Freiburg im Breisgau",
+      "official_url": "http://www.eh-freiburg.de",
+      "vacancy_url": "http://www.eh-freiburg.de/aktuelles/stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule für Soziale Arbeit und Diakonie Hamburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "https://ev-hochschule-hh.de",
+      "vacancy_url": "https://ev-hochschule-hh.de/hochschule/job-und-karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule Ludwigsburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Ludwigsburg",
+      "official_url": "https://www.eh-ludwigsburg.de",
+      "vacancy_url": "https://www.eh-ludwigsburg.de/hochschule/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule Nürnberg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Nürnberg",
+      "official_url": "http://www.evhn.de",
+      "vacancy_url": "http://www.evhn.de/jobs.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Evangelische Hochschule Rheinland-Westfalen-Lippe",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bochum",
+      "official_url": "http://www.efh-bochum.de",
+      "vacancy_url": "http://www.efh-bochum.de/index.php/stellenausschreibung.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Fachhochschule Aachen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Aachen",
+      "official_url": "https://www.fh-aachen.de",
+      "vacancy_url": "https://www.fh-aachen.de/hochschule/zentralverwaltung/dezernat-i-personal/stellenanzeigen/stellenanzeigen-der-fh-aachen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Fachhochschule Dortmund",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Dortmund",
+      "official_url": "https://www.fh-dortmund.de",
+      "vacancy_url": "https://www.fh-dortmund.de/karriere/stellenangebote/index.php",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Fachhochschule Erfurt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Thüringen",
+      "city": "Erfurt",
+      "official_url": "https://www.fh-erfurt.de",
+      "vacancy_url": "https://www.fh-erfurt.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Fachhochschule Potsdam",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Brandenburg",
+      "city": "Potsdam",
+      "official_url": "https://www.fh-potsdam.de",
+      "vacancy_url": "https://www.fh-potsdam.de/hochschule-karriere/karriere/stellenangebote-fh-potsdam",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Fachhochschule Südwestfalen - Iserlohn",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.fh-swf.de",
+      "vacancy_url": "https://www.fh-swf.de/de/karriere/karriere_fhswf/index.php",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Fachhochschule Westküste - Heide",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.fh-westkueste.de",
+      "vacancy_url": "https://www.fh-westkueste.de/hochschulprofil/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "FernUniversität Hagen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Hagen",
+      "official_url": "https://jobs.fernuni-hagen.de",
+      "vacancy_url": "https://jobs.fernuni-hagen.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "FH Münster University of Applied Sciences",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Münster",
+      "official_url": "https://www.fh-muenster.de",
+      "vacancy_url": "https://www.fh-muenster.de/de/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Filmuniversität Babelsberg Konrad Wolf",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.filmuniversitaet.de",
+      "vacancy_url": "https://www.filmuniversitaet.de/filmuni/aktuelles/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Folkwang Universität der Künste - Essen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Essen",
+      "official_url": "http://www.folkwang-uni.de",
+      "vacancy_url": "http://www.folkwang-uni.de/home/hochschule/aktuell/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Frankfurt University of Applied Sciences",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Frankfurt am Main",
+      "official_url": "https://www.frankfurt-university.de",
+      "vacancy_url": "https://www.frankfurt-university.de/de/aktuelles/stellenangebote-der-frankfurt-uas/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Freie Universität Berlin",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "http://www.fu-berlin.de",
+      "vacancy_url": "http://www.fu-berlin.de/service/stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Erlangen",
+      "official_url": "https://www.fau.de",
+      "vacancy_url": "https://www.fau.de/universitaet/stellen-praktika-und-jobs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Friedrich-Schiller-Universität Jena",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Thüringen",
+      "city": "Jena",
+      "official_url": "https://www.uni-jena.de",
+      "vacancy_url": "https://www.uni-jena.de/122166/stellenmarkt",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Georg-August-Universität Göttingen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Göttingen",
+      "official_url": "https://www.uni-goettingen.de",
+      "vacancy_url": "https://www.uni-goettingen.de/de/stellenausschreibungen/305223.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "HafenCity Universität Hamburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "https://www.hcu-hamburg.de",
+      "vacancy_url": "https://www.hcu-hamburg.de/universitaet/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "HAWK Hochschule für angewandte Wissenschaft und Kunst Hildesheim/Holzminden/Göttingen",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Niedersachsen",
+      "city": "Göttingen",
+      "official_url": "https://www.hawk.de",
+      "vacancy_url": "https://www.hawk.de/de/hochschule/arbeitsplatz/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Heinrich-Heine-Universität Düsseldorf",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Düsseldorf",
+      "official_url": "https://www.hhu.de",
+      "vacancy_url": "https://www.hhu.de/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Helmut-Schmidt-Universität/Universität der Bundeswehr Hamburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "https://www.hsu-hh.de",
+      "vacancy_url": "https://www.hsu-hh.de/karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "HHL Leipzig Graduate School of Management",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Sachsen",
+      "city": "Leipzig",
+      "official_url": "https://www.hhl.de",
+      "vacancy_url": "https://www.hhl.de/jobs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Aalen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Aalen",
+      "official_url": "https://www.hs-aalen.de",
+      "vacancy_url": "https://www.hs-aalen.de/pages/stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Albstadt-Sigmaringen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Albstadt",
+      "official_url": "https://www.hs-albsig.de",
+      "vacancy_url": "https://www.hs-albsig.de/hochschule/verwaltung/personalabteilung/aktuelle-stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Anhalt - Anhalt University of Applied Sciences",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.hs-anhalt.de",
+      "vacancy_url": "https://www.hs-anhalt.de/hochschule-anhalt/aktuelles/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Ansbach",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Ansbach",
+      "official_url": "https://www.hs-ansbach.de",
+      "vacancy_url": "https://www.hs-ansbach.de/jobs/jobboerse",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Biberach",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.hochschule-biberach.de",
+      "vacancy_url": "https://www.hochschule-biberach.de/hochschule/karriere/offene-stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bielefeld",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bielefeld",
+      "official_url": "https://www.hsbi.de",
+      "vacancy_url": "https://www.hsbi.de/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bochum",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bochum",
+      "official_url": "https://www.hochschule-bochum.de",
+      "vacancy_url": "https://www.hochschule-bochum.de/die-bo/informationen/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bochum - Standort Gesundheitscampus",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bochum",
+      "official_url": "https://gesundheitscampus.hochschule-bochum.de",
+      "vacancy_url": "https://gesundheitscampus.hochschule-bochum.de/der-standort-gesundheitscampus/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bonn-Rhein-Sieg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bonn",
+      "official_url": "https://www.h-brs.de",
+      "vacancy_url": "https://www.h-brs.de/de/d2/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bonn-Rhein-Sieg - Sankt Augustin",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bonn",
+      "official_url": "https://www.h-brs.de",
+      "vacancy_url": "https://www.h-brs.de/de/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bremen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bremen",
+      "city": "Bremen",
+      "official_url": "https://meine-karriere.hs-bremen.de",
+      "vacancy_url": "https://meine-karriere.hs-bremen.de/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Bremerhaven",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bremen",
+      "city": "Bremerhaven",
+      "official_url": "https://www.hs-bremerhaven.de",
+      "vacancy_url": "https://www.hs-bremerhaven.de/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Darmstadt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Darmstadt",
+      "official_url": "https://h-da.de",
+      "vacancy_url": "https://h-da.de/stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule der bildenden Künste Essen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Essen",
+      "official_url": "http://www.hbk-essen.de",
+      "vacancy_url": "http://www.hbk-essen.de/hochschule/stellenausschreibungen.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule der Bildenden Künste Saar",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.hbksaar.de",
+      "vacancy_url": "http://www.hbksaar.de/aktuell/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule der Medien Stuttgart",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Stuttgart",
+      "official_url": "https://hdm-stuttgart.de",
+      "vacancy_url": "https://hdm-stuttgart.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Düsseldorf",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Düsseldorf",
+      "official_url": "https://jobs.hs-duesseldorf.de",
+      "vacancy_url": "https://jobs.hs-duesseldorf.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Emden/Leer",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Niedersachsen",
+      "city": "Emden",
+      "official_url": "https://karriere.hs-emden-leer.de",
+      "vacancy_url": "https://karriere.hs-emden-leer.de/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Esslingen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.hs-esslingen.de",
+      "vacancy_url": "https://www.hs-esslingen.de/hochschule/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Flensburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Schleswig-Holstein",
+      "city": "Flensburg",
+      "official_url": "http://www.hs-flensburg.de",
+      "vacancy_url": "http://www.hs-flensburg.de/hochschule/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Fulda",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Fulda",
+      "official_url": "https://www.hs-fulda.de",
+      "vacancy_url": "https://www.hs-fulda.de/unsere-hochschule/content-pool-a-z-alle-institutionen/hochschule-als-arbeitgeber/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Furtwangen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Furtwangen",
+      "official_url": "https://www.hs-furtwangen.de",
+      "vacancy_url": "https://www.hs-furtwangen.de/zukunft-erleben/karriere-join-the-hfu-family/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für angewandte Wissenschaften Coburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Coburg",
+      "official_url": "http://www.hs-coburg.de",
+      "vacancy_url": "http://www.hs-coburg.de/stellenangebote.html?&no_cache=1",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Angewandte Wissenschaften Hamburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "http://www.haw-hamburg.de",
+      "vacancy_url": "http://www.haw-hamburg.de/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für angewandte Wissenschaften Kempten",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Kempten",
+      "official_url": "http://www.hochschule-kempten.de",
+      "vacancy_url": "http://www.hochschule-kempten.de/aktuelles/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für angewandte Wissenschaften Kiel",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Schleswig-Holstein",
+      "city": "Kiel",
+      "official_url": "https://www.haw-kiel.de",
+      "vacancy_url": "https://www.haw-kiel.de/wir/karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für angewandte Wissenschaften München",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://hm.edu",
+      "vacancy_url": "https://hm.edu/arbeiten_an_der_hm/index.de.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für angewandte Wissenschaften Weihenstephan-Triesdorf",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Freising",
+      "official_url": "https://www.hswt.de",
+      "vacancy_url": "https://www.hswt.de/arbeiten-an-der-hswt/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Bildende Künste - Städelschule",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://staedelschule.de",
+      "vacancy_url": "https://staedelschule.de/de/aktuelles/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Bildende Künste Braunschweig",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Niedersachsen",
+      "city": "Braunschweig",
+      "official_url": "https://www.hbk-bs.de",
+      "vacancy_url": "https://www.hbk-bs.de/hochschule/stellenausschreibungen-1/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Bildende Künste Hamburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "https://www.hfbk-hamburg.de",
+      "vacancy_url": "https://www.hfbk-hamburg.de/de/service/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Forstwirtschaft Rottenburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Rottenburg",
+      "official_url": "https://www.hs-rottenburg.net",
+      "vacancy_url": "https://www.hs-rottenburg.net/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Gestaltung Offenbach",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.hfg-offenbach.de",
+      "vacancy_url": "https://www.hfg-offenbach.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Gestaltung Schwäbisch Gmünd",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Schwäbisch Gmünd",
+      "official_url": "http://www.hfg-gmuend.de",
+      "vacancy_url": "http://www.hfg-gmuend.de/Stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Grafik und Buchkunst Leipzig",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Sachsen",
+      "city": "Leipzig",
+      "official_url": "https://www.hgb-leipzig.de",
+      "vacancy_url": "https://www.hgb-leipzig.de/hochschule/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Jüdische Studien Heidelberg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Heidelberg",
+      "official_url": "http://www.hfjs.eu",
+      "vacancy_url": "http://www.hfjs.eu/aktuell/jobs.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Künste Bremen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bremen",
+      "city": "Bremen",
+      "official_url": "https://www.hfk-bremen.de",
+      "vacancy_url": "https://www.hfk-bremen.de/stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik \"Carl Maria von Weber\" Dresden",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Sachsen",
+      "city": "Dresden",
+      "official_url": "http://www.hfmdd.de",
+      "vacancy_url": "http://www.hfmdd.de/hochschule/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Detmold",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.hfm-detmold.de",
+      "vacancy_url": "http://www.hfm-detmold.de/service/freie-stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Franz Liszt Weimar",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Thüringen",
+      "city": "Weimar",
+      "official_url": "https://www.hfm-weimar.de",
+      "vacancy_url": "https://www.hfm-weimar.de/mitarbeiten/stellen-und-ausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Freiburg im Breisgau",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Freiburg im Breisgau",
+      "official_url": "http://www.mh-freiburg.de",
+      "vacancy_url": "http://www.mh-freiburg.de/hochschule/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Karlsruhe",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Karlsruhe",
+      "official_url": "https://www.hfm-karlsruhe.de",
+      "vacancy_url": "https://www.hfm-karlsruhe.de/hochschule/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Nürnberg",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Bayern",
+      "city": "Nürnberg",
+      "official_url": "https://www.hfm-nuernberg.de",
+      "vacancy_url": "https://www.hfm-nuernberg.de/service/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Saar",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.hfmsaar.de",
+      "vacancy_url": "https://www.hfmsaar.de/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Darstellende Kunst Frankfurt am Main",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Hessen",
+      "city": "Frankfurt am Main",
+      "official_url": "https://www.hfmdk-frankfurt.de",
+      "vacancy_url": "https://www.hfmdk-frankfurt.de/thema/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Darstellende Kunst Mannheim",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Mannheim",
+      "official_url": "https://www.muho-mannheim.de",
+      "vacancy_url": "https://www.muho-mannheim.de/service/jobs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Tanz Köln",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Nordrhein-Westfalen",
+      "city": "Köln",
+      "official_url": "https://www.hfmt-koeln.de",
+      "vacancy_url": "https://www.hfmt-koeln.de/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Theater \"Felix Mendelssohn Bartholdy\" Leipzig",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Sachsen",
+      "city": "Leipzig",
+      "official_url": "http://www.hmt-leipzig.de",
+      "vacancy_url": "http://www.hmt-leipzig.de/de/home/hochschule/vakanzen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Theater Hamburg",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "https://www.hfmt-hamburg.de",
+      "vacancy_url": "https://www.hfmt-hamburg.de/die-hfmt/offene-stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Theater München",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://hmtm.de",
+      "vacancy_url": "https://hmtm.de/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik und Theater Rostock",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Mecklenburg-Vorpommern",
+      "city": "Rostock",
+      "official_url": "https://www.hmt-rostock.de",
+      "vacancy_url": "https://www.hmt-rostock.de/aktuelles-service/karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik Würzburg",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Bayern",
+      "city": "Würzburg",
+      "official_url": "https://hfm-wuerzburg.de",
+      "vacancy_url": "https://hfm-wuerzburg.de/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik „Hanns Eisler“ Berlin",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.hfm-berlin.de",
+      "vacancy_url": "https://www.hfm-berlin.de/hochschule/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Musik, Theater und Medien Hannover",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Niedersachsen",
+      "city": "Hannover",
+      "official_url": "http://www.hmtm-hannover.de",
+      "vacancy_url": "http://www.hmtm-hannover.de/de/hochschule/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für nachhaltige Entwicklung Eberswalde",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Brandenburg",
+      "city": "Eberswalde",
+      "official_url": "https://www.hnee.de",
+      "vacancy_url": "https://www.hnee.de/hochschule/arbeiten-an-der-hnee/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Philosophie, München",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://hfph.de",
+      "vacancy_url": "https://hfph.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Schauspielkunst „Ernst Busch“",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.hfs-berlin.de",
+      "vacancy_url": "https://www.hfs-berlin.de/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Technik Stuttgart",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Stuttgart",
+      "official_url": "http://www.hft-stuttgart.de",
+      "vacancy_url": "http://www.hft-stuttgart.de/Aktuell/Stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Technik und Wirtschaft Berlin",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "http://www.htw-berlin.de",
+      "vacancy_url": "http://www.htw-berlin.de/beschaeftigte/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Technik und Wirtschaft des Saarlandes",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.htwsaar.de",
+      "vacancy_url": "https://www.htwsaar.de/htw-saar/organisation/verwaltung/a1-personalabteilung/stellenausschreibungen-uebersicht",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Technik und Wirtschaft Dresden",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen",
+      "city": "Dresden",
+      "official_url": "https://www.htw-dresden.de",
+      "vacancy_url": "https://www.htw-dresden.de/die-htw-dresden/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Technik, Wirtschaft und Kultur Leipzig",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen",
+      "city": "Leipzig",
+      "official_url": "https://www.htwk-leipzig.de",
+      "vacancy_url": "https://www.htwk-leipzig.de/hochschule/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Wirtschaft und Gesellschaft Ludwigshafen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Ludwigshafen",
+      "official_url": "https://www.hwg-lu.de",
+      "vacancy_url": "https://www.hwg-lu.de/stellenportal.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Wirtschaft und Recht Berlin",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.hwr-berlin.de",
+      "vacancy_url": "https://www.hwr-berlin.de/hwr-berlin/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule für Wirtschaft und Umwelt Nürtingen-Geislingen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Nürtingen",
+      "official_url": "https://www.hfwu.de",
+      "vacancy_url": "https://www.hfwu.de/hochschule/hochschulverwaltung/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Geisenheim University",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Geisenheim",
+      "official_url": "https://www.hs-geisenheim.de",
+      "vacancy_url": "https://www.hs-geisenheim.de/hochschule/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Hamm-Lippstadt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Hamm",
+      "official_url": "http://www.hshl.de",
+      "vacancy_url": "http://www.hshl.de/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Hannover",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Niedersachsen",
+      "city": "Hannover",
+      "official_url": "https://www.hs-hannover.de",
+      "vacancy_url": "https://www.hs-hannover.de/ueber-uns/organisation/personal/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Harz - Wernigerode",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen-Anhalt",
+      "city": "Wernigerode",
+      "official_url": "https://www.hs-harz.de",
+      "vacancy_url": "https://www.hs-harz.de/karriere/aktuelle-stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Heilbronn",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Heilbronn",
+      "official_url": "https://www.hs-heilbronn.de",
+      "vacancy_url": "https://www.hs-heilbronn.de/de/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Hof",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Hof",
+      "official_url": "http://www.hof-university.de",
+      "vacancy_url": "http://www.hof-university.de/ueber-uns/aktuelles/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Kaiserslautern",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Kaiserslautern",
+      "official_url": "https://www.hs-kl.de",
+      "vacancy_url": "https://www.hs-kl.de/hochschule/aktuelles/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Karlsruhe",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Karlsruhe",
+      "official_url": "https://www.h-ka.de",
+      "vacancy_url": "https://www.h-ka.de/die-hochschule-karlsruhe/campus-karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Koblenz",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Koblenz",
+      "official_url": "https://www.hs-koblenz.de",
+      "vacancy_url": "https://www.hs-koblenz.de/hochschule/karriere-personal/stellenausschreibungen/stellenangebote-professuren",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Konstanz Technik, Wirtschaft und Gestaltung",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Konstanz",
+      "official_url": "https://www.htwg-konstanz.de",
+      "vacancy_url": "https://www.htwg-konstanz.de/hochschule/die-hochschule-als-arbeitgeberin/stellenangebote/professuren",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Landshut",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Landshut",
+      "official_url": "https://www.haw-landshut.de",
+      "vacancy_url": "https://www.haw-landshut.de/organisation/zentrale-services/service-personal/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Magdeburg-Stendal",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen-Anhalt",
+      "city": "Magdeburg",
+      "official_url": "https://www.h2.de",
+      "vacancy_url": "https://www.h2.de/hochschule/jobs-und-karriere/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Mainz",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Mainz",
+      "official_url": "https://www.hs-mainz.de",
+      "vacancy_url": "https://www.hs-mainz.de/karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Merseburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen-Anhalt",
+      "city": "Merseburg",
+      "official_url": "http://www.hs-merseburg.de",
+      "vacancy_url": "http://www.hs-merseburg.de/karriere/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Mittweida",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen",
+      "city": "Mittweida",
+      "official_url": "https://www.hs-mittweida.de",
+      "vacancy_url": "https://www.hs-mittweida.de/newsampservice/stellenausschreibungen.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Neu-Ulm",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Ulm",
+      "official_url": "https://www.hnu.de",
+      "vacancy_url": "https://www.hnu.de/hochschule/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Neubrandenburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Mecklenburg-Vorpommern",
+      "city": "Neubrandenburg",
+      "official_url": "https://www.hs-nb.de",
+      "vacancy_url": "https://www.hs-nb.de/hochschule/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Niederrhein",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://verwaltung.hs-niederrhein.de",
+      "vacancy_url": "https://verwaltung.hs-niederrhein.de/qissva/rds?state=change&type=3&nextdir=sva/bwmsas&subdir=sva/bwm&moduleParameter=bwmSearchResult&next=TableSelect.vm&navigationPosition=qissvaCareer%2Csvabwmstellenuebersi",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Nordhausen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Thüringen",
+      "city": "Nordhausen",
+      "official_url": "https://www.hs-nordhausen.de",
+      "vacancy_url": "https://www.hs-nordhausen.de/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Offenburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Offenburg",
+      "official_url": "https://www.hs-offenburg.de",
+      "vacancy_url": "https://www.hs-offenburg.de/die-hochschule/aktuell/ihre-karriere-an-der-hochschule-offenburg",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Osnabrück",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Niedersachsen",
+      "city": "Osnabrück",
+      "official_url": "https://www.hs-osnabrueck.de",
+      "vacancy_url": "https://www.hs-osnabrueck.de/wir/jobs-und-karriere/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Pforzheim",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Pforzheim",
+      "official_url": "https://www.hs-pforzheim.de",
+      "vacancy_url": "https://www.hs-pforzheim.de/hochschule/organisation/personal_und_organisation/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Ravensburg-Weingarten",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Ravensburg",
+      "official_url": "https://www.rwu.de",
+      "vacancy_url": "https://www.rwu.de/hochschule/arbeiten-der-rwu/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Reutlingen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Reutlingen",
+      "official_url": "https://www.reutlingen-university.de",
+      "vacancy_url": "https://www.reutlingen-university.de/hochschule/hochschule-als-arbeitgeberin/unsere-stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Rhein-Waal - Kleve",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.hochschule-rhein-waal.de",
+      "vacancy_url": "http://www.hochschule-rhein-waal.de/de/hochschule",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule RheinMain Wiesbaden, Rüsselsheim",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Wiesbaden",
+      "official_url": "https://www.hs-rm.de",
+      "vacancy_url": "https://www.hs-rm.de/ueber-uns/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Rosenheim",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.fh-rosenheim.de",
+      "vacancy_url": "http://www.fh-rosenheim.de/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Ruhr West, Mülheim",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.hochschule-ruhr-west.de",
+      "vacancy_url": "https://www.hochschule-ruhr-west.de/die-hrw/die-hrw-als-arbeitgeberin",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Schmalkalden",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Thüringen",
+      "city": "Schmalkalden",
+      "official_url": "https://www.hs-schmalkalden.de",
+      "vacancy_url": "https://www.hs-schmalkalden.de/stellenangebote-an-der-hochschule",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Stralsund",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Mecklenburg-Vorpommern",
+      "city": "Stralsund",
+      "official_url": "https://www.hochschule-stralsund.de",
+      "vacancy_url": "https://www.hochschule-stralsund.de/host/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Trier - Trier University of Applied Sciences",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Trier",
+      "official_url": "https://www.hochschule-trier.de",
+      "vacancy_url": "https://www.hochschule-trier.de/hochschule/aktuelles/stellenausschreibung",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Wismar",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Mecklenburg-Vorpommern",
+      "city": "Wismar",
+      "official_url": "https://www.hs-wismar.de",
+      "vacancy_url": "https://www.hs-wismar.de/hochschule/information/ausschreibungen/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Worms",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Worms",
+      "official_url": "https://www.hs-worms.de",
+      "vacancy_url": "https://www.hs-worms.de/bewerbungsportal/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Hochschule Zittau/Görlitz",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen",
+      "city": "Zittau",
+      "official_url": "https://www.hszg.de",
+      "vacancy_url": "https://www.hszg.de/hochschule/aktuelles/jobs-karriere.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Humboldt-Universität zu Berlin",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "http://www.personalabteilung.hu-berlin.de",
+      "vacancy_url": "http://www.personalabteilung.hu-berlin.de/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "IUBH Internationale Hochschule Erfurt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Thüringen",
+      "city": "Erfurt",
+      "official_url": "https://www.iubh-dualesstudium.de",
+      "vacancy_url": "https://www.iubh-dualesstudium.de/hochschule/jobs/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Jade Hochschule - Wilhelmshaven/Oldenburg/Elsfleth",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Niedersachsen",
+      "city": "Oldenburg",
+      "official_url": "https://www.jade-hs.de",
+      "vacancy_url": "https://www.jade-hs.de/unsere-hochschule/organisation/zentrale-bereiche/verwaltung/dezernat-1-personal-und-recht/abt-11-personalangelegenheiten/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Johann Wolfgang Goethe-Universität Frankfurt am Main",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Frankfurt am Main",
+      "official_url": "http://www.uni-frankfurt.de",
+      "vacancy_url": "http://www.uni-frankfurt.de/45302866/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Johannes Gutenberg-Universität Mainz",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Rheinland-Pfalz",
+      "city": "Mainz",
+      "official_url": "http://www.uni-mainz.de",
+      "vacancy_url": "http://www.uni-mainz.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Justus-Liebig-Universität Gießen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Gießen",
+      "official_url": "http://www.uni-giessen.de",
+      "vacancy_url": "http://www.uni-giessen.de/stellenmarkt/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Karlsruher Institut für Technologie (KIT)",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.pse.kit.edu",
+      "vacancy_url": "https://www.pse.kit.edu/karriere/Stellenangebote.php",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Katholische Hochschule Freiburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Freiburg im Breisgau",
+      "official_url": "https://www.kh-freiburg.de",
+      "vacancy_url": "https://www.kh-freiburg.de/de/hochschule/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Katholische Hochschule für Sozialwesen Berlin",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.khsb-berlin.de",
+      "vacancy_url": "https://www.khsb-berlin.de/hochschule/karriere/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Katholische Hochschule Mainz",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Mainz",
+      "official_url": "https://www.kh-mz.de",
+      "vacancy_url": "https://www.kh-mz.de/hochschule/ueber-uns/karriere/stellenangebote-kh-mainz",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Katholische Hochschule Nordrhein-Westfalen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.katho-nrw.de",
+      "vacancy_url": "https://www.katho-nrw.de/katho-nrw/hochschule/stellenanzeigen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Katholische Stiftungshochschule München",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://karriere.ksh-m.de",
+      "vacancy_url": "https://karriere.ksh-m.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Katholische Universität Eichstätt - Ingolstadt",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Eichstätt",
+      "official_url": "https://www.ku.de",
+      "vacancy_url": "https://www.ku.de/die-ku/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Kirchliche Hochschule Bethel",
+      "institution_type": "Kirchliche / Theologische Hochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.kiho-wb.de",
+      "vacancy_url": "http://www.kiho-wb.de/stellenausschreibung",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Kunstakademie Düsseldorf",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Nordrhein-Westfalen",
+      "city": "Düsseldorf",
+      "official_url": "https://www.kunstakademie-duesseldorf.de",
+      "vacancy_url": "https://www.kunstakademie-duesseldorf.de/de/217-stellenanzeigen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Kunstakademie Münster",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Nordrhein-Westfalen",
+      "city": "Münster",
+      "official_url": "http://www.kunstakademie-muenster.de",
+      "vacancy_url": "http://www.kunstakademie-muenster.de/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Kunsthochschule für Medien Köln",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Nordrhein-Westfalen",
+      "city": "Köln",
+      "official_url": "https://www.khm.de",
+      "vacancy_url": "https://www.khm.de/stellen/device.desktop/lang.de/#o.sort_asc#p.1",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Leuphana Universität Lüneburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Lüneburg",
+      "official_url": "https://www.leuphana.de",
+      "vacancy_url": "https://www.leuphana.de/universitaet/jobs-und-karriere.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ludwig-Maximilians-Universität München",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://www.lmu.de",
+      "vacancy_url": "https://www.lmu.de/de/die-lmu/arbeiten-an-der-lmu/stellenportal/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Lutherische Theologische Hochschule Oberursel",
+      "institution_type": "Kirchliche / Theologische Hochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://lthh.de",
+      "vacancy_url": "https://lthh.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Martin-Luther-Universität Halle-Wittenberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Sachsen-Anhalt",
+      "city": "Halle (Saale)",
+      "official_url": "http://www.uni-halle.de",
+      "vacancy_url": "http://www.uni-halle.de/karriere/#anchor1444696",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Medizinische Hochschule Hannover",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Hannover",
+      "official_url": "https://www.mhh.de",
+      "vacancy_url": "https://www.mhh.de/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Musikhochschule Lübeck",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Schleswig-Holstein",
+      "city": "Lübeck",
+      "official_url": "http://www.mh-luebeck.de",
+      "vacancy_url": "http://www.mh-luebeck.de/service/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Muthesius-Kunsthochschule, Kiel",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Schleswig-Holstein",
+      "city": "Kiel",
+      "official_url": "https://muthesius-kunsthochschule.de",
+      "vacancy_url": "https://muthesius-kunsthochschule.de/im-fokus/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ostbayerische Technische Hochschule Amberg-Weiden",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Amberg",
+      "official_url": "https://www.oth-aw.de",
+      "vacancy_url": "https://www.oth-aw.de/hochschule/aktuelles/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ostbayerische Technische Hochschule Regensburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Regensburg",
+      "official_url": "https://www.oth-regensburg.de",
+      "vacancy_url": "https://www.oth-regensburg.de/die-oth/jobs-und-karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ostfalia Hochschule Wolfenbüttel",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.ostfalia.de",
+      "vacancy_url": "https://www.ostfalia.de/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Otto-Friedrich-Universität Bamberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Bamberg",
+      "official_url": "http://www.uni-bamberg.de",
+      "vacancy_url": "http://www.uni-bamberg.de/?id=24457",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Otto-von-Guericke-Universität Magdeburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Sachsen-Anhalt",
+      "city": "Magdeburg",
+      "official_url": "http://www.uni-magdeburg.de",
+      "vacancy_url": "http://www.uni-magdeburg.de/Universit%C3%A4t/Stellensuchende.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Palucca Hochschule für Tanz Dresden",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen",
+      "city": "Dresden",
+      "official_url": "https://palucca.eu",
+      "vacancy_url": "https://palucca.eu/aktuelles/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Philipps-Universität Marburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Marburg",
+      "official_url": "https://www.uni-marburg.de",
+      "vacancy_url": "https://www.uni-marburg.de/de/universitaet/administration/verwaltung/dezernat2/personalabteilung/bewerber/stellen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Philosophisch-Theologische Hochschule Sankt Georgen Frankfurt am Main",
+      "institution_type": "Kirchliche / Theologische Hochschule",
+      "state": "Hessen",
+      "city": "Frankfurt am Main",
+      "official_url": "http://www.sankt-georgen.de",
+      "vacancy_url": "http://www.sankt-georgen.de/hochschule/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Private Universität Witten/Herdecke gGmbH",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.uni-wh.de",
+      "vacancy_url": "https://www.uni-wh.de/universitaet/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Pädagogische Hochschule Freiburg",
+      "institution_type": "Pädagogische Hochschule (PH)",
+      "state": "Baden-Württemberg",
+      "city": "Freiburg im Breisgau",
+      "official_url": "https://www.ph-freiburg.de",
+      "vacancy_url": "https://www.ph-freiburg.de/hochschule/job-karriere.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Pädagogische Hochschule Heidelberg",
+      "institution_type": "Pädagogische Hochschule (PH)",
+      "state": "Baden-Württemberg",
+      "city": "Heidelberg",
+      "official_url": "http://www.ph-heidelberg.de",
+      "vacancy_url": "http://www.ph-heidelberg.de/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Pädagogische Hochschule Karlsruhe",
+      "institution_type": "Pädagogische Hochschule (PH)",
+      "state": "Baden-Württemberg",
+      "city": "Karlsruhe",
+      "official_url": "https://www.ph-karlsruhe.de",
+      "vacancy_url": "https://www.ph-karlsruhe.de/hochschule/karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Pädagogische Hochschule Ludwigsburg",
+      "institution_type": "Pädagogische Hochschule (PH)",
+      "state": "Baden-Württemberg",
+      "city": "Ludwigsburg",
+      "official_url": "https://www.ph-ludwigsburg.de",
+      "vacancy_url": "https://www.ph-ludwigsburg.de/hochschule/verwaltung/personalangelegenheiten/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Pädagogische Hochschule Schwäbisch Gmünd",
+      "institution_type": "Pädagogische Hochschule (PH)",
+      "state": "Baden-Württemberg",
+      "city": "Schwäbisch Gmünd",
+      "official_url": "https://www.ph-gmuend.de",
+      "vacancy_url": "https://www.ph-gmuend.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Pädagogische Hochschule Weingarten",
+      "institution_type": "Pädagogische Hochschule (PH)",
+      "state": "Baden-Württemberg",
+      "city": "Weingarten",
+      "official_url": "https://www.ph-weingarten.de",
+      "vacancy_url": "https://www.ph-weingarten.de/de/hochschule/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Rheinisch-Westfälische Technische Hochschule Aachen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Aachen",
+      "official_url": "https://www.rwth-aachen.de",
+      "vacancy_url": "https://www.rwth-aachen.de/cms/root/wir/Karriereportal/~buym/RWTH-Jobportal/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Rheinische Friedrich-Wilhelms-Universität Bonn",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bonn",
+      "official_url": "https://www.uni-bonn.de",
+      "vacancy_url": "https://www.uni-bonn.de/de/universitaet/arbeiten-an-der-uni/stellenangebote/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Rheinische Hochschule Köln",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Köln",
+      "official_url": "http://www.rfh-koeln.de",
+      "vacancy_url": "http://www.rfh-koeln.de/aktuelles/stellenausschreibungen/index_ger.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Rheinland-Pfälzische Technische Universität Kaiserslautern-Landau",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Rheinland-Pfalz",
+      "city": "Kaiserslautern",
+      "official_url": "https://rptu.de",
+      "vacancy_url": "https://rptu.de/ueber-die-rptu/rptu-als-arbeitgeberin",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Robert Schumann Hochschule Düsseldorf",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Düsseldorf",
+      "official_url": "http://www.rsh-duesseldorf.de",
+      "vacancy_url": "http://www.rsh-duesseldorf.de/musikhochschule/personen/stellenanzeigen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ruhr-Universität Bochum",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bochum",
+      "official_url": "https://uni.ruhr-uni-bochum.de",
+      "vacancy_url": "https://uni.ruhr-uni-bochum.de/de/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Ruprecht-Karls-Universität Heidelberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Heidelberg",
+      "official_url": "http://www.uni-heidelberg.de",
+      "vacancy_url": "http://www.uni-heidelberg.de/stellenmarkt/index.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "SRH Hochschule Heidelberg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Heidelberg",
+      "official_url": "https://www.srh-karriere.de",
+      "vacancy_url": "https://www.srh-karriere.de/hochschulen/stellenangebote/?c=49",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Staatliche Akademie der Bildenden Künste Karlsruhe",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Baden-Württemberg",
+      "city": "Karlsruhe",
+      "official_url": "https://www.kunstakademie-karlsruhe.de",
+      "vacancy_url": "https://www.kunstakademie-karlsruhe.de/informationen/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Staatliche Akademie der Bildenden Künste Stuttgart",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Baden-Württemberg",
+      "city": "Stuttgart",
+      "official_url": "https://www.abk-stuttgart.de",
+      "vacancy_url": "https://www.abk-stuttgart.de/hochschule/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Staatliche Hochschule für Gestaltung Karlsruhe",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Karlsruhe",
+      "official_url": "https://www.hfg-karlsruhe.de",
+      "vacancy_url": "https://www.hfg-karlsruhe.de/hochschule/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Staatliche Hochschule für Musik Trossingen",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Baden-Württemberg",
+      "city": "Trossingen",
+      "official_url": "https://www.hfm-trossingen.de",
+      "vacancy_url": "https://www.hfm-trossingen.de/nachrichten/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Stiftung Tierärztliche Hochschule Hannover",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Niedersachsen",
+      "city": "Hannover",
+      "official_url": "https://www.tiho-hannover.de",
+      "vacancy_url": "https://www.tiho-hannover.de/universitaet/karriere/tiho-stellenmarkt",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Aschaffenburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Aschaffenburg",
+      "official_url": "https://www.th-ab.de",
+      "vacancy_url": "https://www.th-ab.de/hochschule/die-th-aschaffenburg/arbeiten-an-der-th-ab/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Augsburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Augsburg",
+      "official_url": "https://karriere.hs-augsburg.de",
+      "vacancy_url": "https://karriere.hs-augsburg.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Bingen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Rheinland-Pfalz",
+      "city": "Bingen",
+      "official_url": "https://www.th-bingen.de",
+      "vacancy_url": "https://www.th-bingen.de/hochschule/karriere/arbeiten-an-der-th",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Brandenburg",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Brandenburg",
+      "city": "Brandenburg",
+      "official_url": "https://www.th-brandenburg.de",
+      "vacancy_url": "https://www.th-brandenburg.de/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Deggendorf",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Deggendorf",
+      "official_url": "https://bmgmt.th-deg.de",
+      "vacancy_url": "https://bmgmt.th-deg.de/apply.php",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Georg Agricola",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.thga.de",
+      "vacancy_url": "https://www.thga.de/hochschule/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Ingolstadt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Ingolstadt",
+      "official_url": "https://www.thi.de",
+      "vacancy_url": "https://www.thi.de/karriere/wen-wir-suchen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Köln",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Köln",
+      "official_url": "https://www.th-koeln.de",
+      "vacancy_url": "https://www.th-koeln.de/hochschule/stellenangebote_90041.php",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Lübeck",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Schleswig-Holstein",
+      "city": "Lübeck",
+      "official_url": "https://www.th-luebeck.de",
+      "vacancy_url": "https://www.th-luebeck.de/hochschule/aktuelles/jobs-und-karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Mannheim",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Mannheim",
+      "official_url": "http://www.hs-mannheim.de",
+      "vacancy_url": "http://www.hs-mannheim.de/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Mittelhessen, Gießen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Hessen",
+      "city": "Gießen",
+      "official_url": "http://www.thm.de",
+      "vacancy_url": "http://www.thm.de/site/Stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Nürnberg Georg Simon Ohm",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Nürnberg",
+      "official_url": "https://www.th-nuernberg.de",
+      "vacancy_url": "https://www.th-nuernberg.de/karriere-bei-uns/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Ostwestfalen Lippe - Lemgo",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.th-owl.de",
+      "vacancy_url": "https://www.th-owl.de/hsnews/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Ulm",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Baden-Württemberg",
+      "city": "Ulm",
+      "official_url": "https://studium.hs-ulm.de",
+      "vacancy_url": "https://studium.hs-ulm.de/de/org/va/Seiten/Stellenangebote.aspx",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule Wildau",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "https://www.th-wildau.de",
+      "vacancy_url": "https://www.th-wildau.de/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Hochschule  Würzburg - Schweinfurt",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Bayern",
+      "city": "Würzburg",
+      "official_url": "https://www.thws.de",
+      "vacancy_url": "https://www.thws.de/service/stellenausschreibungen-der-thws/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Bergakademie Freiberg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Sachsen",
+      "city": "Freiberg",
+      "official_url": "http://tu-freiberg.de",
+      "vacancy_url": "http://tu-freiberg.de/wirtschaft/karriere/stellenausschreibungen/ausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Berlin",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "http://www.personalabteilung.tu-berlin.de",
+      "vacancy_url": "http://www.personalabteilung.tu-berlin.de/?id=34901",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Carolo-Wilhelmina zu Braunschweig",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Braunschweig",
+      "official_url": "https://www.tu-braunschweig.de",
+      "vacancy_url": "https://www.tu-braunschweig.de/stellenmarkt",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Chemnitz",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Sachsen",
+      "city": "Chemnitz",
+      "official_url": "https://www.tu-chemnitz.de",
+      "vacancy_url": "https://www.tu-chemnitz.de/tu/stellen.php",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Clausthal",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Clausthal-Zellerfeld",
+      "official_url": "https://www.tu-clausthal.de",
+      "vacancy_url": "https://www.tu-clausthal.de/universitaet/karriere-ausbildung/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Darmstadt",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Darmstadt",
+      "official_url": "https://www.tu-darmstadt.de",
+      "vacancy_url": "https://www.tu-darmstadt.de/universitaet/karriere_an_der_tu/stellenangebote/aktuelle_stellenangebote/index.de.jsp",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Dortmund",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Dortmund",
+      "official_url": "https://www.tu-dortmund.de",
+      "vacancy_url": "https://www.tu-dortmund.de/karriere/offene-stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Dresden",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Sachsen",
+      "city": "Dresden",
+      "official_url": "https://tu-dresden.de",
+      "vacancy_url": "https://tu-dresden.de/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Hamburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "http://intranet.tu-harburg.de",
+      "vacancy_url": "http://intranet.tu-harburg.de/aktuell/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität Ilmenau",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Thüringen",
+      "city": "Ilmenau",
+      "official_url": "https://www.tu-ilmenau.de",
+      "vacancy_url": "https://www.tu-ilmenau.de/universitaet/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Technische Universität München",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "http://www.tum.de",
+      "vacancy_url": "http://www.tum.de/die-tum/arbeiten-an-der-tum/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Theologische Fakultät Fulda",
+      "institution_type": "Kirchliche / Theologische Hochschule",
+      "state": "Hessen",
+      "city": "Fulda",
+      "official_url": "http://thf-fulda.de",
+      "vacancy_url": "http://thf-fulda.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Theologische Fakultät Paderborn",
+      "institution_type": "Kirchliche / Theologische Hochschule",
+      "state": "Nordrhein-Westfalen",
+      "city": "Paderborn",
+      "official_url": "https://www.thf-paderborn.de",
+      "vacancy_url": "https://www.thf-paderborn.de/fakultaet/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Theologische Fakultät Trier",
+      "institution_type": "Kirchliche / Theologische Hochschule",
+      "state": "Rheinland-Pfalz",
+      "city": "Trier",
+      "official_url": "https://www.uni-trier.de",
+      "vacancy_url": "https://www.uni-trier.de/index.php?id=23993",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Augsburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Augsburg",
+      "official_url": "https://www.uni-augsburg.de",
+      "vacancy_url": "https://www.uni-augsburg.de/de/jobs-und-karriere/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Bayreuth",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Bayreuth",
+      "official_url": "http://www.uni-bayreuth.de",
+      "vacancy_url": "http://www.uni-bayreuth.de/de/universitaet/arbeiten-an-der-universitaet/stellenangebote/index.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Bielefeld",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Bielefeld",
+      "official_url": "http://www.uni-bielefeld.de",
+      "vacancy_url": "http://www.uni-bielefeld.de/Universitaet/Aktuelles/Stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Bremen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bremen",
+      "city": "Bremen",
+      "official_url": "http://www.uni-bremen.de",
+      "vacancy_url": "http://www.uni-bremen.de/de/universitaet/die-uni-als-arbeitgeber/offene-stellen.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität der Bundeswehr München",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "München",
+      "official_url": "https://www.unibw.de",
+      "vacancy_url": "https://www.unibw.de/universitaet/arbeitgeber/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität der Künste Berlin",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "https://www.udk-berlin.de",
+      "vacancy_url": "https://www.udk-berlin.de/universitaet/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität des Saarlandes",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Saarland",
+      "city": "Saarbrücken",
+      "official_url": "https://www.uni-saarland.de",
+      "vacancy_url": "https://www.uni-saarland.de/verwaltung/stellen.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Duisburg - Essen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Duisburg",
+      "official_url": "https://www.uni-due.de",
+      "vacancy_url": "https://www.uni-due.de/karriere/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Erfurt",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Thüringen",
+      "city": "Erfurt",
+      "official_url": "https://www.uni-erfurt.de",
+      "vacancy_url": "https://www.uni-erfurt.de/universitaet/arbeiten-an-der-universitaet/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Greifswald",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Mecklenburg-Vorpommern",
+      "city": "Greifswald",
+      "official_url": "https://www.uni-greifswald.de",
+      "vacancy_url": "https://www.uni-greifswald.de/universitaet/information/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Hamburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hamburg",
+      "city": "Hamburg",
+      "official_url": "http://www.uni-hamburg.de",
+      "vacancy_url": "http://www.uni-hamburg.de/uhh/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Hannover",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Hannover",
+      "official_url": "https://www.uni-hannover.de",
+      "vacancy_url": "https://www.uni-hannover.de/de/universitaet/stellenangebote-arbeit-an-der-uni/jobboerse",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Hildesheim",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Hildesheim",
+      "official_url": "https://www.uni-hildesheim.de",
+      "vacancy_url": "https://www.uni-hildesheim.de/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Hohenheim - Stuttgart",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Stuttgart",
+      "official_url": "https://www.uni-hohenheim.de",
+      "vacancy_url": "https://www.uni-hohenheim.de/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Kassel",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Hessen",
+      "city": "Kassel",
+      "official_url": "http://www.uni-kassel.de",
+      "vacancy_url": "http://www.uni-kassel.de/intranet/aktuelles/stellenangebote.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Koblenz",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Rheinland-Pfalz",
+      "city": "Koblenz",
+      "official_url": "https://www.uni-koblenz.de",
+      "vacancy_url": "https://www.uni-koblenz.de/de/karriere",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Konstanz",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Konstanz",
+      "official_url": "https://www.uni-konstanz.de",
+      "vacancy_url": "https://www.uni-konstanz.de/personalabteilung/stellenangebote-1/stellenangebote-der-universitaet-konstanz/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Leipzig",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Sachsen",
+      "city": "Leipzig",
+      "official_url": "https://www.uni-leipzig.de",
+      "vacancy_url": "https://www.uni-leipzig.de/universitaet/arbeiten-an-der-universitaet-leipzig/stellenausschreibungen",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Mannheim",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Mannheim",
+      "official_url": "http://dezv.uni-mannheim.de",
+      "vacancy_url": "http://dezv.uni-mannheim.de/stellenausschreibungen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Münster",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Münster",
+      "official_url": "http://www.uni-muenster.de",
+      "vacancy_url": "http://www.uni-muenster.de/Rektorat/Stellen/st_index.htm",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Osnabrück",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Osnabrück",
+      "official_url": "https://www.uni-osnabrueck.de",
+      "vacancy_url": "https://www.uni-osnabrueck.de/universitaet/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Paderborn",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Paderborn",
+      "official_url": "https://www.uni-paderborn.de",
+      "vacancy_url": "https://www.uni-paderborn.de/zv/4-4/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Passau",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Passau",
+      "official_url": "https://www.uni-passau.de",
+      "vacancy_url": "https://www.uni-passau.de/universitaet/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Potsdam",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Brandenburg",
+      "city": "Potsdam",
+      "official_url": "http://www.uni-potsdam.de",
+      "vacancy_url": "http://www.uni-potsdam.de/verwaltung/dezernat3/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Regensburg",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Bayern",
+      "city": "Regensburg",
+      "official_url": "https://www.uni-regensburg.de",
+      "vacancy_url": "https://www.uni-regensburg.de/universitaet/jobs-und-karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Rostock",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Mecklenburg-Vorpommern",
+      "city": "Rostock",
+      "official_url": "https://www.uni-rostock.de",
+      "vacancy_url": "https://www.uni-rostock.de/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Siegen",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Siegen",
+      "official_url": "http://www.uni-siegen.de",
+      "vacancy_url": "http://www.uni-siegen.de/uni/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Stuttgart",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Stuttgart",
+      "official_url": "http://www.stellenwerk-stuttgart.de",
+      "vacancy_url": "http://www.stellenwerk-stuttgart.de/start.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Trier",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Rheinland-Pfalz",
+      "city": "Trier",
+      "official_url": "https://www.uni-trier.de",
+      "vacancy_url": "https://www.uni-trier.de/index.php?id=86841",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Ulm",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Baden-Württemberg",
+      "city": "Ulm",
+      "official_url": "https://www.uni-ulm.de",
+      "vacancy_url": "https://www.uni-ulm.de/einrichtungen/zuv/dezernat-3/stellenportal/stellenangebote/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität Vechta",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Niedersachsen",
+      "city": "Vechta",
+      "official_url": "https://karriere.uni-vechta.de",
+      "vacancy_url": "https://karriere.uni-vechta.de/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität zu Köln",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Nordrhein-Westfalen",
+      "city": "Köln",
+      "official_url": "https://portal.uni-koeln.de",
+      "vacancy_url": "https://portal.uni-koeln.de/karriere/stellenangebote",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Universität zu Lübeck",
+      "institution_type": "Universität / Technische Universität",
+      "state": "Schleswig-Holstein",
+      "city": "Lübeck",
+      "official_url": "http://www.uni-luebeck.de",
+      "vacancy_url": "http://www.uni-luebeck.de/index.php?id=374",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "weißensee kunsthochschule berlin",
+      "institution_type": "Kunst- und Musikhochschule",
+      "state": "Berlin",
+      "city": "Berlin",
+      "official_url": "http://www.kh-berlin.de",
+      "vacancy_url": "http://www.kh-berlin.de/bewerbung/stellenausschreibungen.html",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Westfälische Hochschule Gelsenkirchen, Bocholt, Recklinghausen",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Nordrhein-Westfalen",
+      "city": "Gelsenkirchen",
+      "official_url": "https://www.w-hs.de",
+      "vacancy_url": "https://www.w-hs.de/stellenangebote-der-hochschule/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "Westsächsische Hochschule Zwickau",
+      "institution_type": "Hochschule für Angewandte Wissenschaften (HAW/FH)",
+      "state": "Sachsen",
+      "city": "Zwickau",
+      "official_url": "https://www.fh-zwickau.de",
+      "vacancy_url": "https://www.fh-zwickau.de/service/stellen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    },
+    {
+      "institution_name": "WHU - Otto Beisheim School of Management - Vallendar",
+      "institution_type": "Sonstige Hochschule",
+      "state": "Deutschland (National)",
+      "city": null,
+      "official_url": "http://www.whu.edu",
+      "vacancy_url": "http://www.whu.edu/whu/stellenanzeigen/",
+      "hrk_source_url": "https://www.hrk.de/mitglieder/stellenanzeigen-der-hochschulen/",
+      "last_verified": "2026-10-01"
+    }
+  ]
+}
