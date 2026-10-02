@@ -240,28 +240,41 @@ async def scrape_leuphana_lueneburg() -> List[RawVacancy]:
 
 
 async def scrape_fh_potsdam() -> List[RawVacancy]:
-    """Scrapes Fachhochschule Potsdam career portal via B-ITE REST API."""
+    """Scrapes Fachhochschule Potsdam career portal via B-ITE REST API with dynamic pagination."""
     source_name = "Fachhochschule Potsdam"
     vacancies: List[RawVacancy] = []
     api_url = "https://jobs.b-ite.com/api/v1/postings/search"
     api_key = "335f1dcc409f0d424facf79f3f2ed0895fe2d6fa"
     seen_links = set()
+    pages_traversed = 0
+    offset = 0
+    limit = 50
 
     try:
-        payload = {
-            "key": api_key,
-            "locale": "de",
-            "channel": 0,
-        }
         api_headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
             "Accept": "application/json",
             "Content-Type": "application/json",
         }
-        r = requests.post(api_url, json=payload, headers=api_headers, timeout=15)
-        if r.status_code == 200:
+        while True:
+            pages_traversed += 1
+            payload = {
+                "key": api_key,
+                "locale": "de",
+                "channel": 0,
+                "page": {
+                    "offset": offset,
+                    "limit": limit,
+                },
+            }
+            r = requests.post(api_url, json=payload, headers=api_headers, timeout=15)
+            if r.status_code != 200:
+                break
             data = r.json()
             postings = data.get("jobPostings", [])
+            if not postings:
+                break
+
             for p in postings:
                 pid = p.get("id")
                 title = p.get("title", "").strip()
@@ -287,11 +300,17 @@ async def scrape_fh_potsdam() -> List[RawVacancy]:
                     )
                 )
 
+            page_meta = data.get("page", {})
+            total = page_meta.get("total", len(postings))
+            offset += len(postings)
+            if offset >= total or len(postings) < limit:
+                break
+
         record_telemetry(
             source=source_name,
-            pages=1,
+            pages=pages_traversed,
             raw=len(vacancies),
-            mode="REST_API",
+            mode="REST_API_PAGINATION",
             completeness="COMPLETE",
             coverage="VERIFIED",
         )
@@ -299,9 +318,9 @@ async def scrape_fh_potsdam() -> List[RawVacancy]:
         logger.error(f"Error scraping {source_name}: {e}")
         record_telemetry(
             source=source_name,
-            pages=1,
+            pages=pages_traversed or 1,
             raw=len(vacancies),
-            mode="REST_API",
+            mode="REST_API_PAGINATION",
             completeness="FAILED",
             coverage="UNKNOWN",
             error=str(e),
