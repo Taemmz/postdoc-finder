@@ -240,43 +240,58 @@ async def scrape_leuphana_lueneburg() -> List[RawVacancy]:
 
 
 async def scrape_fh_potsdam() -> List[RawVacancy]:
-    """Scrapes Fachhochschule Potsdam career portal."""
+    """Scrapes Fachhochschule Potsdam career portal via B-ITE REST API."""
     source_name = "Fachhochschule Potsdam"
     vacancies: List[RawVacancy] = []
-    url = "https://www.fh-potsdam.de/hochschule-karriere/karriere/stellenangebote-fh-potsdam"
+    api_url = "https://jobs.b-ite.com/api/v1/postings/search"
+    api_key = "335f1dcc409f0d424facf79f3f2ed0895fe2d6fa"
     seen_links = set()
 
     try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
+        payload = {
+            "key": api_key,
+            "locale": "de",
+            "channel": 0,
+        }
+        api_headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        }
+        r = requests.post(api_url, json=payload, headers=api_headers, timeout=15)
         if r.status_code == 200:
-            soup = BeautifulSoup(r.text, "html.parser")
-            main = soup.find("main") or soup.find("div", id="content") or soup
-            
-            for a in main.find_all("a", href=True):
-                href = a["href"].strip()
-                title = a.get_text(strip=True)
-                if not title or len(title) < 15:
+            data = r.json()
+            postings = data.get("jobPostings", [])
+            for p in postings:
+                pid = p.get("id")
+                title = p.get("title", "").strip()
+                if not pid or not title:
                     continue
-                if any(skip in href.lower() for skip in ["impressum", "datenschutz", "facebook", "instagram", "digitalisierungs", "personen/"]):
+                full_url = f"https://jobs.fh-potsdam.de/jobposting/{pid}"
+                if full_url in seen_links:
                     continue
-                if any(k in title.lower() or k in href.lower() for k in ["kennziffer", "stellenausschreibung", "professur", "wissenschaftliche/r", "postdoc", "doktorand"]):
-                    full_url = urljoin(url, href)
-                    if full_url not in seen_links:
-                        seen_links.add(full_url)
-                        vacancies.append(
-                            RawVacancy(
-                                source=source_name,
-                                title=title,
-                                link=full_url,
-                                snippet=f"FH Potsdam: {title}",
-                            )
-                        )
+                seen_links.add(full_url)
+
+                custom = p.get("custom", {}) or {}
+                tasks = custom.get("ihre_aufgaben", "")
+                profile = custom.get("ihr_profil", "")
+                snippet_text = f"{title} | {tasks} | {profile}".replace("\n", " ")[:300]
+
+                vacancies.append(
+                    RawVacancy(
+                        source=source_name,
+                        title=title,
+                        link=full_url,
+                        snippet=f"FH Potsdam: {snippet_text}",
+                        query_type="bite_api",
+                    )
+                )
 
         record_telemetry(
             source=source_name,
             pages=1,
             raw=len(vacancies),
-            mode="SINGLE_PAGE",
+            mode="REST_API",
             completeness="COMPLETE",
             coverage="VERIFIED",
         )
@@ -286,7 +301,7 @@ async def scrape_fh_potsdam() -> List[RawVacancy]:
             source=source_name,
             pages=1,
             raw=len(vacancies),
-            mode="SINGLE_PAGE",
+            mode="REST_API",
             completeness="FAILED",
             coverage="UNKNOWN",
             error=str(e),
